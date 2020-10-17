@@ -1,2 +1,10 @@
 # W10-Fresh
-Script for Windows 10 fine-tuning and Fresh setup after installation
+
+
+## RUNNING
+
+```powershell 
+ W10-Fresh/
+> Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+> .\Fresh.ps1
+```
