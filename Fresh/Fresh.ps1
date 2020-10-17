@@ -764,6 +764,9 @@ EnableDeviceRestartAfterUpdate
 # Не перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Do not restart this device as soon as possible when a restart is required to install an update
 # DisableDeviceRestartAfterUpdate
+
+# Install chocolatey package manager and recommended softwares as well
+Chocolatey
 #endregion System
 
 #region Start menu

@@ -3276,6 +3276,14 @@ function DisableDeviceRestartAfterUpdate
 {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
 }
+
+# Install chocolatey package manager and recommended softwares as well
+function Chocolatey 
+{
+    Write-Output "Installing Chocolatey..."
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    -NoProfile -ExecutionPolicy Bypass -Command "choco install -y --allow-empty-checksums chocolatey-core.extension ffmpeg mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-140 directx googlechrome transmission-qt choco install chocolatey-dotnetfx.extension "
+}
 #endregion System
 
 #region Start menu
