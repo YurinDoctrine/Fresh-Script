@@ -3296,7 +3296,7 @@ function Chocolatey
 {
     Write-Output "Installing Chocolatey..."
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install -y --allow-empty-checksums foxitreader chocolatey-windowsupdate.extension libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx googlechrome transmission-qt
+    choco install -y --allow-empty-checksums foxitreader chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
 }
 #endregion System
 #region Start menu
