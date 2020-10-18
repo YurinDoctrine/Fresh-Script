@@ -86,7 +86,7 @@ function SetMinimalDiagnosticDataLevel
 	{
 		# "Basic"
 		# "Базовая настройка"
-		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 1 -Force
+		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
 	}
 }
 
@@ -3010,50 +3010,22 @@ function WinPrtScrDesktopFolder
 	}
 }
 
-# Save screenshots by pressing Win+PrtScr to the Pictures folder (default value) (current user only)
-# Cохранять скриншоты по нажатию Win+PrtScr в папку "Изображения" (значение по умолчанию) (только для текущего пользователя)
-function WinPrtScrDefaultFolder
-{
-	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{B7BEDE81-DF94-4682-A7D8-57A52620B86F}" -Force -ErrorAction SilentlyContinue
-
-	# Save all opened folders in order to restore them after File Explorer restart
-	# Сохранить все открытые папки, чтобы восстановить их после перезапуска проводника
-	Clear-Variable -Name OpenedFolders -Force -ErrorAction Ignore
-	$OpenedFolders = {(New-Object -ComObject Shell.Application).Windows() | ForEach-Object -Process {$_.Document.Folder.Self.Path}}.Invoke()
-
-	# In order for the changes to take effect the File Explorer process has to be restarted
-	# Чтобы изменения вступили в силу, необходимо перезапустить процесс проводника
-	Stop-Process -Name explorer -Force
-
-	# Restore closed folders
-	# Восстановить закрытые папки
-	foreach ($OpenedFolder in $OpenedFolders)
-	{
-		if (Test-Path -Path $OpenedFolder)
-		{
-			Invoke-Item -Path $OpenedFolder
-		}
-	}
-}
-
 <#
-	Run troubleshooters automatically, then notify
-	In order this feature to work the OS level of diagnostic data gathering must be set to "Full"
-
+	Disable annoying Troubleshooting
 	Автоматически запускать средства устранения неполадок, а затем уведомлять
 	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
 #>
-function AutomaticRecommendedTroubleshooting
+function DisableTroubleshooting
 {
 	if (-not (Test-Path -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation))
 	{
 		New-Item -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Force
 	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Name UserPreference -PropertyType DWord -Value 3 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Name UserPreference -PropertyType DWord -Value 1 -Force
 
 	# Set the OS level of diagnostic data gathering to "Full"
 	# Установить уровень сбора диагностических сведений ОС на "Максимальный"
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 3 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
 }
 
 <#
@@ -3403,7 +3375,7 @@ function PinControlPanel
 				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
 				$Parameters = @{
-					Uri = "https://github.com/YurinDoctrine/W10-Fresh/raw/master/start%20menu%20pinning/syspin.exe"
+					Uri = "https://github.com/YurinDoctrine/W10-Fresh/raw/main/start%20menu%20pinning/syspin.exe"
 					OutFile = "$DownloadsFolder\syspin.exe"
 					Verbose = [switch]::Present
 				}
@@ -3483,7 +3455,7 @@ function PinDevicesPrinters
 				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
 				$Parameters = @{
-					Uri = "https://github.com/YurinDoctrine/W10-Fresh/raw/master/start%20menu%20pinning/syspin.exe"
+					Uri = "https://github.com/YurinDoctrine/W10-Fresh/raw/main/start%20menu%20pinning/syspin.exe"
 					OutFile = "$DownloadsFolder\syspin.exe"
 					Verbose = [switch]::Present
 				}
@@ -3548,7 +3520,7 @@ function PinCommandPrompt
 				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
 				$Parameters = @{
-					Uri = "https://github.com/YurinDoctrine/W10-Fresh/raw/master/start%20menu%20pinning/syspin.exe"
+					Uri = "https://github.com/YurinDoctrine/W10-Fresh/raw/main/start%20menu%20pinning/syspin.exe"
 					OutFile = "$DownloadsFolder\syspin.exe"
 					Verbose = [switch]::Present
 				}

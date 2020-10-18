@@ -652,23 +652,15 @@ ChangeUserShellFolderLocation
 # Сохранять скриншоты по нажатию Win+PrtScr в папку "рабочий стол" (только для текущего пользователя)
 # WinPrtScrDesktopFolder
 
-# Save screenshots by pressing Win+PrtScr to the Pictures folder (default value) (current user only)
-# Cохранять скриншоты по нажатию Win+PrtScr в папку "Изображения" (значение по умолчанию) (только для текущего пользователя)
-WinPrtScrDefaultFolder
-
 <#
-	Run troubleshooters automatically, then notify
-	In order this feature to work the OS level of diagnostic data gathering must be set to "Full"
-
+	Disable annoying Troubleshooting
 	Автоматически запускать средства устранения неполадок, а затем уведомлять
 	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
 #>
-AutomaticRecommendedTroubleshooting
+DisableTroubleshooting
 
 <#
-	Ask me before running troubleshooters (default value)
-	In order this feature to work the OS level of diagnostic data gathering must be set to "Full"
-
+    Ask before running troubleshooters(Default Value)
 	Спрашивать перед запуском средств устранения неполадок (значение по умолчанию)
 	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
 #>
