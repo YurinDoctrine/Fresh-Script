@@ -3249,6 +3249,48 @@ function DisableDeviceRestartAfterUpdate
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
 }
 
+# Force disable Battery Saver
+function ForceDisableBatterySaver
+{
+    powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBATTTHRESHOLD 0
+    powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBRIGHTNESS 100 
+}
+
+# Disable default disk defragmenter
+function DisableDefaultDiskDefragmenter
+{
+    Disable-ScheduledTask -TaskName 'ScheduledDefrag' -TaskPath '\Microsoft\Windows\Defrag'
+}
+
+# Let personalize power plan(that would able to increase the overall performance)
+function LetPersonalizePowerPlan
+{
+    powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
+    powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 3
+    powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 3
+    powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 637ea02f-bbcb-4015-8e2c-a1c7b9c0b546 0
+    powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 637ea02f-bbcb-4015-8e2c-a1c7b9c0b546 1
+    powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469 8
+    powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469 8
+    powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f d8742dcb-3e6a-4b3c-b3fe-374623cdcf06 0
+    powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f d8742dcb-3e6a-4b3c-b3fe-374623cdcf06 0
+    powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
+    powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
+    powercfg -setacvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
+    powercfg -setacvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 1200
+    powercfg -setdcvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 1200
+    powercfg -setacvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 2
+    powercfg -setdcvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 2
+    powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
+    powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
+    powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
+    powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+}
+
 # Install chocolatey package manager and recommended softwares as well
 function Chocolatey 
 {
@@ -3257,7 +3299,6 @@ function Chocolatey
     choco install -y --allow-empty-checksums foxitreader chocolatey-windowsupdate.extension libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx googlechrome transmission-qt
 }
 #endregion System
-
 #region Start menu
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"
@@ -3550,6 +3591,137 @@ function PinCommandPrompt
 	}
 }
 #endregion Start menu
+
+#region Gaming
+# Turn off Xbox Game Bar
+# Отключить Xbox Game Bar
+function DisableXboxGameBar
+{
+    if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
+    {
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 0 -Force
+		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 0 -Force
+    }
+}
+
+# Turn on Xbox Game Bar
+# Включить Xbox Game Bar
+function EnableXboxGameBar
+{
+	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
+	{
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 1 -Force
+		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 1 -Force
+	}
+}
+
+# Turn off Xbox Game Bar tips
+# Отключить советы Xbox Game Bar
+function DisableXboxGameTips
+{
+    if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
+    {
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+    }
+}
+
+# Turn on Xbox Game Bar tips
+# Включить советы Xbox Game Bar
+function EnableXboxGameTips
+{
+	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
+	{
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
+	}
+}
+
+<#
+	Set "High performance" in graphics performance preference for an app
+	Only with a dedicated GPU
+
+	Установить параметры производительности графики для отдельных приложений на "Высокая производительность"
+	Только при наличии внешней видеокарты
+#>
+function SetAppGraphicsPerformance
+{
+	if (Get-CimInstance -ClassName Win32_VideoController | Where-Object -FilterScript {$_.AdapterDACType -ne "Internal" -and $null -ne $_.AdapterDACType})
+	{
+		$Title = $Localization.GraphicsPerformanceTitle
+		$Message = $Localization.GraphicsPerformanceRequest
+		$Add = $Localization.GraphicsPerformanceAdd
+		$Skip = $Localization.GraphicsPerformanceSkip
+		$Options = "&$Add", "&$Skip"
+		$DefaultChoice = 1
+
+		do
+		{
+			$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
+			switch ($Result)
+			{
+				"0"
+				{
+					Add-Type -AssemblyName System.Windows.Forms
+					$OpenFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
+					$OpenFileDialog.Filter = $Localization.GraphicsPerformanceFilter
+					$OpenFileDialog.InitialDirectory = "${env:ProgramFiles(x86)}"
+					$OpenFileDialog.Multiselect = $false
+					# Focus on open file dialog
+					# Перевести фокус на диалог открытия файла
+					$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true}
+					$OpenFileDialog.ShowDialog($tmp)
+					if ($OpenFileDialog.FileName)
+					{
+						if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences))
+						{
+							New-Item -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences -Force
+						}
+						New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences -Name $OpenFileDialog.FileName -PropertyType String -Value "GpuPreference=2;" -Force
+						Write-Verbose -Message ("{0}" -f $OpenFileDialog.FileName) -Verbose
+					}
+				}
+				"1"
+				{
+					Write-Verbose -Message $Localization.GraphicsPerformanceSkipped -Verbose
+				}
+			}
+		}
+		until ($Result -eq 1)
+	}
+}
+
+<#
+	Turn on hardware-accelerated GPU scheduling. Restart needed
+	Only with a dedicated GPU and WDDM verion is 2.7 or higher
+
+	Включить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
+	Только при наличии внешней видеокарты и WDDM версии 2.7 и выше
+#>
+function EnableGPUScheduling
+{
+	if ((Get-CimInstance -ClassName CIM_VideoController | Where-Object -FilterScript {$_.AdapterDACType -ne "Internal"}))
+	{
+		# Determining whether an OS is not installed on a virtual machine
+		# Проверяем, не установлена ли ОС на виртуальной машине
+		if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual")
+		{
+			# Checking whether a WDDM verion is 2.7 or higher
+			# Проверка: имеет ли WDDM версию 2.7 или выше
+			$WddmVersion_Min = Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min
+			if ($WddmVersion_Min -ge 2700)
+			{
+				New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 2 -Force
+			}
+		}
+	}
+}
+
+# Turn off hardware-accelerated GPU scheduling. Restart needed
+# Выключить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
+function DisableGPUScheduling
+{
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 1 -Force
+}
+#endregion Gaming
 
 #region UWP apps
 <#
@@ -3881,137 +4053,6 @@ function CheckUWPAppsUpdates
 	Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" -ClassName "MDM_EnterpriseModernAppManagement_AppManagement01" | Invoke-CimMethod -MethodName UpdateScanMethod
 }
 #endregion UWP apps
-
-#region Gaming
-# Turn off Xbox Game Bar
-# Отключить Xbox Game Bar
-function DisableXboxGameBar
-{
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
-	{
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 0 -Force
-		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 0 -Force
-	}
-}
-
-# Turn on Xbox Game Bar
-# Включить Xbox Game Bar
-function EnableXboxGameBar
-{
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
-	{
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 1 -Force
-		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Turn off Xbox Game Bar tips
-# Отключить советы Xbox Game Bar
-function DisableXboxGameTips
-{
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
-	{
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
-	}
-}
-
-# Turn on Xbox Game Bar tips
-# Включить советы Xbox Game Bar
-function EnableXboxGameTips
-{
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp))
-	{
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
-	}
-}
-
-<#
-	Set "High performance" in graphics performance preference for an app
-	Only with a dedicated GPU
-
-	Установить параметры производительности графики для отдельных приложений на "Высокая производительность"
-	Только при наличии внешней видеокарты
-#>
-function SetAppGraphicsPerformance
-{
-	if (Get-CimInstance -ClassName Win32_VideoController | Where-Object -FilterScript {$_.AdapterDACType -ne "Internal" -and $null -ne $_.AdapterDACType})
-	{
-		$Title = $Localization.GraphicsPerformanceTitle
-		$Message = $Localization.GraphicsPerformanceRequest
-		$Add = $Localization.GraphicsPerformanceAdd
-		$Skip = $Localization.GraphicsPerformanceSkip
-		$Options = "&$Add", "&$Skip"
-		$DefaultChoice = 1
-
-		do
-		{
-			$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-			switch ($Result)
-			{
-				"0"
-				{
-					Add-Type -AssemblyName System.Windows.Forms
-					$OpenFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
-					$OpenFileDialog.Filter = $Localization.GraphicsPerformanceFilter
-					$OpenFileDialog.InitialDirectory = "${env:ProgramFiles(x86)}"
-					$OpenFileDialog.Multiselect = $false
-					# Focus on open file dialog
-					# Перевести фокус на диалог открытия файла
-					$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true}
-					$OpenFileDialog.ShowDialog($tmp)
-					if ($OpenFileDialog.FileName)
-					{
-						if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences))
-						{
-							New-Item -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences -Force
-						}
-						New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences -Name $OpenFileDialog.FileName -PropertyType String -Value "GpuPreference=2;" -Force
-						Write-Verbose -Message ("{0}" -f $OpenFileDialog.FileName) -Verbose
-					}
-				}
-				"1"
-				{
-					Write-Verbose -Message $Localization.GraphicsPerformanceSkipped -Verbose
-				}
-			}
-		}
-		until ($Result -eq 1)
-	}
-}
-
-<#
-	Turn on hardware-accelerated GPU scheduling. Restart needed
-	Only with a dedicated GPU and WDDM verion is 2.7 or higher
-
-	Включить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
-	Только при наличии внешней видеокарты и WDDM версии 2.7 и выше
-#>
-function EnableGPUScheduling
-{
-	if ((Get-CimInstance -ClassName CIM_VideoController | Where-Object -FilterScript {$_.AdapterDACType -ne "Internal"}))
-	{
-		# Determining whether an OS is not installed on a virtual machine
-		# Проверяем, не установлена ли ОС на виртуальной машине
-		if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual")
-		{
-			# Checking whether a WDDM verion is 2.7 or higher
-			# Проверка: имеет ли WDDM версию 2.7 или выше
-			$WddmVersion_Min = Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min
-			if ($WddmVersion_Min -ge 2700)
-			{
-				New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 2 -Force
-			}
-		}
-	}
-}
-
-# Turn off hardware-accelerated GPU scheduling. Restart needed
-# Выключить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
-function DisableGPUScheduling
-{
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 1 -Force
-}
-#endregion Gaming
 
 #region Scheduled tasks
 <#

@@ -413,15 +413,15 @@ UninstallOneDrive
 #region System
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
-EnableStorageSense
+# EnableStorageSense
 
 # Turn off Storage Sense (current user only)
 # Выключить Контроль памяти (только для текущего пользователя)
-# DisableStorageSense
+DisableStorageSense
 
 # Run Storage Sense every month (current user only)
 # Запускать Контроль памяти каждый месяц (только для текущего пользователя)
-StorageSenseMonthFrequency
+# StorageSenseMonthFrequency
 
 # Run Storage Sense during low free disk space (default value) (current user only)
 # Запускать Контроль памяти, когда остается мало место на диске (значение по умолчанию) (только для текущего пользователя)
@@ -429,19 +429,19 @@ StorageSenseMonthFrequency
 
 # Delete temporary files that apps aren't using (current user only)
 # Удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-EnableStorageSenseTempFiles
+# EnableStorageSenseTempFiles
 
 # Do not delete temporary files that apps aren't using (current user only)
 # Не удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-# DisableStorageSenseTempFiles
+DisableStorageSenseTempFiles
 
 # Delete files in recycle bin if they have been there for over 30 days (current user only)
 # Удалять файлы из корзины, если они находятся в корзине более 30 дней (только для текущего пользователя)
-EnableStorageSenseRecycleBin
+# EnableStorageSenseRecycleBin
 
 # Do not delete files in recycle bin if they have been there for over 30 days (current user only)
 # Не удалять файлы из корзины, если они находятся в корзине более 30 дней(только для текущего пользователя)
-# DisableStorageSenseRecycleBin
+DisableStorageSenseRecycleBin
 
 # Disable hibernation if the device is not a laptop
 # Отключить режим гибернации, если устройство не является ноутбуком
@@ -753,9 +753,18 @@ DisableSmartActiveHours
 # Restart this device as soon as possible when a restart is required to install an update
 EnableDeviceRestartAfterUpdate
 
+# Force disable battery saver
+ForceDisableBatterySaver
+
 # Не перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Do not restart this device as soon as possible when a restart is required to install an update
 # DisableDeviceRestartAfterUpdate
+
+# Disable default disk defragmenter
+DisableDefaultDefragmenter
+
+# Let personalize power plan, neither switch it off so
+LetPersonalizePowerPlan
 
 # Install chocolatey package manager and recommended softwares as well
 Chocolatey
