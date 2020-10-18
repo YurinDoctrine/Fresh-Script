@@ -761,7 +761,7 @@ ForceDisableBatterySaver
 # DisableDeviceRestartAfterUpdate
 
 # Disable default disk defragmenter
-DisableDefaultDefragmenter
+DisableDefaultDiskDefragmenter
 
 # Let personalize power plan, neither switch it off so
 LetPersonalizePowerPlan
@@ -827,42 +827,6 @@ PinDevicesPrinters
 # PinCommandPrompt
 #endregion Start menu
 
-#region UWP apps
-<#
-	Uninstall UWP apps
-	A dialog box that enables the user to select packages to remove
-	App packages will not be installed for new users if "Uninstall for All Users" is checked
-
-	Удалить UWP-приложения
-	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
-	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
-#>
-UninstallUWPApps
-
-<#
-	Open Microsoft Store "HEVC Video Extensions from Device Manufacturer" page
-	The extension can be installed without Microsoft account for free instead of $0.99
-	"Movies & TV" app required
-
-	Открыть страницу "Расширения для видео HEVC от производителя устройства" в Microsoft Store
-	Расширение может быть установлено без учетной записи Microsoft бесплатно вместо 0,99 $
-	Для работы необходимо приложение "Кино и ТВ"
-#>
-InstallHEVC
-
-# Turn off Cortana autostarting
-# Удалить Кортана из автозагрузки
-DisableCortanaAutostart
-
-# Turn on Cortana autostarting
-# Добавить Кортана в автозагрузку
-# EnableCortanaAutostart
-
-# Check for UWP apps updates
-# Проверить обновления UWP-приложений
-# CheckUWPAppsUpdates
-#endregion UWP apps
-
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -902,6 +866,42 @@ EnableGPUScheduling
 # Выключить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
 # DisableGPUScheduling
 #endregion Gaming
+
+#region UWP apps
+<#
+	Uninstall UWP apps
+	A dialog box that enables the user to select packages to remove
+	App packages will not be installed for new users if "Uninstall for All Users" is checked
+
+	Удалить UWP-приложения
+	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
+	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
+#>
+UninstallUWPApps
+
+<#
+	Open Microsoft Store "HEVC Video Extensions from Device Manufacturer" page
+	The extension can be installed without Microsoft account for free instead of $0.99
+	"Movies & TV" app required
+
+	Открыть страницу "Расширения для видео HEVC от производителя устройства" в Microsoft Store
+	Расширение может быть установлено без учетной записи Microsoft бесплатно вместо 0,99 $
+	Для работы необходимо приложение "Кино и ТВ"
+#>
+InstallHEVC
+
+# Turn off Cortana autostarting
+# Удалить Кортана из автозагрузки
+DisableCortanaAutostart
+
+# Turn on Cortana autostarting
+# Добавить Кортана в автозагрузку
+# EnableCortanaAutostart
+
+# Check for UWP apps updates
+# Проверить обновления UWP-приложений
+# CheckUWPAppsUpdates
+#endregion UWP apps
 
 #region Scheduled tasks
 <#
