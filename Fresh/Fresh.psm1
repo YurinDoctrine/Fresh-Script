@@ -3370,6 +3370,12 @@ function DisableTaskbarAnimations
     New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -PropertyType DWord -Value 0 -Force
 }
 
+# Enable respect power modes
+function EnableRespectPowerModes
+{
+    New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex -Name RespectPowerModes -PropertyType DWord -Value 1 -Force  
+}
+
 # Install chocolatey package manager and recommended softwares as well
 function Chocolatey 
 {

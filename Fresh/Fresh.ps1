@@ -778,8 +778,12 @@ DisableTransparencyEffects
 # Disable taskbar animations
 DisableTaskbarAnimations
 
+# Enable respect power modes
+EnableRespectPowerModes
+
 # Install chocolatey package manager and recommended softwares as well
 Chocolatey
+
 #endregion System
 
 #region Start menu
