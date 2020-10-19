@@ -3400,24 +3400,6 @@ function ShowAppSuggestions
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338388Enabled -PropertyType DWord -Value 1 -Force
 }
 
-# Run the Command Prompt shortcut from the Start menu as Administrator
-# Запускать ярлык командной строки в меню "Пуск" от имени Администратора
-function RunCMDShortcutElevated
-{
-	[byte[]]$bytes = Get-Content -Path "$env:APPDATA\Microsoft\Windows\Start menu\Programs\System Tools\Command Prompt.lnk" -Encoding Byte -Raw
-	$bytes[0x15] = $bytes[0x15] -bor 0x20
-	Set-Content -Path "$env:APPDATA\Microsoft\Windows\Start menu\Programs\System Tools\Command Prompt.lnk" -Value $bytes -Encoding Byte -Force
-}
-
-# Run the Command Prompt shortcut from the Start menu as user
-# Запускать ярлык командной строки в меню "Пуск" от имени пользователя
-function RunCMDShortcutUser
-{
-	[byte[]]$bytes = Get-Content -Path "$env:APPDATA\Microsoft\Windows\Start menu\Programs\System Tools\Command Prompt.lnk" -Encoding Byte -Raw
-	$bytes[0x15] = $bytes[0x15] -bxor 0x20
-	Set-Content -Path "$env:APPDATA\Microsoft\Windows\Start menu\Programs\System Tools\Command Prompt.lnk" -Value $bytes -Encoding Byte -Force
-}
-
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
 function UnpinAllStartTiles
