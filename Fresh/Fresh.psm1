@@ -3279,10 +3279,12 @@ function LetPersonalizePowerPlan
     powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
     powercfg -setacvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
     powercfg -setdcvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
-    powercfg -setacvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 1200
-    powercfg -setdcvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 1200
-    powercfg -setacvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 2
-    powercfg -setdcvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 2
+    powercfg -setacvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 0
+    powercfg -setacvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0
+    powercfg -setacvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
+    powercfg -setdcvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
     powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
     powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
     powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
@@ -3291,12 +3293,78 @@ function LetPersonalizePowerPlan
     powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 }
 
+# Disable indexing
+function DisableIndexing
+{
+    $DriveLetters = @((Get-Disk | Where-Object -FilterScript {$_.BusType -ne "USB"} | Get-Partition | Get-Volume | Where-Object -FilterScript {$null -ne $_.DriveLetter}).DriveLetter | Sort-Object)
+    
+    if ($DriveLetters.Count -inotmatch 0)
+	{
+		$Drive = 'C:'
+        $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$Drive'"
+        $indexing = $obj.IndexingEnabled
+        if("$indexing" -eq $True)
+        {
+            Write-Output "Disabling indexing of drive $Drive"
+            $obj | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
+        }
+        else
+        {
+            Write-Output "Indexing already disabled. SKIPPING..."
+        }
+    }
+	
+    if ($DriveLetters.Count -inotmatch 2)
+	{
+		$Drive = 'C:'
+        $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$Drive'"
+        $indexing = $obj.IndexingEnabled
+        if("$indexing" -eq $True)
+        {
+            Write-Output "Disabling indexing of drive $Drive"
+            $obj | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
+        }
+        else
+        {
+            Write-Output "Indexing already disabled. SKIPPING..."
+        }
+    }
+
+    if ($DriveLetters.Count -inotmatch 3)
+	{
+		$Drive = 'C:'
+        $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$Drive'"
+        $indexing = $obj.IndexingEnabled
+        if("$indexing" -eq $True)
+        {
+            Write-Output "Disabling indexing of drive $Drive"
+            $obj | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
+        }
+        else
+        {
+            Write-Output "Indexing already disabled. SKIPPING..."
+        }
+    }
+    else
+	{
+		Write-Output "Unable to find the right option. SKIPPING..."
+	}
+
+}
+
+# Disable transparency effects
+function DisableTransparencyEffects
+{
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force    
+
+}
+
 # Install chocolatey package manager and recommended softwares as well
 function Chocolatey 
 {
     Write-Output "Installing Chocolatey..."
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install -y --allow-empty-checksums foxitreader chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
+    choco install -y --allow-empty-checksums foxitreader drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
 }
 #endregion System
 #region Start menu

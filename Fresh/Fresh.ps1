@@ -429,11 +429,11 @@ DisableStorageSense
 
 # Delete temporary files that apps aren't using (current user only)
 # Удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-EnableStorageSenseTempFiles
+# EnableStorageSenseTempFiles
 
 # Do not delete temporary files that apps aren't using (current user only)
 # Не удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-# DisableStorageSenseTempFiles
+DisableStorageSenseTempFiles
 
 # Delete files in recycle bin if they have been there for over 30 days (current user only)
 # Удалять файлы из корзины, если они находятся в корзине более 30 дней (только для текущего пользователя)
@@ -765,6 +765,12 @@ DisableDefaultDiskDefragmenter
 
 # Let personalize power plan, neither switch it off so
 LetPersonalizePowerPlan
+
+# Disable indexing
+DisableIndexing
+
+# Disable transparency effects
+DisableTransparencyEffects
 
 # Install chocolatey package manager and recommended softwares as well
 Chocolatey
