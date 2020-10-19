@@ -3243,7 +3243,7 @@ function DisableIndexing
             Write-Output "Indexing already disabled. SKIPPING..."
         }
     }
-	
+
     if ($DriveLetters.Count -inotmatch 3)
 	{
 		$Drive = 'C:'
