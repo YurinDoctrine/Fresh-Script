@@ -134,6 +134,12 @@ function EnableWindowsFeedback
 	Remove-Item -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Force -ErrorAction SilentlyContinue
 }
 
+# Turn off tracking apps launch event
+function TurnOffAppLaunchTracking
+{ 
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name Start_TrackProgs -PropertyType DWord -Value 0 -Force
+}
+
 # Turn off diagnostics tracking scheduled tasks
 # Отключить задачи диагностического отслеживания
 function DisableScheduledTasks
@@ -3355,8 +3361,13 @@ function DisableIndexing
 # Disable transparency effects
 function DisableTransparencyEffects
 {
-    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force    
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force
+}
 
+# Disable taskbar animations
+function DisableTaskbarAnimations
+{ 
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -PropertyType DWord -Value 0 -Force
 }
 
 # Install chocolatey package manager and recommended softwares as well
@@ -3366,6 +3377,7 @@ function Chocolatey
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     choco install -y --allow-empty-checksums foxitreader drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
 }
+
 #endregion System
 #region Start menu
 # Do not show recently added apps in the Start menu

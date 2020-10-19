@@ -49,6 +49,9 @@ DisableWindowsFeedback
 # Изменить частоту формирования отзывов на "Автоматически" для текущего пользователя
 # EnableWindowsFeedback
 
+# Turn off tracking apps launch event
+TurnOffAppLaunchTracking
+
 # Turn off diagnostics tracking scheduled tasks
 # Отключить задачи диагностического отслеживания
 DisableScheduledTasks
@@ -771,6 +774,9 @@ DisableIndexing
 
 # Disable transparency effects
 DisableTransparencyEffects
+
+# Disable taskbar animations
+DisableTaskbarAnimations
 
 # Install chocolatey package manager and recommended softwares as well
 Chocolatey
