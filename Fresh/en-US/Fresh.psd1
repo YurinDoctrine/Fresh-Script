@@ -91,12 +91,6 @@ VideosDefaultFolder = Would you like to change the location of the Videos folder
 # DisableReservedStorage
 ReservedStorageIsInUse = This operation is not supported when reserved storage is in use `nPlease wait for any servicing operations to complete and then try again later
 
-# PinControlPanel/PinDevicesPrinters/PinCommandPrompt
-syspinDownloading = Downloading syspin... ~20 KB
-ControlPanelPinning = "$ControlPanelLocalizedName shortcut is being pinned to Start"
-DevicesPrintersPinning = "$DevicesAndPrintersLocalizedName shortcut is being pinned to Start"
-CMDPinning = Command Prompt shortcut is being pinned to Start
-
 # UninstallUWPApps
 UninstallUWPForAll = Uninstall for All Users
 UninstallUWPTitle = UWP Packages to Uninstall
