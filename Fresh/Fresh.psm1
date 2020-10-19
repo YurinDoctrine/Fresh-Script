@@ -2146,82 +2146,6 @@ function AllowPCTurnOffDevice
 	}
 }
 
-# Set the default input method to the English language
-# Установить метод ввода по умолчанию на английский язык
-function SetEnglishDefaultInputMethod
-{
-	Set-WinDefaultInputMethodOverride -InputTip "0409:00000409"
-}
-
-# Reset the default input method
-# Сбросить метод ввода по умолчанию
-function ResetDefaultInputMethod
-{
-	Remove-ItemProperty -Path "HKCU:\Control Panel\International\User Profile" -Name InputMethodOverride -Force -ErrorAction SilentlyContinue
-}
-
-# Enable Windows Sandbox
-# Включить Windows Sandbox
-function EnableWindowsSandbox
-{
-	if (Get-WindowsEdition -Online | Where-Object -FilterScript {$_.Edition -eq "Professional" -or $_.Edition -like "Enterprise*"})
-	{
-		# Checking whether x86 virtualization is enabled in the firmware
-		# Проверка: включена ли в настройках UEFI аппаратная виртуализация x86
-		if ((Get-CimInstance -ClassName CIM_Processor).VirtualizationFirmwareEnabled -eq $true)
-		{
-			Enable-WindowsOptionalFeature -FeatureName Containers-DisposableClientVM -All -Online -NoRestart
-		}
-		else
-		{
-			try
-			{
-				# Determining whether Hyper-V is enabled
-				# Проверка: включен ли Hyper-V
-				if ((Get-CimInstance -ClassName CIM_ComputerSystem).HypervisorPresent -eq $true)
-				{
-					Enable-WindowsOptionalFeature -FeatureName Containers-DisposableClientVM -All -Online -NoRestart
-				}
-			}
-			catch [System.Exception]
-			{
-				Write-Error -Message $Localization.EnableHardwareVT -ErrorAction SilentlyContinue
-			}
-		}
-	}
-}
-
-# Disable Windows Sandbox
-# Выключить Windows Sandbox
-function DisableWindowsSandbox
-{
-	if (Get-WindowsEdition -Online | Where-Object -FilterScript {$_.Edition -eq "Professional" -or $_.Edition -like "Enterprise*"})
-	{
-		# Checking whether x86 virtualization is enabled in the firmware
-		# Проверка: включена ли в настройках UEFI аппаратная виртуализация x86
-		if ((Get-CimInstance -ClassName CIM_Processor).VirtualizationFirmwareEnabled -eq $true)
-		{
-			Disable-WindowsOptionalFeature -FeatureName Containers-DisposableClientVM -Online -NoRestart
-		}
-		else
-		{
-			try
-			{
-				# Determining whether Hyper-V is enabled
-				# Проверка: включен ли Hyper-V
-				if ((Get-CimInstance -ClassName CIM_ComputerSystem).HypervisorPresent -eq $true)
-				{
-					Disable-WindowsOptionalFeature -FeatureName Containers-DisposableClientVM -Online -NoRestart
-				}
-			}
-			catch [System.Exception]
-			{
-				Write-Error -Message $Localization.EnableHardwareVT -ErrorAction SilentlyContinue
-			}
-		}
-	}
-}
-
 <#
 	Change the location of the user folders to any drives root (current user only)
 	It is suggested to move it to any disks root of your choice using the interactive menu by default
@@ -3304,22 +3228,6 @@ function DisableIndexing
 {
     $DriveLetters = @((Get-Disk | Where-Object -FilterScript {$_.BusType -ne "USB"} | Get-Partition | Get-Volume | Where-Object -FilterScript {$null -ne $_.DriveLetter}).DriveLetter | Sort-Object)
     
-    if ($DriveLetters.Count -inotmatch 0)
-	{
-		$Drive = 'C:'
-        $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$Drive'"
-        $indexing = $obj.IndexingEnabled
-        if("$indexing" -eq $True)
-        {
-            Write-Output "Disabling indexing of drive $Drive"
-            $obj | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
-        }
-        else
-        {
-            Write-Output "Indexing already disabled. SKIPPING..."
-        }
-    }
-	
     if ($DriveLetters.Count -inotmatch 2)
 	{
 		$Drive = 'C:'
@@ -3335,7 +3243,7 @@ function DisableIndexing
             Write-Output "Indexing already disabled. SKIPPING..."
         }
     }
-
+	
     if ($DriveLetters.Count -inotmatch 3)
 	{
 		$Drive = 'C:'
@@ -3351,6 +3259,7 @@ function DisableIndexing
             Write-Output "Indexing already disabled. SKIPPING..."
         }
     }
+
     else
 	{
 		Write-Output "Unable to find the right option. SKIPPING..."
@@ -3370,10 +3279,10 @@ function DisableTaskbarAnimations
     New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -PropertyType DWord -Value 0 -Force
 }
 
-# Enable respect power modes
-function EnableRespectPowerModes
+# Turn off list view shadow
+function TurnOffListviewShadow
 {
-    New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex -Name RespectPowerModes -PropertyType DWord -Value 1 -Force  
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
 }
 
 # Install chocolatey package manager and recommended softwares as well
@@ -4146,7 +4055,7 @@ function CreateTempTask
 {
 	$Argument = "Get-ChildItem -Path $env:TEMP -Force -Recurse | Remove-Item -Recurse -Force"
 	$Action = New-ScheduledTaskAction -Execute powershell.exe -Argument $Argument
-	$Trigger = New-ScheduledTaskTrigger -Daily -DaysInterval 62 -At 9am
+	$Trigger = New-ScheduledTaskTrigger -Daily -DaysInterval 5 -At 11am
 	$Settings = New-ScheduledTaskSettingsSet -Compatibility Win8 -StartWhenAvailable
 	$Principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -RunLevel Highest
 	$Description = $Localization.TempTaskDescription

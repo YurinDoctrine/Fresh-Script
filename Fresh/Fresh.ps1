@@ -232,11 +232,11 @@ HidePeopleTaskbar
 
 # Show seconds on the taskbar clock (current user only)
 # Отображать секунды в системных часах на панели задач (только для текущего пользователя)
-ShowSecondsInSystemClock
+# ShowSecondsInSystemClock
 
 # Do not show seconds on the taskbar clock (current user only)
 # не отображать секунды в системных часах на панели задач (только для текущего пользователя)
-# HideSecondsInSystemClock
+HideSecondsInSystemClock
 
 # Do not show when snapping a window, what can be attached next to it (current user only)
 # Не показывать при прикреплении окна, что можно прикрепить рядом с ним (только для текущего пользователя)
@@ -432,11 +432,11 @@ DisableStorageSense
 
 # Delete temporary files that apps aren't using (current user only)
 # Удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-EnableStorageSenseTempFiles
+# EnableStorageSenseTempFiles
 
 # Do not delete temporary files that apps aren't using (current user only)
 # Не удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-# DisableStorageSenseTempFiles
+DisableStorageSenseTempFiles
 
 # Delete files in recycle bin if they have been there for over 30 days (current user only)
 # Удалять файлы из корзины, если они находятся в корзине более 30 дней (только для текущего пользователя)
@@ -615,22 +615,6 @@ EnableLatestInstalled.NET
 # Разрешить отключение всех сетевых адаптеров для экономии энергии
 AllowPCTurnOffDevice
 
-# Set the default input method to the English language
-# Установить метод ввода по умолчанию на английский язык
-# SetEnglishDefaultInputMethod
-
-# Reset the default input method
-# Сбросить метод ввода по умолчанию
-ResetDefaultInputMethod
-
-# Enable Windows Sandbox
-# Включить Windows Sandbox
-EnableWindowsSandbox
-
-# Disable Windows Sandbox
-# Выключить Windows Sandbox
-# DisableWindowsSandbox
-
 <#
 	Change the location of the user folders to any drives root (current user only)
 	It is suggested to move it to any disks root of your choice using the interactive menu by default
@@ -719,19 +703,19 @@ DisableAutoplay
 
 # Disable thumbnail cache removal
 # Отключить удаление кэша миниатюр
-DisableThumbnailCacheRemoval
+# DisableThumbnailCacheRemoval
 
 # Enable thumbnail cache removal
 # Включить удаление кэша миниатюр
-# EnableThumbnailCacheRemoval
+EnableThumbnailCacheRemoval
 
 # Automatically save my restartable apps when signing out and restart them after signing in (current user only)
 # Автоматически сохранять мои перезапускаемые приложения при выходе из системы и перезапускать их после выхода (только для текущего пользователя)
-EnableSaveRestartableApps
+# EnableSaveRestartableApps
 
 # Do not automatically save my restartable apps when signing out and restart them after signing in
 # Не сохранять автоматически мои перезапускаемые приложения при выходе из системы и перезапускать их после выхода
-# DisableSaveRestartableApps
+DisableSaveRestartableApps
 
 # Enable "Network Discovery" and "File and Printers Sharing" for workgroup networks
 # Включить сетевое обнаружение и общий доступ к файлам и принтерам для рабочих групп
@@ -778,8 +762,8 @@ DisableTransparencyEffects
 # Disable taskbar animations
 DisableTaskbarAnimations
 
-# Enable respect power modes
-EnableRespectPowerModes
+# Turn off list view shadow
+TurnOffListviewShadow
 
 # Install chocolatey package manager and recommended softwares as well
 Chocolatey
@@ -929,35 +913,35 @@ CreateTempTask
 #region Microsoft Defender & Security
 # Enable Controlled folder access and add protected folders
 # Включить контролируемый доступ к папкам и добавить защищенные папки
-AddProtectedFolders
+# AddProtectedFolders
 
 # Remove all added protected folders
 # Удалить все добавленные защищенные папки
-# RemoveProtectedFolders
+RemoveProtectedFolders
 
 # Allow an app through Controlled folder access
 # Разрешить работу приложения через контролируемый доступ к папкам
-AddAppControlledFolder
+# AddAppControlledFolder
 
 # Remove all allowed apps through Controlled folder access
 # Удалить все добавленные разрешенные приложение через контролируемый доступ к папкам
-# RemoveAllowedAppsControlledFolder
+RemoveAllowedAppsControlledFolder
 
 # Add a folder to the exclusion from Microsoft Defender scanning
 # Добавить папку в список исключений сканирования Microsoft Defender
-AddDefenderExclusionFolder
+# AddDefenderExclusionFolder
 
 # Remove all excluded folders from Microsoft Defender scanning
 # Удалить все папки из списка исключений сканирования Microsoft Defender
-# RemoveDefenderExclusionFolders
+RemoveDefenderExclusionFolders
 
 # Add a file to the exclusion from Microsoft Defender scanning
 # Добавить файл в список исключений сканирования Microsoft Defender
-AddDefenderExclusionFile
+# AddDefenderExclusionFile
 
 # Remove all excluded files from Microsoft Defender scanning
 # Удалить все файлы из списка исключений сканирования Microsoft Defender
-# RemoveDefenderExclusionFiles
+RemoveDefenderExclusionFiles
 
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -977,11 +961,11 @@ EnablePUAppsDetection
 
 # Run Microsoft Defender within a sandbox
 # Запускать Microsoft Defender в песочнице
-EnableDefenderSandbox
+# EnableDefenderSandbox
 
 # Do not run Microsoft Defender within a sandbox
 # Не запускать Microsoft Defender в песочнице
-# DisableDefenderSandbox
+DisableDefenderSandbox
 
 # Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
 # Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
@@ -1006,11 +990,11 @@ EnableAuditProcess
 	Включать командную строку в событиях создания процесса
 	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
 #>
-EnableAuditCommandLineProcess
+# EnableAuditCommandLineProcess
 
 # Do not include command line in process creation events
 # Не включать командную строку в событиях создания процесса
-# DisableAuditCommandLineProcess
+DisableAuditCommandLineProcess
 
 <#
 	Create "Process Creation" Event Viewer Custom View
@@ -1019,19 +1003,19 @@ EnableAuditCommandLineProcess
 	Создать настаиваемое представление "Создание процесса" в Просмотре событий
 	Необходимо включить аудит событий и командной строки в событиях создания процесса, чтобы работал данный функционал (функция "EnableAuditProcess")
 #>
-CreateEventViewerCustomView
+# CreateEventViewerCustomView
 
 # Remove "Process Creation" Event Viewer Custom View
 # Удалить настаиваемое представление "Создание процесса" в Просмотре событий
-# RemoveEventViewerCustomView
+RemoveEventViewerCustomView
 
 # Log for all Windows PowerShell modules
 # Вести журнал для всех модулей Windows PowerShell
-EnablePowerShellModulesLogging
+# EnablePowerShellModulesLogging
 
 # Do not log for all Windows PowerShell modules
 # Не вести журнал для всех модулей Windows PowerShell
-# DisablePowerShellModulesLogging
+DisablePowerShellModulesLogging
 
 # Log all PowerShell scripts input to the Windows PowerShell event log
 # Вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
@@ -1059,11 +1043,11 @@ DisableSaveZoneInformation
 
 # Turn off Windows Script Host (current user only)
 # Отключить Windows Script Host (только для текущего пользователя)
-DisableWindowsScriptHost
+# DisableWindowsScriptHost
 
 # Turn on Windows Script Host (current user only)
 # Включить Windows Script Host (только для текущего пользователя)
-# EnableWindowsScriptHost
+EnableWindowsScriptHost
 #endregion Microsoft Defender & Security
 
 #region Context menu
