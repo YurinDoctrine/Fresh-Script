@@ -793,44 +793,10 @@ HideAppSuggestions
 # Показывать рекомендации в меню "Пуск"
 # ShowAppSuggestions
 
-# Run the Command Prompt shortcut from the Start menu as Administrator
-# Запускать ярлык командной строки в меню "Пуск" от имени Администратора
-RunCMDShortcutElevated
-
-# Run the Command Prompt shortcut from the Start menu as user
-# Запускать ярлык командной строки в меню "Пуск" от имени пользователя
-# RunCMDShortcutUser
-
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
 UnpinAllStartTiles
 
-<#
-	Pin the "Control Panel" shortcut to Start within syspin
-	Закрепить ярлык "Панели управления" на начальном экране с помощью syspin
-
-	http://www.technosys.net/products/utils/pintotaskbar
-	SHA256: 6967E7A3C2251812DD6B3FA0265FB7B61AADC568F562A98C50C345908C6E827
-#>
-PinControlPanel
-
-<#
-	Pin the old-style "Devices and Printers" shortcut to Start within syspin
-	Закрепить ярлык старого формата "Устройства и принтеры" на начальном экране с помощью syspin
-
-	http://www.technosys.net/products/utils/pintotaskbar
-	SHA256: 6967E7A3C2251812DD6B3FA0265FB7B61AADC568F562A98C50C345908C6E827
-#>
-PinDevicesPrinters
-
-<#
-	Pin the Command Prompt" shortcut to Start within syspin
-	Закрепить ярлык "Командная строка" на начальном экране с помощью syspin
-
-	http://www.technosys.net/products/utils/pintotaskbar
-	SHA256: 6967E7A3C2251812DD6B3FA0265FB7B61AADC568F562A98C50C345908C6E827
-#>
-# PinCommandPrompt
 #endregion Start menu
 
 #region Gaming
