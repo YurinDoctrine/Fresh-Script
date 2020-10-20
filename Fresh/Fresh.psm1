@@ -3049,6 +3049,16 @@ function DisableDeviceRestartAfterUpdate
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
 }
 
+# Install chocolatey package manager and recommended softwares as well
+function Chocolatey 
+{
+    Write-Output "Installing Chocolatey..."
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install -y --allow-empty-checksums foxitreader drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
+}
+
+#endregion System
+#region Performance
 # Force disable Battery Saver
 function ForceDisableBatterySaver
 {
@@ -3062,7 +3072,7 @@ function DisableDefaultDiskDefragmenter
     Disable-ScheduledTask -TaskName 'ScheduledDefrag' -TaskPath '\Microsoft\Windows\Defrag'
 }
 
-# Let personalize power plan(that would able to increase the overall performance)
+# Let personalize power plan
 function LetPersonalizePowerPlan
 {
     powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
@@ -3156,15 +3166,13 @@ function TurnOffListviewShadow
     New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
 }
 
-# Install chocolatey package manager and recommended softwares as well
-function Chocolatey 
+# Adjust best performance(that would able to increase the overall performance)
+function AdjustBestPerformance
 {
-    Write-Output "Installing Chocolatey..."
-    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install -y --allow-empty-checksums foxitreader drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects -Name VisualFXSettings -PropertyType DWord -Value 2 -Force
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\DWM -Name Composition -PropertyType DWord -Value 0 -Force 
 }
-
-#endregion System
+#endregion Performance
 #region Start menu
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"

@@ -708,12 +708,17 @@ DisableSmartActiveHours
 # Restart this device as soon as possible when a restart is required to install an update
 EnableDeviceRestartAfterUpdate
 
-# Force disable battery saver
-ForceDisableBatterySaver
-
 # Не перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Do not restart this device as soon as possible when a restart is required to install an update
 # DisableDeviceRestartAfterUpdate
+
+# Install chocolatey package manager and recommended softwares as well
+Chocolatey
+
+#endregion System
+#region Performance
+# Force disable battery saver
+ForceDisableBatterySaver
 
 # Disable default disk defragmenter
 DisableDefaultDiskDefragmenter
@@ -736,11 +741,9 @@ DisableTaskbarAnimations
 # Turn off list view shadow
 TurnOffListviewShadow
 
-# Install chocolatey package manager and recommended softwares as well
-Chocolatey
-
-#endregion System
-
+# Adjust best performance(that would able to increase the overall performance)
+AdjustBestPerformance
+#endregion Performance
 #region Start menu
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"
