@@ -1753,6 +1753,10 @@ function DisableWindowsCapabilities
 		# Средство записи действий
 		"App.StepsRecorder*",
 
+		# Windows Hello Face
+		# Распознавание лиц Windows Hello
+		"Hello.Face*",
+
 		# Microsoft Quick Assist
 		# Быстрая поддержка (Майкрософт)
 		"App.Support.QuickAssist*",
@@ -1771,14 +1775,6 @@ function DisableWindowsCapabilities
 		# Факсы и сканирование Windows
 		"Print.Fax.Scan*"
 	)
-	# If device is not a laptop disable "Hello.Face*" too
-	# Если устройство не является ноутбуком, отключить также и "Hello.Face"
-	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2)
-	{
-		# Windows Hello Face
-		# Распознавание лиц Windows Hello
-		$CheckedCapabilities += "Hello.Face*"
-	}
 
 	# The following FODv2 items will be shown, but their checkboxes would be clear
 	# Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
@@ -1790,18 +1786,6 @@ function DisableWindowsCapabilities
 		# Language components
 		# Языковые компоненты
 		"Language\.",
-
-		# Notepad
-		# Блокнот
-		"Microsoft.Windows.Notepad*",
-
-		# Mail, contacts, and calendar sync component
-		# Компонент синхронизации почты, контактов и календаря
-		"OneCoreUAP\.OneSync",
-
-		# Management of printers, printer drivers, and printer servers
-		# Управление принтерами, драйверами принтеров и принт-серверами
-		"Print\.Management\.Console",
 
 		# Features critical to Windows functionality
 		# Компоненты, критичные для работоспособности Windows
@@ -1994,16 +1978,6 @@ function DisableBackgroundUWPApps
 	}
 
 	$ExcludedBackgroundApps = @(
-		# Lock screen app
-		# Экран блокировки
-		"Microsoft.LockApp",
-
-		# Content Delivery Manager (delivers Windows Spotlight wallpapers to the lock screen)
-		# Content Delivery Manager (доставляет обои для Windows Spotlight на экран блокировки)
-		"Microsoft.Windows.ContentDeliveryManager",
-
-		# Cortana
-		"Microsoft.Windows.Cortana",
 
 		# Windows Search
 		"Microsoft.Windows.Search",
