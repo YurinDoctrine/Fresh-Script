@@ -890,38 +890,13 @@ function HideTrayIcons
 
 # Unpin "Microsoft Edge" and "Microsoft Store" from the taskbar (current user only)
 # Открепить Microsoft Edge и Microsoft Store от панели задач (только для текущего пользователя)
-function UnpinTaskbarEdgeStore
+function UnpinMSEdgeMStoreFromTaskbar
 {
-	$Signature = @{
-		Namespace = "WinAPI"
-		Name = "GetStr"
-		Language = "CSharp"
-		MemberDefinition = @"
-	// https://github.com/Disassembler0/Win10-Initial-Setup-Script/issues/8#issue-227159084
-	[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-	public static extern IntPtr GetModuleHandle(string lpModuleName);
-	[DllImport("user32.dll", CharSet = CharSet.Auto)]
-	internal static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
-	public static string GetString(uint strId)
-	{
-		IntPtr intPtr = GetModuleHandle("shell32.dll");
-		StringBuilder sb = new StringBuilder(255);
-		LoadString(intPtr, strId, sb, sb.Capacity);
-		return sb.ToString();
-	}
-"@
-	}
-	if (-not ("WinAPI.GetStr" -as [type]))
-	{
-		Add-Type @Signature -Using System.Text
-	}
-
-	# Extract the "Unpin from taskbar" string from shell32.dll
-	# Извлечь строку "Открепить от панели задач" из shell32.dll
-	$LocalizedString = [WinAPI.GetStr]::GetString(5387)
-	$Apps = (New-Object -ComObject Shell.Application).NameSpace("shell:::{4234d49b-0245-4df3-b780-3893943456e1}").Items()
-	$Apps | Where-Object -FilterScript {$_.Path -eq "MSEdge"} | ForEach-Object -Process {$_.Verbs() | Where-Object -FilterScript {$_.Name -eq $LocalizedString} | ForEach-Object -Process {$_.DoIt()}}
-	$Apps | Where-Object -FilterScript {$_.Name -eq "Microsoft Store"} | ForEach-Object -Process {$_.Verbs() | Where-Object -FilterScript {$_.Name -eq $LocalizedString} | ForEach-Object -Process {$_.DoIt()}}
+$appnames = "^Microsoft Edge$|^Store$"
+((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | 
+  Where-Object{$_.Name -match $appnames}).Verbs() | 
+  Where-Object{$_.Name.replace('&','') -match 'Unpin|Kaldır'} | 
+  ForEach-Object{$_.DoIt(); $exec = $true}
 }
 
 # View the Control Panel icons by: large icons (current user only)

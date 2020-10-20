@@ -320,7 +320,7 @@ ShowTrayIcons
 
 # Unpin "Microsoft Edge" and "Microsoft Store" from the taskbar (current user only)
 # Открепить Microsoft Edge и Microsoft Store от панели задач (только для текущего пользователя)
-UnpinTaskbarEdgeStore
+UnpinMSEdgeMStoreFromTaskbar
 
 # View the Control Panel icons by: large icons (current user only)
 # Просмотр иконок Панели управления как: крупные значки (только для текущего пользователя)
