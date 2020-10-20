@@ -296,11 +296,11 @@ HideQuickAccessRecentFiles
 
 # Hide the search box or the search icon from the taskbar (current user only)
 # Скрыть поле или значок поиска на панели задач (только для текущего пользователя)
-HideTaskbarSearch
+# HideTaskbarSearch
 
 # Show the search box from the taskbar (current user only)
 # Показать поле поиска на панели задач (только для текущего пользователя)
-# ShowTaskbarSearch
+ShowTaskbarSearch
 
 # Do not show the "Windows Ink Workspace" button on the taskbar (current user only)
 # Не показывать кнопку Windows Ink Workspace на панели задач (current user only)
@@ -488,11 +488,11 @@ DisableAdminApprovalMode
 
 # Turn on access to mapped drives from app running with elevated permissions with Admin Approval Mode enabled
 # Включить доступ к сетевым дискам при включенном режиме одобрения администратором при доступе из программ, запущенных с повышенными правами
-EnableMappedDrivesAppElevatedAccess
+# EnableMappedDrivesAppElevatedAccess
 
 # Turn off access to mapped drives from app running with elevated permissions with Admin Approval Mode enabled
 # Выключить доступ к сетевым дискам при включенном режиме одобрения администратором при доступе из программ, запущенных с повышенными правами
-# DisableMappedDrivesAppElevatedAccess
+DisableMappedDrivesAppElevatedAccess
 
 # Opt out of the Delivery Optimization-assisted updates downloading
 # Отказаться от загрузки обновлений с помощью оптимизации доставки
@@ -504,19 +504,11 @@ DisableDeliveryOptimization
 
 # Always wait for the network at computer startup and logon for workgroup networks
 # Всегда ждать сеть при запуске и входе в систему для рабочих групп
-AlwaysWaitNetworkStartup
+# AlwaysWaitNetworkStartup
 
 # Never wait for the network at computer startup and logon for workgroup networks
 # Никогда ждать сеть при запуске и входе в систему для рабочих групп
-# NeverWaitNetworkStartup
-
-# Do not let Windows decide which printer should be the default one (current user only)
-# Не разрешать Windows решать, какой принтер должен использоваться по умолчанию (только для текущего пользователя)
-DisableWindowsManageDefaultPrinter
-
-# Let Windows decide which printer should be the default one (current user only)
-# Разрешать Windows решать, какой принтер должен использоваться по умолчанию (только для текущего пользователя)
-# EnableWindowsManageDefaultPrinter
+NeverWaitNetworkStartup
 
 # Disable the following Windows features
 # Отключить следующие компоненты Windows
@@ -557,7 +549,7 @@ SetupWSL
 
 	https://github.com/microsoft/WSL/issues/5437
 #>
-DisableWSLSwap
+# DisableWSLSwap
 
 <#
 	Enable swap file in WSL
@@ -565,7 +557,7 @@ DisableWSLSwap
 
 	https://github.com/microsoft/WSL/issues/5437
 #>
-# EnableWSLSwap
+EnableWSLSwap
 
 # Uninstall the Windows Subsystem for Linux (WSL2)
 # Удалить подсистему Windows для Linux (WSL2)
@@ -591,14 +583,6 @@ DisableBackgroundUWPApps
 # Разрешить UWP-приложениям работать в фоновом режиме (только для текущего пользователя)
 # EnableBackgroundUWPApps
 
-# Set the power management scheme on "High performance" if device is a desktop
-# Установить схему управления питанием на "Высокая производительность", если устройство является стационарным ПК
-# DesktopPowerManagementScheme
-
-# Set the power management scheme on "Balanced" (default value)
-# Установить схему управления питанием на "Сбалансированная" (значение по умолчанию)
-DefaultPowerManagementScheme
-
 # Use latest installed .NET runtime for all apps
 # Использовать последнюю установленную среду выполнения .NET для всех приложений
 EnableLatestInstalled.NET
@@ -606,14 +590,6 @@ EnableLatestInstalled.NET
 # Do not use latest installed .NET runtime for all apps
 # Не использовать последнюю установленную версию .NET для всех приложений
 # DisableLatestInstalled.NET
-
-# Do not allow the computer (if device is not a laptop) to turn off the network adapters to save power
-# Запретить отключение всех сетевых адаптеров для экономии энергии (если устройство не является ноутбуком)
-# DisallowPCTurnOffDevice
-
-# Allow the computer to turn off the network adapters to save power
-# Разрешить отключение всех сетевых адаптеров для экономии энергии
-AllowPCTurnOffDevice
 
 <#
 	Change the location of the user folders to any drives root (current user only)
@@ -655,11 +631,11 @@ DisableTroubleshooting
 
 # Launch folder windows in a separate process (current user only)
 # Запускать окна с папками в отдельном процессе (только для текущего пользователя)
-EnableFoldersLaunchSeparateProcess
+# EnableFoldersLaunchSeparateProcess
 
 # Do not folder windows in a separate process (current user only)
 # Не запускать окна с папками в отдельном процессе (только для текущего пользователя)
-# DisableFoldersLaunchSeparateProcess
+DisableFoldersLaunchSeparateProcess
 
 # Disable and delete reserved storage after the next update installation
 # Отключить и удалить зарезервированное хранилище после следующей установки обновлений
@@ -668,14 +644,6 @@ DisableReservedStorage
 # Turn on reserved storage
 # Включить зарезервированное хранилище
 # EnableReservedStorage
-
-# Disable help lookup via F1 (current user only)
-# Отключить открытие справки по нажатию F1 (только для текущего пользователя)
-DisableF1HelpPage
-
-# Turn on Help page opening by F1 key (current user only)
-# Включить открытие справки по нажатию F1 (только для текущего пользователя)
-# EnableF1HelpPage
 
 # Turn on Num Lock at startup
 # Включить Num Lock при загрузке

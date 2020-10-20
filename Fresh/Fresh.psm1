@@ -1543,20 +1543,6 @@ function NeverWaitNetworkStartup
 	}
 }
 
-# Do not let Windows decide which printer should be the default one (current user only)
-# Не разрешать Windows решать, какой принтер должен использоваться по умолчанию (только для текущего пользователя)
-function DisableWindowsManageDefaultPrinter
-{
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" -Name LegacyDefaultPrinterMode -PropertyType DWord -Value 1 -Force
-}
-
-# Let Windows decide which printer should be the default one (current user only)
-# Разрешать Windows решать, какой принтер должен использоваться по умолчанию (только для текущего пользователя)
-function EnableWindowsManageDefaultPrinter
-{
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" -Name LegacyDefaultPrinterMode -PropertyType DWord -Value 0 -Force
-}
-
 # Disable the following Windows features
 # Отключить следующие компоненты Windows
 function DisableWindowsFeatures
@@ -2083,23 +2069,6 @@ function EnableBackgroundUWPApps
 	}
 }
 
-# Set the power management scheme on "High performance" if device is a desktop
-# Установить схему управления питанием на "Высокая производительность", если устройство является стационарным ПК
-function DesktopPowerManagementScheme
-{
-	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -eq 1)
-	{
-		POWERCFG /SETACTIVE SCHEME_MIN
-	}
-}
-
-# Set the power management scheme on "Balanced" (default value)
-# Установить схему управления питанием на "Сбалансированная" (значение по умолчанию)
-function DefaultPowerManagementScheme
-{
-	POWERCFG /SETACTIVE SCHEME_BALANCED
-}
-
 # Use latest installed .NET runtime for all apps
 # Использовать последнюю установленную среду выполнения .NET для всех приложений
 function EnableLatestInstalled.NET
@@ -2114,36 +2083,6 @@ function DisableLatestInstalled.NET
 {
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\.NETFramework -Name OnlyUseLatestCLR -Force -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework -Name OnlyUseLatestCLR -Force -ErrorAction SilentlyContinue
-}
-
-# Do not allow the computer (if device is not a laptop) to turn off the network adapters to save power
-# Запретить отключение всех сетевых адаптеров для экономии энергии (если устройство не является ноутбуком)
-function DisallowPCTurnOffDevice
-{
-	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2)
-	{
-		$Adapters = Get-NetAdapter -Physical | Get-NetAdapterPowerManagement | Where-Object -FilterScript {$_.AllowComputerToTurnOffDevice -ne "Unsupported"}
-		foreach ($Adapter in $Adapters)
-		{
-			$Adapter.AllowComputerToTurnOffDevice = "Disabled"
-			$Adapter | Set-NetAdapterPowerManagement
-		}
-	}
-}
-
-# Allow the computer to turn off the network adapters to save power
-# Разрешить отключение всех сетевых адаптеров для экономии энергии
-function AllowPCTurnOffDevice
-{
-	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2)
-	{
-		$Adapters = Get-NetAdapter -Physical | Get-NetAdapterPowerManagement | Where-Object -FilterScript {$_.AllowComputerToTurnOffDevice -ne "Unsupported"}
-		foreach ($Adapter in $Adapters)
-		{
-			$Adapter.AllowComputerToTurnOffDevice = "Enabled"
-			$Adapter | Set-NetAdapterPowerManagement
-		}
-	}
 }
 
 <#
@@ -3013,24 +2952,6 @@ function EnableReservedStorage
 	Set-WindowsReservedStorageState -State Enabled
 }
 
-# Disable help lookup via F1 (current user only)
-# Отключить открытие справки по нажатию F1 (только для текущего пользователя)
-function DisableF1HelpPage
-{
-	if (-not (Test-Path -Path "HKCU:\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64"))
-	{
-		New-Item -Path "HKCU:\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64" -Force
-	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\win64" -Name "(Default)" -PropertyType String -Value "" -Force
-}
-
-# Turn on Help page opening by F1 key (current user only)
-# Включить открытие справки по нажатию F1 (только для текущего пользователя)
-function EnableF1HelpPage
-{
-	Remove-Item -Path "HKCU:\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}" -Recurse -Force -ErrorAction SilentlyContinue
-}
-
 # Turn on Num Lock at startup
 # Включить Num Lock при загрузке
 function EnableNumLock
@@ -3227,32 +3148,27 @@ function LetPersonalizePowerPlan
 function DisableIndexing
 {
     $DriveLetters = @((Get-Disk | Where-Object -FilterScript {$_.BusType -ne "USB"} | Get-Partition | Get-Volume | Where-Object -FilterScript {$null -ne $_.DriveLetter}).DriveLetter | Sort-Object)
+    $Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
     
-    if ($DriveLetters.Count -inotmatch 2)
+    if ($DriveLetters.Count -notmatch 2)
 	{
-		$Drive = 'C:'
-        $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$Drive'"
-        $indexing = $obj.IndexingEnabled
-        if("$indexing" -eq $True)
+        if(($Object.IndexingEnabled -match $True))
         {
-            Write-Output "Disabling indexing of drive $Drive"
-            $obj | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
+            Write-Output "Disabling indexing of drive C:"
+            $Object | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
         }
         else
         {
             Write-Output "Indexing already disabled. SKIPPING..."
         }
     }
-
-    if ($DriveLetters.Count -inotmatch 3)
+    
+    if ($DriveLetters.Count -notmatch 3)
 	{
-		$Drive = 'C:'
-        $obj = Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$Drive'"
-        $indexing = $obj.IndexingEnabled
-        if("$indexing" -eq $True)
+        if(($Object.IndexingEnabled -match $True))
         {
-            Write-Output "Disabling indexing of drive $Drive"
-            $obj | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
+            Write-Output "Disabling indexing of drive C:"
+            $Object | Set-WmiInstance -Arguments @{IndexingEnabled=$False} | Out-Null
         }
         else
         {
