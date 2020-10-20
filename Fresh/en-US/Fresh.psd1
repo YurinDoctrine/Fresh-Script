@@ -25,9 +25,6 @@ FODWindowButton = Uninstall
 DialogBoxOpening = Displaying the dialog box...
 NoData = Nothing to display
 
-# EnableWindowsSandbox/DisableWindowsSandbox
-EnableHardwareVT = Enable Virtualization in UEFI
-
 # ChangeUserShellFolderLocation
 UserShellFolderNotEmpty = "Some files left in the $UserShellFolderRegValue folder `nMove them manually to a new location"
 RetrievingDrivesList = Retrieving drives list...
@@ -96,14 +93,6 @@ UninstallUWPForAll = Uninstall for All Users
 UninstallUWPTitle = UWP Packages to Uninstall
 UninstallUWPUninstallButton = Uninstall
 
-# SetAppGraphicsPerformance
-GraphicsPerformanceTitle = Graphics performance preference
-GraphicsPerformanceRequest = Would you like to set the graphics performance setting of an app of your choice to "High performance"?
-GraphicsPerformanceAdd = Add
-GraphicsPerformanceSkip = Skip
-GraphicsPerformanceFilter = *.exe|*.exe|All Files (*.*)|*.*
-GraphicsPerformanceSkipped = Skipped
-
 # CreateCleanUpTask
 CleanUpTaskToast = Cleaning up unused Windows files and updates starts in a minute
 CleanUpTaskDescription = Cleaning up unused Windows files and updates using built-in Disk cleanup app. To decode encoded command use [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("string"))
@@ -113,50 +102,6 @@ SoftwareDistributionTaskDescription = The %SystemRoot%\\SoftwareDistribution\\Do
 
 # CreateTempTask
 TempTaskDescription = The %TEMP% folder cleaning
-
-# AddProtectedFolders
-AddProtectedFoldersTitle = Controlled folder access
-AddProtectedFoldersRequest = Would you like to enable Controlled folder access and specify the folder that Microsoft Defender will protect from malicious apps and threats?
-AddProtectedFoldersAdd = Add
-AddProtectedFoldersSkip = Skip
-AddProtectedFoldersDescription = Select a folder
-AddProtectedFoldersSkipped = Skipped
-
-# RemoveProtectedFolders
-RemoveProtectedFoldersList = Removed folders
-
-# AddAppControlledFolder
-AddAppControlledFolderTitle = Controlled folder access
-AddAppControlledFolderRequest = Would you like to specify an app that is allowed through Controlled Folder access?
-AddAppControlledFolderAdd = Add
-AddAppControlledFolderSkip = Skip
-AddAppControlledFolderFilter = *.exe|*.exe|All Files (*.*)|*.*
-AddAppControlledFolderSkipped = Skipped
-
-# RemoveAllowedAppsControlledFolder
-RemoveAllowedAppsControlledFolderList = Removed allowed apps
-
-# AddDefenderExclusionFolder
-AddDefenderExclusionFolderTitle = Microsoft Defender
-AddDefenderExclusionFolderRequest = Would you like to specify a folder to be excluded from Microsoft Defender malware scans?
-AddDefenderExclusionFolderAdd = Add
-AddDefenderExclusionFolderSkip = Skip
-AddDefenderExclusionFolderDescription = Select a folder
-AddDefenderExclusionFolderSkipped = Skipped
-
-# RemoveDefenderExclusionFolders
-RemoveDefenderExclusionFoldersList = Excluded folders removed
-
-# AddDefenderExclusionFile
-AddDefenderExclusionFileTitle = Microsoft Defender
-AddDefenderExclusionFileRequest = Would you like to specify a file to be excluded from Microsoft Defender malware scans?
-AddDefenderExclusionFileAdd = Add
-AddDefenderExclusionFileSkip = Skip
-AddDefenderExclusionFileFilter = All Files (*.*)|*.*
-AddDefenderExclusionFileSkipped = Skipped
-
-# RemoveDefenderExclusionFiles
-RemoveDefenderExclusionFilesList = Excluded files removed
 
 # CreateEventViewerCustomView
 EventViewerCustomViewName = Process Creation
