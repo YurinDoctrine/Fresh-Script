@@ -888,15 +888,11 @@ function HideTrayIcons
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name EnableAutoTray -PropertyType DWord -Value 1 -Force
 }
 
-# Unpin "Microsoft Edge" and "Microsoft Store" from the taskbar (current user only)
-# Открепить Microsoft Edge и Microsoft Store от панели задач (только для текущего пользователя)
-function UnpinMSEdgeMStoreFromTaskbar
+# Unpin all taskbar icons
+function UnpinAllTaskbarIcons
 {
-$appnames = "^Microsoft Edge$|^Store$"
-((New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items() | 
-  Where-Object{$_.Name -match $appnames}).Verbs() | 
-  Where-Object{$_.Name.replace('&','') -match 'Unpin|Kaldır'} | 
-  ForEach-Object{$_.DoIt(); $exec = $true}
+	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255)) -Force
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue -Force
 }
 
 # View the Control Panel icons by: large icons (current user only)
@@ -1172,7 +1168,6 @@ function UninstallOneDrive
 
 		# Restoring closed folders
 		# Восстановляем закрытые папки
-		Start-Process -FilePath explorer
 		foreach ($OpenedFolder in $OpenedFolders)
 		{
 			if (Test-Path -Path $OpenedFolder)
@@ -3049,12 +3044,56 @@ function DisableDeviceRestartAfterUpdate
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
 }
 
+# Disable standart F8 boot menu policy
+function EnableF8BootMenuLegacy
+{
+	bcdedit /set `{current`} bootmenupolicy Legacy | Out-Null
+}
+
+# Set data execution prevention (DEP) policy to optout
+Function SetDEPOptOut
+{
+	bcdedit /set `{current`} nx OptOut | Out-Null
+}
+
+# Stop and disable home groups services
+function DisableHomeGroups
+{
+	Stop-Service "HomeGroupListener" -WarningAction SilentlyContinue
+	Set-Service "HomeGroupListener" -StartupType Disabled
+	Stop-Service "HomeGroupProvider" -WarningAction SilentlyContinue
+	Set-Service "HomeGroupProvider" -StartupType Disabled
+}
+
+
+# Disable remote assistance
+function DisableRemoteAssistance
+{
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Remote Assistance" -Name "fAllowToGetHelp" -Type DWord -Value 0
+}
+
+# Stop and disable superfetch service
+function DisableSuperfetch
+{
+	Stop-Service "SysMain" -WarningAction SilentlyContinue
+	Set-Service "SysMain" -StartupType Disabled
+}
+
+# Disable built-in Flash in Edge
+function DisableAdobeFlash
+{
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" -Force | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" -Name "FlashPlayerEnabled" -Type DWord -Value 0
+}
+
 # Install chocolatey package manager and recommended softwares as well
 function Chocolatey 
 {
     Write-Output "Installing Chocolatey..."
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install -y --allow-empty-checksums foxitreader drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
+    choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
 }
 
 #endregion System
@@ -4140,7 +4179,12 @@ function DismissMSAccount
 # Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
 function DismissSmartScreenFilter
 {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Type DWord -Value 0 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
 }
 
 # Turn on events auditing generated when a process is created or starts
@@ -4305,6 +4349,70 @@ function DisableWindowsScriptHost
 function EnableWindowsScriptHost
 {
 	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name Enabled -Force -ErrorAction SilentlyContinue
+}
+
+# Disable activity history
+function DisableActivityHistory
+{
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableActivityFeed -Type DWord -Value 0 -Force
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name PublishUserActivities -Type DWord -Value 0 -Force
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name UploadUserActivities -Type DWord -Value 0 -Force
+}
+
+# Disable automatic map updates
+function DisableMapUpdates
+{
+	Set-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0
+}
+
+# Disable wap push service
+function DisableWAPPush
+{
+	Stop-Service "dmwappushservice" -WarningAction SilentlyContinue
+	Set-Service "dmwappushservice" -StartupType Disabled
+}
+
+# Enable strong cryptography for .NET Framework(version 4 and above)
+function EnableDotNetStrongCrypto
+{
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1
+}
+
+<#
+Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
+This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
+Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
+#>
+function EnableMeltdownCompatFlag
+{
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -Type DWord -Value 0
+}
+
+<#
+Disable offering of drivers through Windows Update
+Note: This doesn't work properly if you use a driver intended for another hardware model. E.g. Intel I219-V on WinServer works only with I219-LM driver.
+Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
+#>
+function DisableAutoUpdateDriver
+{
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Name "PreventDeviceMetadataFromNetwork" -Type DWord -Value 1
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Force | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontPromptForWindowsUpdate" -Type DWord -Value 1
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontSearchWindowsUpdate" -Type DWord -Value 1
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DriverUpdateWizardWuSearchEnabled" -Type DWord -Value 0
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Out-Null
+	}
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1
 }
 #endregion Microsoft Defender & Security
 

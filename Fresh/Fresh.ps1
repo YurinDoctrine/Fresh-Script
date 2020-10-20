@@ -318,9 +318,8 @@ ShowTrayIcons
 # Не отображать все значки в области уведомлений (только для текущего пользователя)
 # HideTrayIcons
 
-# Unpin "Microsoft Edge" and "Microsoft Store" from the taskbar (current user only)
-# Открепить Microsoft Edge и Microsoft Store от панели задач (только для текущего пользователя)
-UnpinMSEdgeMStoreFromTaskbar
+# Unpin all taskbar icons
+UnpinAllTaskbarIcons
 
 # View the Control Panel icons by: large icons (current user only)
 # Просмотр иконок Панели управления как: крупные значки (только для текущего пользователя)
@@ -706,11 +705,29 @@ DisableSmartActiveHours
 
 # Перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Restart this device as soon as possible when a restart is required to install an update
-EnableDeviceRestartAfterUpdate
+# EnableDeviceRestartAfterUpdate
 
 # Не перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Do not restart this device as soon as possible when a restart is required to install an update
-# DisableDeviceRestartAfterUpdate
+DisableDeviceRestartAfterUpdate
+
+# Disable standart F8 boot menu policy
+EnableF8BootMenuLegacy
+
+# Set data execution prevention (DEP) policy to optout
+SetDEPOptOut
+
+# Stop and disable home groups services
+DisableHomeGroups
+
+# Disable remote assistance
+DisableRemoteAssistance
+
+# Stop and disable superfetch service
+DisableSuperfetch
+
+# Disable built-in Flash in Edge
+DisableAdobeFlash
 
 # Install chocolatey package manager and recommended softwares as well
 Chocolatey
@@ -1008,11 +1025,34 @@ DisableSaveZoneInformation
 
 # Turn off Windows Script Host (current user only)
 # Отключить Windows Script Host (только для текущего пользователя)
-# DisableWindowsScriptHost
+DisableWindowsScriptHost
 
 # Turn on Windows Script Host (current user only)
 # Включить Windows Script Host (только для текущего пользователя)
-EnableWindowsScriptHost
+# EnableWindowsScriptHost
+
+# Disable activity history
+DisableActivityHistory
+
+# Disable wap push service
+DisableWAPPush
+
+# Enable strong cryptography for .NET Framework(version 4 and above)
+EnableDotNetStrongCrypto
+
+<#
+Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
+This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
+Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
+#>
+EnableMeltdownCompatFlag
+
+<#
+Disable offering of drivers through Windows Update
+Note: This doesn't work properly if you use a driver intended for another hardware model. E.g. Intel I219-V on WinServer works only with I219-LM driver.
+Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
+#>
+DisableAutoUpdateDriver
 #endregion Microsoft Defender & Security
 
 #region Context menu
