@@ -729,7 +729,14 @@ DisableSuperfetch
 # Disable built-in Flash in Edge
 DisableAdobeFlash
 
-# Install chocolatey package manager and recommended softwares as well
+<#
+Disable offering of drivers through Windows Update
+Note: This doesn't work properly if you use a driver intended for another hardware model. E.g. Intel I219-V on WinServer works only with I219-LM driver.
+Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
+#>
+DisableAutoUpdateDriver
+
+# Install chocolatey package manager and pre-installs as well
 Chocolatey
 
 #endregion System
@@ -1047,12 +1054,8 @@ Use the tweak only if you have confirmed that your AV is compatible but unable t
 #>
 EnableMeltdownCompatFlag
 
-<#
-Disable offering of drivers through Windows Update
-Note: This doesn't work properly if you use a driver intended for another hardware model. E.g. Intel I219-V on WinServer works only with I219-LM driver.
-Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
-#>
-DisableAutoUpdateDriver
+# Disable password complexity and maximum age requirements
+DisablePasswordPolicy
 #endregion Microsoft Defender & Security
 
 #region Context menu
