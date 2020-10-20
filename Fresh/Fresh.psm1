@@ -3144,6 +3144,12 @@ function LetPersonalizePowerPlan
     powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
 }
 
+# Prevent require sign-in when after sleep
+function PreventRequireSignInWhenAfterSleep
+{
+    powercfg -setacvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
+    powercfg -setdcvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
+}
 # Disable indexing
 function DisableIndexing
 {
@@ -3335,52 +3341,6 @@ function EnableXboxGameTips
 	Установить параметры производительности графики для отдельных приложений на "Высокая производительность"
 	Только при наличии внешней видеокарты
 #>
-function SetAppGraphicsPerformance
-{
-	if (Get-CimInstance -ClassName Win32_VideoController | Where-Object -FilterScript {$_.AdapterDACType -ne "Internal" -and $null -ne $_.AdapterDACType})
-	{
-		$Title = $Localization.GraphicsPerformanceTitle
-		$Message = $Localization.GraphicsPerformanceRequest
-		$Add = $Localization.GraphicsPerformanceAdd
-		$Skip = $Localization.GraphicsPerformanceSkip
-		$Options = "&$Add", "&$Skip"
-		$DefaultChoice = 1
-
-		do
-		{
-			$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-			switch ($Result)
-			{
-				"0"
-				{
-					Add-Type -AssemblyName System.Windows.Forms
-					$OpenFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
-					$OpenFileDialog.Filter = $Localization.GraphicsPerformanceFilter
-					$OpenFileDialog.InitialDirectory = "${env:ProgramFiles(x86)}"
-					$OpenFileDialog.Multiselect = $false
-					# Focus on open file dialog
-					# Перевести фокус на диалог открытия файла
-					$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true}
-					$OpenFileDialog.ShowDialog($tmp)
-					if ($OpenFileDialog.FileName)
-					{
-						if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences))
-						{
-							New-Item -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences -Force
-						}
-						New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\DirectX\UserGpuPreferences -Name $OpenFileDialog.FileName -PropertyType String -Value "GpuPreference=2;" -Force
-						Write-Verbose -Message ("{0}" -f $OpenFileDialog.FileName) -Verbose
-					}
-				}
-				"1"
-				{
-					Write-Verbose -Message $Localization.GraphicsPerformanceSkipped -Verbose
-				}
-			}
-		}
-		until ($Result -eq 1)
-	}
-}
 
 <#
 	Turn on hardware-accelerated GPU scheduling. Restart needed
@@ -3446,58 +3406,11 @@ function UninstallUWPApps
 		# UWP-панель AMD Radeon
 		"AdvancedMicroDevicesInc*",
 
-		# Intel Graphics Control Center
-		# UWP-панель Intel
-		"AppUp.IntelGraphicsControlPanel",
-		"AppUp.IntelGraphicsExperience",
-
-		# Sticky Notes
-		# Записки
-		"Microsoft.MicrosoftStickyNotes",
-
-		# Screen Sketch
-		# Набросок на фрагменте экрана
-		"Microsoft.ScreenSketch",
-
-		# Photos (and Video Editor)
-		# Фотографии и Видеоредактор
-		"Microsoft.Windows.Photos",
-		"Microsoft.Photos.MediaEngineDLC",
-
-		# Calculator
-		# Калькулятор
-		"Microsoft.WindowsCalculator",
-
-		# Xbox Identity Provider
-		# Поставщик удостоверений Xbox
-		"Microsoft.XboxIdentityProvider",
-
-		# Xbox
-		# Компаньон консоли Xbox
-		"Microsoft.XboxApp",
-
-		# Xbox (beta version)
-		# Xbox (бета-версия)
-		"Microsoft.GamingApp",
-		"Microsoft.GamingServices",
-
-		# Xbox TCUI
-		"Microsoft.Xbox.TCUI",
-
-		# Xbox Speech To Text Overlay
-		"Microsoft.XboxSpeechToTextOverlay",
-
-		# Xbox Game Bar
-		"Microsoft.XboxGamingOverlay",
-
-		# Xbox Game Bar Plugin
-		"Microsoft.XboxGameOverlay",
-
 		# NVIDIA Control Panel
 		# Панель управления NVidia
 		"NVIDIACorp.NVIDIAControlPanel",
 
-		# Realtek Audio Console
+		# Realtek Audio Control
 		"RealtekSemiconductorCorp.RealtekAudioControl"
 	)
 
@@ -3506,10 +3419,6 @@ function UninstallUWPApps
 	$ExcludedAppxPackages = @(
 		# Microsoft Desktop App Installer
 		"Microsoft.DesktopAppInstaller",
-
-		# Store Experience Host
-		# Узел для покупок Microsoft Store
-		"Microsoft.StorePurchaseApp",
 
 		# Microsoft Store
 		"Microsoft.WindowsStore",

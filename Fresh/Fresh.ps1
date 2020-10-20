@@ -721,6 +721,9 @@ DisableDefaultDiskDefragmenter
 # Let personalize power plan, neither switch it off so
 LetPersonalizePowerPlan
 
+# Prevent require sign-in when after sleep 
+PreventRequireSignInWhenAfterSleep
+
 # Disable indexing
 DisableIndexing
 
@@ -777,15 +780,6 @@ DisableXboxGameTips
 # Turn on Xbox Game Bar tips
 # Включить советы Xbox Game Bar
 # EnableXboxGameTips
-
-<#
-	Set "High performance" in graphics performance preference for an app
-	Only with a dedicated GPU
-
-	Установить параметры производительности графики для отдельных приложений на "Высокая производительность"
-	Только при наличии внешней видеокарты
-#>
-SetAppGraphicsPerformance
 
 <#
 	Turn on hardware-accelerated GPU scheduling. Restart needed
