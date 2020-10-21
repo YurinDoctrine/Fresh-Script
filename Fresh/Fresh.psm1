@@ -562,20 +562,6 @@ function ShowCortanaButton
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowCortanaButton -PropertyType DWord -Value 1 -Force
 }
 
-# Do not show sync provider notification within File Explorer (current user only)
-# Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
-function HideOneDriveFileExplorerAd
-{
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 0 -Force
-}
-
-# Show sync provider notification within File Explorer (current user only)
-# Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
-function ShowOneDriveFileExplorerAd
-{
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 1 -Force
-}
-
 # Do not show Task View button on the taskbar (current user only)
 # Не показывать кнопку Просмотра задач (только для текущего пользователя)
 function HideTaskViewButton
@@ -1092,7 +1078,7 @@ function DisablePrtScnSnippingTool
 }
 #endregion UI & Personalization
 
-#region OneDrive
+#region 
 # Uninstall OneDrive
 # Удалить OneDrive
 function UninstallOneDrive
@@ -1224,6 +1210,20 @@ function InstallOneDrive
 		}
 		Get-ScheduledTask -TaskName "Onedrive* Update*" | Start-ScheduledTask
 	}
+}
+
+# Do not show sync provider notification within File Explorer (current user only)
+# Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
+function HideOneDriveFileExplorerAd
+{
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 0 -Force
+}
+
+# Show sync provider notification within File Explorer (current user only)
+# Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
+function ShowOneDriveFileExplorerAd
+{
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 1 -Force
 }
 #endregion OneDrive
 
@@ -3110,15 +3110,6 @@ function DisableAutoUpdateDriver
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1
 }
-
-# Install chocolatey package manager and pre-installs as well
-function Chocolatey 
-{
-    Write-Output "Installing Chocolatey..."
-    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension microsoft-edge-insider-dev libreoffice chocolatey-core.extension mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension 7zip.install jpegview vcredist-all directx transmission-qt
-}
-
 #endregion System
 #region Performance
 # Force disable Battery Saver
@@ -4798,7 +4789,16 @@ function EnablePreviousVersionsPage
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
 }
 #endregion Context menu
+#region chocolatey
 
+# Install chocolatey package manager and pre-installs as well
+function ChocolateyPackageManager 
+{
+    Write-Output "Installing Chocolatey..."
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension 7zip.install microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all libreoffice
+}
+#endregion chocolatey
 #region Refresh
 function Refresh
 {

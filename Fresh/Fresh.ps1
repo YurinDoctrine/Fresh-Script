@@ -206,14 +206,6 @@ HideCortanaButton
 # Показывать кнопку Кортаны на панели задач (только для текущего пользователя)
 # ShowCortanaButton
 
-# Do not show sync provider notification within File Explorer (current user only)
-# Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
-HideOneDriveFileExplorerAd
-
-# Show sync provider notification within File Explorer (current user only)
-# Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
-# ShowOneDriveFileExplorerAd
-
 # Do not show Task View button on the taskbar (current user only)
 # Не показывать кнопку Просмотра задач (только для текущего пользователя)
 HideTaskViewButton
@@ -410,6 +402,14 @@ UninstallOneDrive
 # Install OneDrive (current user only)
 # Установить OneDrive (только для текущего пользователя)
 # InstallOneDrive
+
+# Do not show sync provider notification within File Explorer (current user only)
+# Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
+HideOneDriveFileExplorerAd
+
+# Show sync provider notification within File Explorer (current user only)
+# Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
+# ShowOneDriveFileExplorerAd
 #endregion OneDrive
 
 #region System
@@ -735,9 +735,6 @@ Note: This doesn't work properly if you use a driver intended for another hardwa
 Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
 #>
 DisableAutoUpdateDriver
-
-# Install chocolatey package manager and pre-installs as well
-Chocolatey
 
 #endregion System
 #region Performance
@@ -1211,7 +1208,11 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
+#region chocolatey
 
+# Install chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion chocolatey
 <#
 	Simulate pressing F5 to refresh the desktop
 	Refresh desktop icons, environment variables, taskbar
