@@ -736,6 +736,8 @@ Therefore Windows update will repeatedly try and fail to install I219-V driver i
 #>
 DisableAutoUpdateDriver
 
+# Change taskbar location
+ChangeTaskbarLocation
 #endregion System
 #region Performance
 # Force disable battery saver

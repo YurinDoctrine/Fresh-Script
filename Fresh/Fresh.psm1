@@ -3110,6 +3110,16 @@ function DisableAutoUpdateDriver
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1
 }
+# Change taskbar location
+function ChangeTaskbarLocation
+{
+	$Value = "28,00,00,00,ff,ff,ff,ff,02,00,00,00,00,00,00,00,3e,00,00,00,2e,00,00,00,00,00,00,00,00,00,00,00,3e,00,00,00,b0,04,00,00"
+	$RegPath   = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3'
+	$Name  = "Settings"
+
+	$hexified = $Value.Split(',') | % { "0x$_"}
+	New-ItemProperty -Path $RegPath -Name $Name -PropertyType Binary -Value ([byte[]]$hexified) -Force
+}
 #endregion System
 #region Performance
 # Force disable Battery Saver
@@ -4796,7 +4806,7 @@ function ChocolateyPackageManager
 {
     Write-Output "Installing Chocolatey..."
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension 7zip.install microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all libreoffice
+    choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension notepadplusplus.install 7zip.install microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all libreoffice
 }
 #endregion chocolatey
 #region Refresh
