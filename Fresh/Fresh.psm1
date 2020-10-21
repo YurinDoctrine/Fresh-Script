@@ -1730,6 +1730,72 @@ function UninstallWSL
 	Remove-Item -Path "$env:USERPROFILE\.wslconfig" -Force -ErrorAction Ignore
 }
 
+# Opt-in to Microsoft Update service, so to receive updates for other Microsoft products
+# Подключаться к службе Microsoft Update так, чтобы при обновлении Windows получать обновления для других продуктов Майкрософт
+function EnableUpdatesMicrosoftProducts
+{
+	(New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
+}
+
+# Opt-out of Microsoft Update service, so not to receive updates for other Microsoft products
+# Не подключаться к службе Microsoft Update так, чтобы при обновлении Windows не получать обновления для других продуктов Майкрософт
+function DisableUpdatesMicrosoftProducts
+{
+	if ((New-Object -ComObject Microsoft.Update.ServiceManager).Services | Where-Object {$_.ServiceID -eq "7971f918-a847-4430-9279-4a52d1efe18d"} )
+	{
+		(New-Object -ComObject Microsoft.Update.ServiceManager).RemoveService("7971f918-a847-4430-9279-4a52d1efe18d")
+	}
+}
+
+# Do not let UWP apps run in the background, except the followings... (current user only)
+# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
+function DisableBackgroundUWPApps
+{
+	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
+		Remove-ItemProperty -Path $_.PsPath -Name * -Force
+	}
+
+	$ExcludedBackgroundApps = @(
+
+		# Windows Search
+		"Microsoft.Windows.Search",
+
+		# Windows Security
+		# Безопасность Windows
+		"Microsoft.Windows.SecHealthUI",
+
+		# Windows Shell Experience (Action center, snipping support, toast notification, touch screen keyboard)
+		# Windows Shell Experience (Центр уведомлений, приложение "Ножницы", тостовые уведомления, сенсорная клавиатура)
+		"Microsoft.Windows.ShellExperienceHost",
+
+		# The Start menu
+		# Меню "Пуск"
+		"Microsoft.Windows.StartMenuExperienceHost",
+
+		# Microsoft Store
+		"Microsoft.WindowsStore"
+	)
+	$OFS = "|"
+	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | Where-Object -FilterScript {$_.PSChildName -notmatch "^$($ExcludedBackgroundApps.ForEach({[regex]::Escape($_)}))"} | ForEach-Object -Process {
+		New-ItemProperty -Path $_.PsPath -Name Disabled -PropertyType DWord -Value 1 -Force
+		New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
+	}
+	$OFS = " "
+
+	# Open "Background apps" page
+	# Открыть раздел "Фоновые приложения"
+	Start-Process -FilePath ms-settings:privacy-backgroundapps
+}
+
+# Let UWP apps run in the background (current user only)
+# Разрешить UWP-приложениям работать в фоновом режиме (только для текущего пользователя)
+function EnableBackgroundUWPApps
+{
+	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
+		Remove-ItemProperty -Path $_.PsPath -Name * -Force
+	}
+}
+
 # Disable certain Feature On Demand v2 (FODv2) capabilities
 # Отключить определенные компоненты "Функции по требованию" (FODv2)
 function DisableWindowsCapabilities
@@ -1944,72 +2010,6 @@ function DisableWindowsCapabilities
 	else
 	{
 		Write-Verbose -Message $Localization.NoData -Verbose
-	}
-}
-
-# Opt-in to Microsoft Update service, so to receive updates for other Microsoft products
-# Подключаться к службе Microsoft Update так, чтобы при обновлении Windows получать обновления для других продуктов Майкрософт
-function EnableUpdatesMicrosoftProducts
-{
-	(New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
-}
-
-# Opt-out of Microsoft Update service, so not to receive updates for other Microsoft products
-# Не подключаться к службе Microsoft Update так, чтобы при обновлении Windows не получать обновления для других продуктов Майкрософт
-function DisableUpdatesMicrosoftProducts
-{
-	if ((New-Object -ComObject Microsoft.Update.ServiceManager).Services | Where-Object {$_.ServiceID -eq "7971f918-a847-4430-9279-4a52d1efe18d"} )
-	{
-		(New-Object -ComObject Microsoft.Update.ServiceManager).RemoveService("7971f918-a847-4430-9279-4a52d1efe18d")
-	}
-}
-
-# Do not let UWP apps run in the background, except the followings... (current user only)
-# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
-function DisableBackgroundUWPApps
-{
-	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
-		Remove-ItemProperty -Path $_.PsPath -Name * -Force
-	}
-
-	$ExcludedBackgroundApps = @(
-
-		# Windows Search
-		"Microsoft.Windows.Search",
-
-		# Windows Security
-		# Безопасность Windows
-		"Microsoft.Windows.SecHealthUI",
-
-		# Windows Shell Experience (Action center, snipping support, toast notification, touch screen keyboard)
-		# Windows Shell Experience (Центр уведомлений, приложение "Ножницы", тостовые уведомления, сенсорная клавиатура)
-		"Microsoft.Windows.ShellExperienceHost",
-
-		# The Start menu
-		# Меню "Пуск"
-		"Microsoft.Windows.StartMenuExperienceHost",
-
-		# Microsoft Store
-		"Microsoft.WindowsStore"
-	)
-	$OFS = "|"
-	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | Where-Object -FilterScript {$_.PSChildName -notmatch "^$($ExcludedBackgroundApps.ForEach({[regex]::Escape($_)}))"} | ForEach-Object -Process {
-		New-ItemProperty -Path $_.PsPath -Name Disabled -PropertyType DWord -Value 1 -Force
-		New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
-	}
-	$OFS = " "
-
-	# Open "Background apps" page
-	# Открыть раздел "Фоновые приложения"
-	Start-Process -FilePath ms-settings:privacy-backgroundapps
-}
-
-# Let UWP apps run in the background (current user only)
-# Разрешить UWP-приложениям работать в фоновом режиме (только для текущего пользователя)
-function EnableBackgroundUWPApps
-{
-	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
-		Remove-ItemProperty -Path $_.PsPath -Name * -Force
 	}
 }
 

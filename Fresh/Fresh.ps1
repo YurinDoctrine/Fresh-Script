@@ -562,10 +562,6 @@ EnableWSLSwap
 # Удалить подсистему Windows для Linux (WSL2)
 # UninstallWSL
 
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-DisableWindowsCapabilities
-
 # Opt-in to Microsoft Update service, so to receive updates for other Microsoft products
 # Подключаться к службе Microsoft Update так, чтобы при обновлении Windows получать обновления для других продуктов Майкрософт
 # EnableUpdatesMicrosoftProducts
@@ -581,6 +577,10 @@ DisableBackgroundUWPApps
 # Let UWP apps run in the background (current user only)
 # Разрешить UWP-приложениям работать в фоновом режиме (только для текущего пользователя)
 # EnableBackgroundUWPApps
+
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+DisableWindowsCapabilities
 
 # Use latest installed .NET runtime for all apps
 # Использовать последнюю установленную среду выполнения .NET для всех приложений
