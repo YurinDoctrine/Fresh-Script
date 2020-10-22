@@ -692,16 +692,16 @@ EnableNetworkDiscovery
 # Выключить сетевое обнаружение и общий доступ к файлам и принтерам для рабочих групп
 # DisableNetworkDiscovery
 
-# Automatically adjust active hours for me based on daily usage
-# Автоматически изменять период активности для этого устройства на основе действий
-SetActiveHours
-
 # This option must be Enabled by default, otherwise set it so.
 OnlySecurityUpdates
 
 # Do not automatically adjust active hours for me based on daily usage
 # Не изменять автоматически период активности для этого устройства на основе действий
 DisableSmartActiveHours
+
+# Automatically adjust active hours for me based on daily usage
+# Автоматически изменять период активности для этого устройства на основе действий
+SetActiveHours
 
 # Перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Restart this device as soon as possible when a restart is required to install an update
@@ -741,7 +741,7 @@ ChangeTaskbarLocation
 #endregion System
 #region Performance
 # Force disable battery saver
-ForceDisableBatterySaver
+PreventBatterySaver
 
 # Disable default disk defragmenter
 DisableDefaultDiskDefragmenter
