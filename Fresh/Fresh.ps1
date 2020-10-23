@@ -819,6 +819,9 @@ EnableGPUScheduling
 # Turn off hardware-accelerated GPU scheduling. Restart needed
 # Выключить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
 # DisableGPUScheduling
+
+# Adjust best performance for all programs and also foreground services
+BestPriorityForeground
 #endregion Gaming
 
 #region UWP apps

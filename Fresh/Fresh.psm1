@@ -3403,6 +3403,12 @@ function DisableGPUScheduling
 {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 1 -Force
 }
+
+# Adjust best performance for all programs and also foreground services
+function BestPriorityForeground
+{
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
+}
 #endregion Gaming
 
 #region UWP apps
