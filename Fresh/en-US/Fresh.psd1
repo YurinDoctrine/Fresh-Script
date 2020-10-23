@@ -107,6 +107,9 @@ TempTaskDescription = The %TEMP% folder cleaning
 EventViewerCustomViewName = Process Creation
 EventViewerCustomViewDescription = Process Creation and Command-line Auditing Events
 
+# ChocolateyPackageManager
+OOShutup = Running O&O Shutup with Recommended Settings
+
 # Refresh
 RestartWarning = Restart your PC
 
