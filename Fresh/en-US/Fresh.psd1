@@ -93,16 +93,6 @@ UninstallUWPForAll = Uninstall for All Users
 UninstallUWPTitle = UWP Packages to Uninstall
 UninstallUWPUninstallButton = Uninstall
 
-# CreateCleanUpTask
-CleanUpTaskToast = Cleaning up unused Windows files and updates starts in a minute
-CleanUpTaskDescription = Cleaning up unused Windows files and updates using built-in Disk cleanup app. To decode encoded command use [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("string"))
-
-# CreateSoftwareDistributionTask
-SoftwareDistributionTaskDescription = The %SystemRoot%\\SoftwareDistribution\\Download
-
-# CreateTempTask
-TempTaskDescription = The %TEMP% folder cleaning
-
 # CreateEventViewerCustomView
 EventViewerCustomViewName = Process Creation
 EventViewerCustomViewDescription = Process Creation and Command-line Auditing Events
