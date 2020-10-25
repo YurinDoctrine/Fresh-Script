@@ -2882,8 +2882,7 @@ function TurnOffListviewShadow {
 
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects -Name VisualFXSettings -PropertyType DWord -Value 2 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\DWM -Name Composition -PropertyType DWord -Value 0 -Force 
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects -Name VisualFXSetting -PropertyType DWord -Value 2 -Force
 }
 #endregion Performance
 #region Start menu
@@ -3302,11 +3301,11 @@ function CheckUWPAppsUpdates {
 <#
 	Create a task to clean up unused files and Windows updates in the Task Scheduler
 	A minute before the task starts, a warning in the Windows action center will appear
-	The task runs every 90 days
+	The task runs every 10 days
 
 	Создать задачу в Планировщике задач по очистке неиспользуемых файлов и обновлений Windows
 	За минуту до выполнения задачи в Центре уведомлений Windows появится предупреждение
-	Задача выполняется каждые 90 дней
+	Задача выполняется каждые 10 дней
 #>
 function CreateCleanUpTask {
 	Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches | ForEach-Object -Process {
@@ -3449,18 +3448,16 @@ $Process.Start() | Out-Null
 	$EncodedScript = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($PS1Script))
 
 	$Action = New-ScheduledTaskAction -Execute powershell.exe -Argument "-WindowStyle Hidden -EncodedCommand $EncodedScript"
-	$Trigger = New-ScheduledTaskTrigger -Daily -DaysInterval 90 -At 9am
+	$Trigger = New-ScheduledTaskTrigger -Daily -DaysInterval 10 -At 11am
 	$Settings = New-ScheduledTaskSettingsSet -Compatibility Win8 -StartWhenAvailable
 	$Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -RunLevel Highest
-	$Description = $Localization.CleanUpTaskDescription
 	$Parameters = @{
-		"TaskName"    = "Windows Cleanup"
-		"TaskPath"    = "Fresh Script"
-		"Principal"   = $Principal
-		"Action"      = $Action
-		"Description"	= $Description
-		"Settings"    = $Settings
-		"Trigger"     = $Trigger
+		"TaskName"  = "Windows Cleanup"
+		"TaskPath"  = "Fresh Script"
+		"Principal" = $Principal
+		"Action"    = $Action
+		"Settings"  = $Settings
+		"Trigger"   = $Trigger
 	}
 	Register-ScheduledTask @Parameters -Force
 }
@@ -3473,10 +3470,10 @@ function DeleteCleanUpTask {
 
 <#
 	Create a task to clear the %SystemRoot%\SoftwareDistribution\Download folder in the Task Scheduler
-	The task runs on Thursdays every 4 weeks
+	The task runs in every 7 days
 
 	Создать задачу в Планировщике задач по очистке папки %SystemRoot%\SoftwareDistribution\Download
-	Задача выполняется по четвергам каждую 4 неделю
+	Задача выполняется по четвергам каждую 7 дней
 #>
 function CreateSoftwareDistributionTask {
 	$Argument = "
@@ -3484,18 +3481,16 @@ function CreateSoftwareDistributionTask {
 		Get-ChildItem -Path $env:SystemRoot\SoftwareDistribution\Download -Recurse -Force | Remove-Item -Recurse -Force
 	"
 	$Action = New-ScheduledTaskAction -Execute powershell.exe -Argument $Argument
-	$Trigger = New-JobTrigger -Weekly -WeeksInterval 4 -DaysOfWeek Thursday -At 9am
+	$Trigger = New-JobTrigger -Daily -DaysInterval 7 -At 11am
 	$Settings = New-ScheduledTaskSettingsSet -Compatibility Win8 -StartWhenAvailable
 	$Principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -RunLevel Highest
-	$Description = $Localization.SoftwareDistributionTaskDescription
 	$Parameters = @{
-		"TaskName"    = "SoftwareDistribution"
-		"TaskPath"    = "Fresh Script"
-		"Principal"   = $Principal
-		"Action"      = $Action
-		"Description"	= $Description
-		"Settings"    = $Settings
-		"Trigger"     = $Trigger
+		"TaskName"  = "SoftwareDistribution"
+		"TaskPath"  = "Fresh Script"
+		"Principal" = $Principal
+		"Action"    = $Action
+		"Settings"  = $Settings
+		"Trigger"   = $Trigger
 	}
 	Register-ScheduledTask @Parameters -Force
 }
@@ -3508,10 +3503,10 @@ function DeleteCSoftwareDistributionTask {
 
 <#
 	Create a task to clear the %TEMP% folder in the Task Scheduler
-	The task runs every 62 days
+	The task runs every 5 days
 
 	Создать задачу в Планировщике задач по очистке папки %TEMP%
-	Задача выполняется каждые 62 дня
+	Задача выполняется каждые 5 дня
 #>
 function CreateTempTask {
 	$Argument = "Get-ChildItem -Path $env:TEMP -Force -Recurse | Remove-Item -Recurse -Force"
@@ -3519,15 +3514,13 @@ function CreateTempTask {
 	$Trigger = New-ScheduledTaskTrigger -Daily -DaysInterval 5 -At 11am
 	$Settings = New-ScheduledTaskSettingsSet -Compatibility Win8 -StartWhenAvailable
 	$Principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -RunLevel Highest
-	$Description = $Localization.TempTaskDescription
 	$Parameters = @{
-		"TaskName"    = "Temp"
-		"TaskPath"    = "Fresh Script"
-		"Principal"   = $Principal
-		"Action"      = $Action
-		"Description"	= $Description
-		"Settings"    = $Settings
-		"Trigger"     = $Trigger
+		"TaskName"  = "Temp"
+		"TaskPath"  = "Fresh Script"
+		"Principal" = $Principal
+		"Action"    = $Action
+		"Settings"  = $Settings
+		"Trigger"   = $Trigger
 	}
 	Register-ScheduledTask @Parameters -Force
 }
@@ -4291,7 +4284,7 @@ function EnablePreviousVersionsPage {
 function ChocolateyPackageManager {
 	Write-Output "Installing Chocolatey..."
 	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-	choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension notepadplusplus.install 7zip.install microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all libreoffice
+	choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension notepadplusplus.install 7zip.install microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all ccleaner libreoffice
 	Write-Warning -Message $Localization.OOShutup
 	Import-Module BitsTransfer
 	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/ooshutup.cfg" -Destination ooshutup10.cfg
