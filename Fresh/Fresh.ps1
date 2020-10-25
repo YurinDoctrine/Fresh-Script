@@ -755,19 +755,11 @@ PreventRequireSignInWhenAfterSleep
 # Disable indexing
 DisableIndexing
 
-# Disable transparency effects
-DisableTransparencyEffects
-
-# Disable taskbar animations
-DisableTaskbarAnimations
-
-# Turn off list view shadow
-TurnOffListviewShadow
-
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
 #endregion Performance
 #region Start menu
+
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"
 HideRecentlyAddedApps

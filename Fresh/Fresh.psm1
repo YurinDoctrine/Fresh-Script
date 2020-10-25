@@ -2865,27 +2865,13 @@ function DisableIndexing {
 
 }
 
-# Disable transparency effects
-function DisableTransparencyEffects {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force
-}
-
-# Disable taskbar animations
-function DisableTaskbarAnimations { 
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -PropertyType DWord -Value 0 -Force
-}
-
-# Turn off list view shadow
-function TurnOffListviewShadow {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
-}
-
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects -Name VisualFXSetting -PropertyType DWord -Value 2 -Force
 }
 #endregion Performance
 #region Start menu
+
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"
 function HideRecentlyAddedApps {
