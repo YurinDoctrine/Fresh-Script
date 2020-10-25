@@ -304,11 +304,11 @@ HideWindowsInkWorkspace
 
 # Always show all icons in the notification area (current user only)
 # Всегда отображать все значки в области уведомлений (только для текущего пользователя)
-ShowTrayIcons
+# ShowTrayIcons
 
 # Do not show all icons in the notification area (current user only)
 # Не отображать все значки в области уведомлений (только для текущего пользователя)
-# HideTrayIcons
+HideTrayIcons
 
 # Unpin all taskbar icons
 UnpinAllTaskbarIcons
@@ -757,6 +757,9 @@ DisableIndexing
 
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
+
+# Set current boot timeout value to 0
+SetBootTimeoutValue
 #endregion Performance
 #region Start menu
 

@@ -2869,6 +2869,11 @@ function DisableIndexing {
 function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects -Name VisualFXSetting -PropertyType DWord -Value 2 -Force
 }
+
+# Set current boot timeout value to 0
+function SetBootTimeoutValue {
+	bcdedit /timeout 0
+}
 #endregion Performance
 #region Start menu
 
