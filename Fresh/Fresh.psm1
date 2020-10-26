@@ -29,7 +29,6 @@ function Check {
 	}
 }
 #endregion Check
-
 # Create a restore point
 # Создать точку восстановления
 function CreateRestorePoint {
@@ -409,7 +408,6 @@ function EnableBingSearch {
 	}
 }
 #endregion Privacy & Telemetry
-
 #region UI & Personalization
 # Show "This PC" on Desktop (current user only)
 # Отобразить "Этот компьютер" на рабочем столе (только для текущего пользователя)
@@ -941,8 +939,7 @@ function DisablePrtScnSnippingTool {
 	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name PrintScreenKeyForSnippingEnabled -PropertyType DWord -Value 0 -Force
 }
 #endregion UI & Personalization
-
-#region 
+#region OneDrive
 # Uninstall OneDrive
 # Удалить OneDrive
 function UninstallOneDrive {
@@ -1071,7 +1068,6 @@ function ShowOneDriveFileExplorerAd {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 1 -Force
 }
 #endregion OneDrive
-
 #region System
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
@@ -1629,7 +1625,6 @@ function DisableWindowsCapabilities {
 		"Windows\.Client\.ShellComponents"
 	)
 	#endregion Variables
-
 	#region XAML Markup
 	# The section defines the design of the upcoming dialog box
 	# Раздел, определяющий форму диалогового окна
@@ -1673,13 +1668,11 @@ function DisableWindowsCapabilities {
 	</Window>
 	'
 	#endregion XAML Markup
-
 	$Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
 	$Form = [Windows.Markup.XamlReader]::Load($Reader)
 	$XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
 		Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name) -Scope Global
 	}
-
 	#region Functions
 	function Get-CheckboxClicked {
 		[CmdletBinding()]
@@ -1750,7 +1743,6 @@ function DisableWindowsCapabilities {
 		}
 	}
 	#endregion Functions
-
 	#region Events Handlers
 	# Window Loaded Event
 	$Window.Add_Loaded( {
@@ -1767,7 +1759,6 @@ function DisableWindowsCapabilities {
 	# Button Click Event
 	$Button.Add_Click( { DeleteButton })
 	#endregion Events Handlers
-
 	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) }) {
 		Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
 		# Display the dialog box
@@ -2885,7 +2876,6 @@ function SetBootTimeoutValue {
 }
 #endregion Performance
 #region Start menu
-
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"
 function HideRecentlyAddedApps {
@@ -2952,7 +2942,6 @@ function UnpinAllStartTiles {
 }
 
 #endregion Start menu
-
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -3037,7 +3026,6 @@ function BestPriorityForeground {
 	netsh int tcp set global rsc=disabled
 }
 #endregion Gaming
-
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -3089,7 +3077,6 @@ function UninstallUWPApps {
 		"Microsoft.WebMediaExtensions"
 	)
 	#endregion Variables
-
 	#region XAML Markup
 	[xml]$XAML = '
 	<Window
@@ -3142,7 +3129,6 @@ function UninstallUWPApps {
 	</Window>
 	'
 	#endregion XAML Markup
-
 	$Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
 	$Form = [Windows.Markup.XamlReader]::Load($Reader)
 	$XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
@@ -3226,7 +3212,6 @@ function UninstallUWPApps {
 		[void]$AppxPackages.Add($AppxName)
 	}
 	#endregion Functions
-
 	#region Events Handlers
 	# Window Loaded Event
 	$Window.Add_Loaded( {
@@ -3244,7 +3229,6 @@ function UninstallUWPApps {
 	# Button Click Event
 	$Button.Add_Click( { DeleteButton })
 	#endregion Events Handlers
-
 	if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") }) {
 		Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
 		# Display the dialog box
@@ -3296,7 +3280,6 @@ function CheckUWPAppsUpdates {
 	Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" -ClassName "MDM_EnterpriseModernAppManagement_AppManagement01" | Invoke-CimMethod -MethodName UpdateScanMethod
 }
 #endregion UWP apps
-
 #region Scheduled tasks
 <#
 	Create a task to clean up unused files and Windows updates in the Task Scheduler
@@ -3531,7 +3514,6 @@ function DeleteTempTask {
 	Unregister-ScheduledTask -TaskName Temp -Confirm:$false
 }
 #endregion Scheduled tasks
-
 #region Microsoft Defender & Security
 # Enable Controlled folder access and add protected folders
 # Включить контролируемый доступ к папкам и добавить защищенные папки
@@ -3967,7 +3949,6 @@ function DisablePasswordPolicy {
 	Remove-Item -Path $tmpfile
 }
 #endregion Microsoft Defender & Security
-
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
 # Добавить пункт "Извлечь все" в контекстное меню Windows Installer (.msi)
@@ -4279,7 +4260,6 @@ function EnablePreviousVersionsPage {
 }
 #endregion Context menu
 #region chocolatey
-
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
 	Write-Output "Installing Chocolatey..."
@@ -4356,7 +4336,6 @@ public static void PostMessage()
 	Write-Warning -Message $Localization.RestartWarning
 }
 #endregion Refresh
-
 # Errors output
 # Вывод ошибок
 function Errors {

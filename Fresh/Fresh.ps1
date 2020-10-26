@@ -148,7 +148,6 @@ DisableBingSearch
 # Включить поиск через Bing в меню "Пуск"
 # EnableBingSearch
 #endregion Privacy & Telemetry
-
 #region UI & Personalization
 # Show "This PC" on Desktop (current user only)
 # Отобразить "Этот компьютер" на рабочем столе (только для текущего пользователя)
@@ -393,7 +392,6 @@ EnablePrtScnSnippingTool
 # Не использовать кнопку PRINT SCREEN, чтобы запустить функцию создания фрагмента экрана (только для текущего пользователя)
 # DisablePrtScnSnippingTool
 #endregion UI & Personalization
-
 #region OneDrive
 # Uninstall OneDrive
 # Удалить OneDrive
@@ -411,7 +409,6 @@ HideOneDriveFileExplorerAd
 # Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
 # ShowOneDriveFileExplorerAd
 #endregion OneDrive
-
 #region System
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
@@ -762,7 +759,6 @@ AdjustBestPerformance
 SetBootTimeoutValue
 #endregion Performance
 #region Start menu
-
 # Do not show recently added apps in the Start menu
 # Не показывать недавно добавленные приложения в меню "Пуск"
 HideRecentlyAddedApps
@@ -782,9 +778,7 @@ HideAppSuggestions
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
 UnpinAllStartTiles
-
 #endregion Start menu
-
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -818,7 +812,6 @@ EnableGPUScheduling
 # Adjust best performance for all programs and also foreground services
 BestPriorityForeground
 #endregion Gaming
-
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -854,7 +847,6 @@ DisableCortanaAutostart
 # Проверить обновления UWP-приложений
 # CheckUWPAppsUpdates
 #endregion UWP apps
-
 #region Scheduled tasks
 <#
 	Create a task to clean up unused files and Windows updates in the Task Scheduler
@@ -895,7 +887,6 @@ CreateTempTask
 # Удалить задачу в Планировщике задач по очистке папки %TEMP%
 # DeleteTempTask
 #endregion Scheduled tasks
-
 #region Microsoft Defender & Security
 # Enable Controlled folder access and add protected folders
 # Включить контролируемый доступ к папкам и добавить защищенные папки
@@ -1054,7 +1045,6 @@ EnableMeltdownCompatFlag
 # Disable password complexity and maximum age requirements
 DisablePasswordPolicy
 #endregion Microsoft Defender & Security
-
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
 # Добавить пункт "Извлечь все" в контекстное меню Windows Installer (.msi)
@@ -1209,7 +1199,6 @@ DisablePreviousVersionsPage
 # EnablePreviousVersionsPage
 #endregion Context menu
 #region chocolatey
-
 # Install chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
 #endregion chocolatey
