@@ -548,7 +548,7 @@ SetupWSL
 
 	https://github.com/microsoft/WSL/issues/5437
 #>
-# DisableWSLSwap
+DisableWSLSwap
 
 <#
 	Enable swap file in WSL
@@ -556,7 +556,7 @@ SetupWSL
 
 	https://github.com/microsoft/WSL/issues/5437
 #>
-EnableWSLSwap
+# EnableWSLSwap
 
 # Uninstall the Windows Subsystem for Linux (WSL2)
 # Удалить подсистему Windows для Linux (WSL2)
@@ -678,11 +678,11 @@ EnableThumbnailCacheRemoval
 
 # Automatically save my restartable apps when signing out and restart them after signing in (current user only)
 # Автоматически сохранять мои перезапускаемые приложения при выходе из системы и перезапускать их после выхода (только для текущего пользователя)
-# EnableSaveRestartableApps
+EnableSaveRestartableApps
 
 # Do not automatically save my restartable apps when signing out and restart them after signing in
 # Не сохранять автоматически мои перезапускаемые приложения при выходе из системы и перезапускать их после выхода
-DisableSaveRestartableApps
+# DisableSaveRestartableApps
 
 # Enable "Network Discovery" and "File and Printers Sharing" for workgroup networks
 # Включить сетевое обнаружение и общий доступ к файлам и принтерам для рабочих групп
