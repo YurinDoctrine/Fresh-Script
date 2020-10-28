@@ -2771,10 +2771,10 @@ function DisableAutoUpdateDriver {
 # Change taskbar location
 function ChangeTaskbarLocation {
 	$Value = "28,00,00,00,ff,ff,ff,ff,02,00,00,00,00,00,00,00,3e,00,00,00,2e,00,00,00,00,00,00,00,00,00,00,00,3e,00,00,00,b0,04,00,00"
-	$RegPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3'
+	$RegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3"
 	$Name = "Settings"
-
 	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
+	
 	New-ItemProperty -Path $RegPath -Name $Name -PropertyType Binary -Value ([byte[]]$hexified) -Force
 }
 #endregion System
