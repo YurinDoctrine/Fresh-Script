@@ -2859,15 +2859,15 @@ function DisableIndexing {
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects -Name VisualFXSetting -PropertyType DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseHoverTime -Type String -Value 10 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -Type String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -Type Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name MinAnimate -Type String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name KeyboardDelay -Type DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewAlphaSelect -Type DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -Type DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -Type DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseHoverTime -PropertyType String -Value 10 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -PropertyType Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name MinAnimate -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name KeyboardDelay -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewAlphaSelect -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -PropertyType DWord -Value 0 -Force
 }
 
 # Set current boot timeout value to 0
@@ -3947,6 +3947,11 @@ function DisablePasswordPolicy {
 	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
 	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY | Out-Null
 	Remove-Item -Path $tmpfile
+}
+
+# Schedule automatic maintenance hours
+function AutomaticMaintenanceHours {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name "Activation Boundary" -Type String -Value "01/01/2001 11:00:00" -Force
 }
 #endregion Microsoft Defender & Security
 #region Context menu

@@ -1044,6 +1044,9 @@ EnableMeltdownCompatFlag
 
 # Disable password complexity and maximum age requirements
 DisablePasswordPolicy
+
+# Schedule automatic maintenance hours
+AutomaticMaintenanceHours
 #endregion Microsoft Defender & Security
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
