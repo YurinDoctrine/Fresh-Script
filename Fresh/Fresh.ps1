@@ -1047,6 +1047,9 @@ DisablePasswordPolicy
 
 # Schedule automatic maintenance hours
 AutomaticMaintenanceHours
+
+# Turn on memory integry(virtualization based security)
+TurnOnMemoryIntegry
 #endregion Microsoft Defender & Security
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
