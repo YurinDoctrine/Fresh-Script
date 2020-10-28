@@ -4276,7 +4276,7 @@ function EnablePreviousVersionsPage {
 function ChocolateyPackageManager {
 	Write-Output "Installing Chocolatey..."
 	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-	choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension notepadplusplus.install 7zip.install microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all bleachbit.install libreoffice
+	choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension notepadplusplus.install 7zip.install spotify microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all bleachbit.install libreoffice
 	Write-Warning -Message $Localization.OOShutup
 	Import-Module BitsTransfer
 	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
