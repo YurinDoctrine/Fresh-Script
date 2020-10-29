@@ -735,6 +735,9 @@ DisableAutoUpdateDriver
 
 # Change taskbar location
 ChangeTaskbarLocation
+
+# Change desktop background
+ChangeDesktopBackground
 #endregion System
 #region Performance
 # Force disable battery saver

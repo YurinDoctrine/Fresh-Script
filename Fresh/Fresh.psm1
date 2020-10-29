@@ -2777,6 +2777,13 @@ function ChangeTaskbarLocation {
 	
 	New-ItemProperty -Path $RegPath -Name $Name -PropertyType Binary -Value ([byte[]]$hexified) -Force
 }
+
+# Change desktop background
+function ChangeDesktopBackground {
+	Move-Item -Path Wallpaper.png -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.png
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.png" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
+}
 #endregion System
 #region Performance
 # Force disable Battery Saver
@@ -4309,7 +4316,6 @@ function EnablePreviousVersionsPage {
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-	Write-Output "Installing Chocolatey..."
 	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 	choco install -y --allow-empty-checksums drivereasyfree chocolatey-windowsupdate.extension notepadplusplus.install 7zip.install spotify microsoft-edge-insider-dev chocolatey-core.extension transmission-qt jpegview mpc-hc k-litecodecpackfull chocolatey-dotnetfx.extension directx vcredist-all bleachbit.install libreoffice
 	Write-Warning -Message $Localization.OOShutup
