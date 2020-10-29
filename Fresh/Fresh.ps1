@@ -1050,6 +1050,21 @@ AutomaticMaintenanceHours
 
 # Turn on memory integry(virtualization based security)
 TurnOnMemoryIntegry
+
+# Disable implicit administrative shares
+DisableAdminShares
+
+# Disable obsolete SMB protocol(disabled by default since 1709)
+DisableSMB
+
+# Disable link-local multicast name resolution(LLMNR) protocol
+DisableLLMNR
+
+# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
+SetUnknownNetworksPublic
+
+# Disable automatic installation of network devices
+DisableNetDevicesAutoInst
 #endregion Microsoft Defender & Security
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
