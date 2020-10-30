@@ -2780,8 +2780,8 @@ function ChangeTaskbarLocation {
 
 # Change desktop background
 function ChangeDesktopBackground {
-	Move-Item -Path Wallpaper.png -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.png
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.png" -Force
+	Move-Item -Path Wallpaper.jpg -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion System
