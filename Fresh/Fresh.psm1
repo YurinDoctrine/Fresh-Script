@@ -3082,11 +3082,7 @@ function UninstallUWPApps {
 		"Microsoft.DesktopAppInstaller",
 
 		# Microsoft Store
-		"Microsoft.WindowsStore",
-
-		# Web Media Extensions
-		# Расширения для интернет-мультимедиа
-		"Microsoft.WebMediaExtensions"
+		"Microsoft.WindowsStore"
 	)
 	#endregion Variables
 	#region XAML Markup
