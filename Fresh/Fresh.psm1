@@ -1555,10 +1555,6 @@ function DisableBackgroundUWPApps {
 		New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
 	}
 	$OFS = " "
-
-	# Open "Background apps" page
-	# Открыть раздел "Фоновые приложения"
-	Start-Process -FilePath ms-settings:privacy-backgroundapps
 }
 
 # Let UWP apps run in the background (current user only)
