@@ -3775,7 +3775,9 @@ function EnableAuditCommandLineProcess {
 # Do not include command line in process creation events
 # Не включать командную строку в событиях создания процесса
 function DisableAuditCommandLineProcess {
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -Force -ErrorAction SilentlyContinue
+	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
+	        Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -Force -ErrorAction SilentlyContinue
+	} 
 }
 
 <#
@@ -3849,7 +3851,9 @@ function EnablePowerShellScriptsLogging {
 # Do not log all PowerShell scripts input to the Windows PowerShell event log
 # Не вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
 function DisablePowerShellScriptsLogging {
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -Force -ErrorAction SilentlyContinue
+	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging")) {
+	        Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -Force -ErrorAction SilentlyContinue
+	}
 }
 
 # Do not check apps and files within Microsofot Defender SmartScreen
