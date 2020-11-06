@@ -1006,8 +1006,8 @@ function ChangeTaskbarLocation {
 # Change desktop background
 function ChangeDesktopBackground {
     Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
-	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/Wallpaper.jpg" -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
+	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "$env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion UI & Personalization
@@ -1288,8 +1288,12 @@ function UninstallOneDrive {
 		# Сохранить все открытые папки, чтобы восстановить их после перезапуска проводника
 		Clear-Variable -Name OpenedFolders -Force -ErrorAction Ignore
 		$OpenedFolders = { (New-Object -ComObject Shell.Application).Windows() | ForEach-Object -Process { $_.Document.Folder.Self.Path } }.Invoke()
-
-		# Attempt to unregister FileSyncShell64.dll and remove
+        
+        # Terminate File Explorer process
+		# Завершить процесс проводника
+		TASKKILL /F /IM explorer.exe
+		
+        # Attempt to unregister FileSyncShell64.dll and remove
 		# Попытка разрегистрировать FileSyncShell64.dll и удалить
 		$FileSyncShell64dlls = Get-ChildItem -Path "$OneDriveFolder\*\amd64\FileSyncShell64.dll" -Force
 		foreach ($FileSyncShell64dll in $FileSyncShell64dlls.FullName) {
@@ -1537,8 +1541,10 @@ function DisableMappedDrivesAppElevatedAccess {
 # Opt out of the Delivery Optimization-assisted updates downloading
 # Отказаться от загрузки обновлений с помощью оптимизации доставки
 function DisableDeliveryOptimization {
-	New-ItemProperty -Path Registry::HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings -Name DownloadMode -PropertyType DWord -Value 0 -Force
-	Delete-DeliveryOptimizationCache -Force
+	if ((Test-Path "Registry::HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings")) {
+            New-ItemProperty -Path Registry::HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings -Name DownloadMode -PropertyType DWord -Value 0 -Force
+	}
+    Delete-DeliveryOptimizationCache -Force
 }
 
 # Opt-in to the Delivery Optimization-assisted updates downloading
@@ -3004,7 +3010,7 @@ function EnableGPUScheduling {
 		if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual") {
 			# Checking whether a WDDM verion is 2.7 or higher
 			# Проверка: имеет ли WDDM версию 2.7 или выше
-			$WddmVersion_Min = Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min
+			$WddmVersion_Min = 	if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) { Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min }
 			if ($WddmVersion_Min -ge 2700) {
 				New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 2 -Force
 			}
@@ -3586,7 +3592,9 @@ function CreateEventViewerCustomView {
 # Remove "Process Creation" Event Viewer Custom View
 # Удалить настаиваемое представление "Создание процесса" в Просмотре событий
 function RemoveEventViewerCustomView {
-	Remove-Item -Path "$env:ProgramData\Microsoft\Event Viewer\Views\ProcessCreation.xml" -Force -ErrorAction SilentlyContinue
+	if ((Test-Path -Path "$env:ProgramData\Microsoft\Event Viewer\Views\")) {
+	        Remove-Item -Path "$env:ProgramData\Microsoft\Event Viewer\Views\ProcessCreation.xml" -Force -ErrorAction SilentlyContinue
+	}
 }
 
 # Log for all Windows PowerShell modules
