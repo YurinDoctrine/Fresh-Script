@@ -544,32 +544,6 @@ DisableWindowsFeatures
 # Включить следующие компоненты Windows
 # EnableWindowsFeatures
 
-<#
-	Install the Windows Subsystem for Linux (WSL)
-	Установить подсистему Windows для Linux (WSL)
-
-	https://github.com/farag2/Windows-10-Setup-Script/issues/43
-	https://github.com/microsoft/WSL/issues/5437
-#>
-InstallWSL
-
-<#
-	Download and install the Linux kernel update package
-	Set WSL 2 as the default version when installing a new Linux distribution
-	Run the function only after WSL installed and PC restart
-
-	Скачать и установить пакет обновления ядра Linux
-	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
-	Выполните функцию только после установки WSL и перезагрузки ПК
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-OptInWSL
-
-# Uninstall the Windows Subsystem for Linux (WSL2)
-# Удалить подсистему Windows для Linux (WSL2)
-# UninstallWSL
-
 # Do not let UWP apps run in the background, except the followings... (current user only)
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
 DisableBackgroundUWPApps
@@ -1163,6 +1137,32 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
+#region WSL
+<#
+	Install the Windows Subsystem for Linux (WSL)
+	Установить подсистему Windows для Linux (WSL)
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+InstallWSL
+
+<#
+	Download and install the Linux kernel update package
+	Set WSL 2 as the default version when installing a new Linux distribution
+	Run the function only after WSL installed and PC restart
+
+	Скачать и установить пакет обновления ядра Linux
+	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
+	Выполните функцию только после установки WSL и перезагрузки ПК
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+OptInWSL
+
+# Uninstall the Windows Subsystem for Linux (WSL2)
+# Удалить подсистему Windows для Linux (WSL2)
+# UninstallWSL
+#endregion WSL
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 ChocolateyPackageManager

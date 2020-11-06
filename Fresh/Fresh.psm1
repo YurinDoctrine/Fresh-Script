@@ -1616,92 +1616,6 @@ function EnableWindowsFeatures {
 	Enable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
 }
 
-<#
-	Install the Windows Subsystem for Linux (WSL)
-	Установить подсистему Windows для Linux (WSL)
-
-	https://github.com/farag2/Windows-10-Setup-Script/issues/43
-	https://github.com/microsoft/WSL/issues/5437
-#>
-function InstallWSL {
-	$WSLFeatures = @(
-		# Windows Subsystem for Linux
-		# Подсистема Windows для Linux
-		"Microsoft-Windows-Subsystem-Linux",
-
-		# Virtual Machine Platform
-		# Поддержка платформы для виртуальных машин
-		"VirtualMachinePlatform"
-	)
-	Enable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
-}
-
-<#
-	Download and install the Linux kernel update package
-	Set WSL 2 as the default version when installing a new Linux distribution
-	Run the function only after WSL installed and PC restart
-
-	Скачать и установить пакет обновления ядра Linux
-	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
-	Выполните функцию только после установки WSL и перезагрузки ПК
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-function OptInWSL {
-	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -ne "Installed") {
-		try {
-			if ((Invoke-WebRequest -Uri https://www.google.com -UseBasicParsing -DisableKeepAlive -Method Head).StatusDescription) {
-				Write-Verbose $Localization.WSLUpdateDownloading -Verbose
-
-				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
-				$Parameters = @{
-					Uri     = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
-					OutFile = "$DownloadsFolder\wsl_update_x64.msi"
-					Verbose = [switch]::Present
-				}
-				Invoke-WebRequest @Parameters
-
-				Write-Verbose $Localization.WSLUpdateInstalling -Verbose
-				Start-Process -FilePath "$DownloadsFolder\wsl_update_x64.msi" -ArgumentList "/passive" -Wait
-				Remove-Item -Path "$DownloadsFolder\wsl_update_x64.msi" -Force
-			}
-		}
-		catch [System.Net.WebException] {
-			Write-Warning -Message $Localization.NoInternetConnection
-		}
-	}
-
-	<#
-		Set WSL 2 as the default architecture when installing a new Linux distribution
-		To receive kernel updates, enable the Windows Update setting: 'Receive updates for other Microsoft products when you update Windows'
-
-		Установить WSL 2 как архитектуру по умолчанию при установке нового дистрибутива Linux
-		Чтобы получать обновления ядра, включите параметр Центра обновления Windows: "Получение обновлений для других продуктов Майкрософт при обновлении Windows"
-	#>
-	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -eq "Installed") {
-		wsl --set-default-version 2
-	}
-}
-
-# Uninstall the Windows Subsystem for Linux (WSL2)
-# Удалить подсистему Windows для Linux (WSL2)
-function UninstallWSL {
-	$WSLFeatures = @(
-		# Windows Subsystem for Linux
-		# Подсистему Windows для Linux
-		"Microsoft-Windows-Subsystem-Linux",
-
-		# Virtual Machine Platform
-		# Поддержка платформы для виртуальных машин
-		"VirtualMachinePlatform"
-	)
-	Disable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
-
-	Uninstall-Package -Name "Windows Subsystem for Linux Update" -Force
-	Remove-Item -Path "$env:USERPROFILE\.wslconfig" -Force -ErrorAction Ignore
-}
-
 # Do not let UWP apps run in the background, except the followings... (current user only)
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
 function DisableBackgroundUWPApps {
@@ -4167,6 +4081,93 @@ function EnablePreviousVersionsPage {
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
 }
 #endregion Context menu
+#region WSL
+<#
+	Install the Windows Subsystem for Linux (WSL)
+	Установить подсистему Windows для Linux (WSL)
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+function InstallWSL {
+    $WSLFeatures = @(
+		# Windows Subsystem for Linux
+		# Подсистема Windows для Linux
+		"Microsoft-Windows-Subsystem-Linux",
+
+		# Virtual Machine Platform
+		# Поддержка платформы для виртуальных машин
+		"VirtualMachinePlatform"
+	)
+	Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
+	Enable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
+}
+
+<#
+	Download and install the Linux kernel update package
+	Set WSL 2 as the default version when installing a new Linux distribution
+	Run the function only after WSL installed and PC restart
+
+	Скачать и установить пакет обновления ядра Linux
+	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
+	Выполните функцию только после установки WSL и перезагрузки ПК
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+function OptInWSL {
+	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -ne "Installed") {
+		try {
+			if ((Invoke-WebRequest -Uri https://www.google.com -UseBasicParsing -DisableKeepAlive -Method Head).StatusDescription) {
+				Write-Verbose $Localization.WSLUpdateDownloading -Verbose
+
+				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
+				$Parameters = @{
+					Uri     = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
+					OutFile = "$DownloadsFolder\wsl_update_x64.msi"
+					Verbose = [switch]::Present
+				}
+				Invoke-WebRequest @Parameters
+
+				Write-Verbose $Localization.WSLUpdateInstalling -Verbose
+				Start-Process -FilePath "$DownloadsFolder\wsl_update_x64.msi" -ArgumentList "/passive" -Wait
+				Remove-Item -Path "$DownloadsFolder\wsl_update_x64.msi" -Force
+			}
+		}
+		catch [System.Net.WebException] {
+			Write-Warning -Message $Localization.NoInternetConnection
+		}
+	}
+
+	<#
+		Set WSL 2 as the default architecture when installing a new Linux distribution
+		To receive kernel updates, enable the Windows Update setting: 'Receive updates for other Microsoft products when you update Windows'
+
+		Установить WSL 2 как архитектуру по умолчанию при установке нового дистрибутива Linux
+		Чтобы получать обновления ядра, включите параметр Центра обновления Windows: "Получение обновлений для других продуктов Майкрософт при обновлении Windows"
+	#>
+	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -eq "Installed") {
+		wsl --set-default-version 2
+	}
+}
+
+# Uninstall the Windows Subsystem for Linux (WSL2)
+# Удалить подсистему Windows для Linux (WSL2)
+function UninstallWSL {
+	$WSLFeatures = @(
+		# Windows Subsystem for Linux
+		# Подсистему Windows для Linux
+		"Microsoft-Windows-Subsystem-Linux",
+
+		# Virtual Machine Platform
+		# Поддержка платформы для виртуальных машин
+		"VirtualMachinePlatform"
+	)
+	Disable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
+
+	Uninstall-Package -Name "Windows Subsystem for Linux Update" -Force
+	Remove-Item -Path "$env:USERPROFILE\.wslconfig" -Force -ErrorAction Ignore
+}
+#endregion WSL
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
