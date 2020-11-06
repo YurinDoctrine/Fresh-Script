@@ -148,15 +148,28 @@ DisableBingSearch
 # Включить поиск через Bing в меню "Пуск"
 # EnableBingSearch
 #endregion Privacy & Telemetry
+#region Start menu
+# Unpin all the Start tiles
+# Открепить все ярлыки от начального экрана
+UnpinAllStartTiles
+
+# Do not show recently added apps in the Start menu
+# Не показывать недавно добавленные приложения в меню "Пуск"
+HideRecentlyAddedApps
+
+# Show recently added apps in the Start menu
+# Показывать недавно добавленные приложения в меню "Пуск"
+# ShowRecentlyAddedApps
+
+# Do not show app suggestions in the Start menu
+# Не показывать рекомендации в меню "Пуск"
+HideAppSuggestions
+
+# Show app suggestions in the Start menu
+# Показывать рекомендации в меню "Пуск"
+# ShowAppSuggestions
+#endregion Start menu
 #region UI & Personalization
-# Show "This PC" on Desktop (current user only)
-# Отобразить "Этот компьютер" на рабочем столе (только для текущего пользователя)
-# ShowThisPC
-
-# Do not show "This PC" on Desktop (current user only)
-# Не отображать "Этот компьютер" на рабочем столе (только для текущего пользователя)
-HideThisPC
-
 # Do not use check boxes to select items (current user only)
 # Не использовать флажки для выбора элементов (только для текущего пользователя)
 DisableCheckBoxes
@@ -303,11 +316,11 @@ HideWindowsInkWorkspace
 
 # Always show all icons in the notification area (current user only)
 # Всегда отображать все значки в области уведомлений (только для текущего пользователя)
-# ShowTrayIcons
+ShowTrayIcons
 
 # Do not show all icons in the notification area (current user only)
 # Не отображать все значки в области уведомлений (только для текущего пользователя)
-HideTrayIcons
+# HideTrayIcons
 
 # Unpin all taskbar icons
 UnpinAllTaskbarIcons
@@ -391,6 +404,12 @@ EnablePrtScnSnippingTool
 # Do not use the PrtScn button to open screen snipping (current user only)
 # Не использовать кнопку PRINT SCREEN, чтобы запустить функцию создания фрагмента экрана (только для текущего пользователя)
 # DisablePrtScnSnippingTool
+
+# Change taskbar location
+ChangeTaskbarLocation
+
+# Change desktop background
+ChangeDesktopBackground
 #endregion UI & Personalization
 #region OneDrive
 # Uninstall OneDrive
@@ -732,12 +751,6 @@ Note: This doesn't work properly if you use a driver intended for another hardwa
 Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
 #>
 DisableAutoUpdateDriver
-
-# Change taskbar location
-ChangeTaskbarLocation
-
-# Change desktop background
-ChangeDesktopBackground
 #endregion System
 #region Performance
 # Force disable battery saver
@@ -761,27 +774,6 @@ AdjustBestPerformance
 # Set current boot timeout value to 0
 SetBootTimeoutValue
 #endregion Performance
-#region Start menu
-# Do not show recently added apps in the Start menu
-# Не показывать недавно добавленные приложения в меню "Пуск"
-HideRecentlyAddedApps
-
-# Show recently added apps in the Start menu
-# Показывать недавно добавленные приложения в меню "Пуск"
-# ShowRecentlyAddedApps
-
-# Do not show app suggestions in the Start menu
-# Не показывать рекомендации в меню "Пуск"
-HideAppSuggestions
-
-# Show app suggestions in the Start menu
-# Показывать рекомендации в меню "Пуск"
-# ShowAppSuggestions
-
-# Unpin all the Start tiles
-# Открепить все ярлыки от начального экрана
-UnpinAllStartTiles
-#endregion Start menu
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -933,11 +925,11 @@ EnableNetworkProtection
 
 # Turn on detection for potentially unwanted applications and block them
 # Включить обнаружение потенциально нежелательных приложений и блокировать их
-EnablePUAppsDetection
+# EnablePUAppsDetection
 
 # Turn off detection for potentially unwanted applications and block them
 # Выключить обнаружение потенциально нежелательных приложений и блокировать их
-# DisabledPUAppsDetection
+DisabledPUAppsDetection
 
 # Run Microsoft Defender within a sandbox
 # Запускать Microsoft Defender в песочнице
@@ -955,14 +947,6 @@ DismissMSAccount
 # Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
 DismissSmartScreenFilter
 
-# Turn on events auditing generated when a process is created or starts
-# Включить аудит событий, возникающих при создании или запуске процесса
-EnableAuditProcess
-
-# Turn off events auditing generated when a process is created or starts
-# Выключить аудит событий, возникающих при создании или запуске процесса
-# DisableAuditProcess
-
 <#
 	Include command line in process creation events
 	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
@@ -970,6 +954,14 @@ EnableAuditProcess
 	Включать командную строку в событиях создания процесса
 	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
 #>
+# EnableAuditProcess
+
+# Turn off events auditing generated when a process is created or starts
+# Выключить аудит событий, возникающих при создании или запуске процесса
+DisableAuditProcess
+
+# Turn on events auditing generated when a process is created or starts
+# Включить аудит событий, возникающих при создании или запуске процесса
 # EnableAuditCommandLineProcess
 
 # Do not include command line in process creation events
@@ -999,11 +991,11 @@ DisablePowerShellModulesLogging
 
 # Log all PowerShell scripts input to the Windows PowerShell event log
 # Вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
-EnablePowerShellScriptsLogging
+# EnablePowerShellScriptsLogging
 
 # Do not log all PowerShell scripts input to the Windows PowerShell event log
 # Не вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
-# DisablePowerShellScriptsLogging
+DisablePowerShellScriptsLogging
 
 # Do not check apps and files within Microsofot Defender SmartScreen
 # Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender

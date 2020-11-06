@@ -408,19 +408,73 @@ function EnableBingSearch {
 	}
 }
 #endregion Privacy & Telemetry
+#region Start menu
+# Unpin all the Start tiles
+# Открепить все ярлыки от начального экрана
+function UnpinAllStartTiles {
+	$StartMenuLayout = @"
+<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
+<LayoutOptions StartTileGroupCellWidth="6" />
+	<DefaultLayoutOverride>
+		<StartLayoutCollection>
+			<defaultlayout:StartLayout GroupCellWidth="6" />
+		</StartLayoutCollection>
+	</DefaultLayoutOverride>
+</LayoutModificationTemplate>
+"@
+	$StartMenuLayoutPath = "$env:TEMP\StartMenuLayout.xml"
+	# Saving StartMenuLayout.xml in UTF-8 encoding
+	# Сохраняем StartMenuLayout.xml в кодировке UTF-8
+	Set-Content -Path $StartMenuLayoutPath -Value (New-Object -TypeName System.Text.UTF8Encoding).GetBytes($StartMenuLayout) -Encoding Byte -Force
+
+	# Temporarily disable changing the Start menu layout
+	# Временно выключаем возможность редактировать начальный экран меню "Пуск"
+	if (-not (Test-Path -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
+		New-Item -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name LockedStartLayout -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name StartLayoutFile -Value $StartMenuLayoutPath -Force
+
+	# Restart the Start menu
+	# Перезапустить меню "Пуск"
+	Stop-Process -Name StartMenuExperienceHost -Force -ErrorAction Ignore
+	Start-Sleep -Seconds 3
+
+	Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name LockedStartLayout -Force -ErrorAction Ignore
+	Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name StartLayoutFile -Force -ErrorAction Ignore
+
+	Stop-Process -Name StartMenuExperienceHost -Force -ErrorAction Ignore
+	Get-Item -Path $StartMenuLayoutPath | Remove-Item -Force -ErrorAction Ignore
+}
+
+# Do not show recently added apps in the Start menu
+# Не показывать недавно добавленные приложения в меню "Пуск"
+function HideRecentlyAddedApps {
+	if (-not (Test-Path -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name HideRecentlyAddedApps -PropertyType DWord -Value 1 -Force
+}
+
+# Show recently added apps in the Start menu
+# Показывать недавно добавленные приложения в меню "Пуск"
+function ShowRecentlyAddedApps {
+	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name HideRecentlyAddedApps -Force -ErrorAction SilentlyContinue
+}
+
+# Do not show app suggestions in the Start menu
+# Не показывать рекомендации в меню "Пуск"
+function HideAppSuggestions {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338388Enabled -PropertyType DWord -Value 0 -Force
+}
+
+# Show app suggestions in the Start menu
+# Показывать рекомендации в меню "Пуск"
+function ShowAppSuggestions {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338388Enabled -PropertyType DWord -Value 1 -Force
+}
+#endregion Start menu
 #region UI & Personalization
-# Show "This PC" on Desktop (current user only)
-# Отобразить "Этот компьютер" на рабочем столе (только для текущего пользователя)
-function ShowThisPC {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel -Name "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -PropertyType DWord -Value 0 -Force
-}
-
-# Do not show "This PC" on Desktop (current user only)
-# Не отображать "Этот компьютер" на рабочем столе (только для текущего пользователя)
-function HideThisPC {
-	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel -Name "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -Force -ErrorAction SilentlyContinue
-}
-
 # Do not use check boxes to select items (current user only)
 # Не использовать флажки для выбора элементов (только для текущего пользователя)
 function DisableCheckBoxes {
@@ -937,6 +991,23 @@ function EnablePrtScnSnippingTool {
 # Не использовать кнопку PRINT SCREEN, чтобы запустить функцию создания фрагмента экрана (только для текущего пользователя)
 function DisablePrtScnSnippingTool {
 	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name PrintScreenKeyForSnippingEnabled -PropertyType DWord -Value 0 -Force
+}
+
+# Change taskbar location
+function ChangeTaskbarLocation {
+	$Value = "28,00,00,00,ff,ff,ff,ff,02,00,00,00,00,00,00,00,3e,00,00,00,2e,00,00,00,00,00,00,00,00,00,00,00,3e,00,00,00,b0,04,00,00"
+	$RegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3"
+	$Name = "Settings"
+	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
+	
+	New-ItemProperty -Path $RegPath -Name $Name -PropertyType Binary -Value ([byte[]]$hexified) -Force
+}
+
+# Change desktop background
+function ChangeDesktopBackground {
+	Move-Item -Path Wallpaper.jpg -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion UI & Personalization
 #region OneDrive
@@ -2764,22 +2835,6 @@ function DisableAutoUpdateDriver {
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1 -Force
 }
-# Change taskbar location
-function ChangeTaskbarLocation {
-	$Value = "28,00,00,00,ff,ff,ff,ff,02,00,00,00,00,00,00,00,3e,00,00,00,2e,00,00,00,00,00,00,00,00,00,00,00,3e,00,00,00,b0,04,00,00"
-	$RegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3"
-	$Name = "Settings"
-	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
-	
-	New-ItemProperty -Path $RegPath -Name $Name -PropertyType Binary -Value ([byte[]]$hexified) -Force
-}
-
-# Change desktop background
-function ChangeDesktopBackground {
-	Move-Item -Path Wallpaper.jpg -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
-}
 #endregion System
 #region Performance
 # Force disable Battery Saver
@@ -2877,73 +2932,6 @@ function SetBootTimeoutValue {
 	bcdedit /timeout 0
 }
 #endregion Performance
-#region Start menu
-# Do not show recently added apps in the Start menu
-# Не показывать недавно добавленные приложения в меню "Пуск"
-function HideRecentlyAddedApps {
-	if (-not (Test-Path -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
-		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name HideRecentlyAddedApps -PropertyType DWord -Value 1 -Force
-}
-
-# Show recently added apps in the Start menu
-# Показывать недавно добавленные приложения в меню "Пуск"
-function ShowRecentlyAddedApps {
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name HideRecentlyAddedApps -Force -ErrorAction SilentlyContinue
-}
-
-# Do not show app suggestions in the Start menu
-# Не показывать рекомендации в меню "Пуск"
-function HideAppSuggestions {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338388Enabled -PropertyType DWord -Value 0 -Force
-}
-
-# Show app suggestions in the Start menu
-# Показывать рекомендации в меню "Пуск"
-function ShowAppSuggestions {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338388Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Unpin all the Start tiles
-# Открепить все ярлыки от начального экрана
-function UnpinAllStartTiles {
-	$StartMenuLayout = @"
-<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
-<LayoutOptions StartTileGroupCellWidth="6" />
-	<DefaultLayoutOverride>
-		<StartLayoutCollection>
-			<defaultlayout:StartLayout GroupCellWidth="6" />
-		</StartLayoutCollection>
-	</DefaultLayoutOverride>
-</LayoutModificationTemplate>
-"@
-	$StartMenuLayoutPath = "$env:TEMP\StartMenuLayout.xml"
-	# Saving StartMenuLayout.xml in UTF-8 encoding
-	# Сохраняем StartMenuLayout.xml в кодировке UTF-8
-	Set-Content -Path $StartMenuLayoutPath -Value (New-Object -TypeName System.Text.UTF8Encoding).GetBytes($StartMenuLayout) -Encoding Byte -Force
-
-	# Temporarily disable changing the Start menu layout
-	# Временно выключаем возможность редактировать начальный экран меню "Пуск"
-	if (-not (Test-Path -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
-		New-Item -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name LockedStartLayout -Value 1 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name StartLayoutFile -Value $StartMenuLayoutPath -Force
-
-	# Restart the Start menu
-	# Перезапустить меню "Пуск"
-	Stop-Process -Name StartMenuExperienceHost -Force -ErrorAction Ignore
-	Start-Sleep -Seconds 3
-
-	Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name LockedStartLayout -Force -ErrorAction Ignore
-	Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name StartLayoutFile -Force -ErrorAction Ignore
-
-	Stop-Process -Name StartMenuExperienceHost -Force -ErrorAction Ignore
-	Get-Item -Path $StartMenuLayoutPath | Remove-Item -Force -ErrorAction Ignore
-}
-
-#endregion Start menu
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -3765,8 +3753,13 @@ function DismissSmartScreenFilter {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
 }
 
-# Turn on events auditing generated when a process is created or starts
-# Включить аудит событий, возникающих при создании или запуске процесса
+<#
+	Include command line in process creation events
+	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
+
+	Включать командную строку в событиях создания процесса
+	Необходимо включить аудит событий, чтобы работал данный функционал (функция "EnableAuditProcess")
+#>
 function EnableAuditProcess {
 	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
 }
@@ -3777,13 +3770,8 @@ function DisableAuditProcess {
 	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:disable /failure:disable
 }
 
-<#
-	Include command line in process creation events
-	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
-
-	Включать командную строку в событиях создания процесса
-	Необходимо включить аудит событий, чтобы работал данный функционал (функция "EnableAuditProcess")
-#>
+# Turn on events auditing generated when a process is created or starts
+# Включить аудит событий, возникающих при создании или запуске процесса
 function EnableAuditCommandLineProcess {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 1 -Force
 }
@@ -3847,8 +3835,10 @@ function EnablePowerShellModulesLogging {
 # Do not log for all Windows PowerShell modules
 # Не вести журнал для всех модулей Windows PowerShell
 function DisablePowerShellModulesLogging {
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging -Name EnableModuleLogging -Force -ErrorAction SilentlyContinue
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames -Name * -Force -ErrorAction SilentlyContinue
+	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging")) {
+		Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging -Name EnableModuleLogging -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames -Name * -Force -ErrorAction SilentlyContinue
+	}
 }
 
 # Log all PowerShell scripts input to the Windows PowerShell event log
@@ -3995,7 +3985,9 @@ function DisableLLMNR {
 
 # Set unknown networks profile to public(deny file sharing, device discovery, etc.)
 function SetUnknownNetworksPublic {
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" -Name "Category" -ErrorAction SilentlyContinue
+	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24")) {
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" -Name "Category" -ErrorAction SilentlyContinue
+	}
 }
 
 # Disable automatic installation of network devices
