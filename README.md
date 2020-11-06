@@ -4,7 +4,6 @@
 ## RUNNING
 
 ```powershell 
- W10-Fresh-main\Fresh\
-> Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-> .\Fresh.ps1
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+.\Fresh.ps1
 ```
