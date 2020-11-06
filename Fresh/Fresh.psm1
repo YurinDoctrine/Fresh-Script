@@ -1651,14 +1651,6 @@ function DisableBackgroundUWPApps {
 	$OFS = " "
 }
 
-# Let UWP apps run in the background (current user only)
-# Разрешить UWP-приложениям работать в фоновом режиме (только для текущего пользователя)
-function EnableBackgroundUWPApps {
-	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
-		Remove-ItemProperty -Path $_.PsPath -Name * -Force
-	}
-}
-
 # Disable certain Feature On Demand v2 (FODv2) capabilities
 # Отключить определенные компоненты "Функции по требованию" (FODv2)
 function DisableWindowsCapabilities {
@@ -1708,7 +1700,10 @@ function DisableWindowsCapabilities {
 
 		# Features critical to Windows functionality
 		# Компоненты, критичные для работоспособности Windows
-		"Windows\.Client\.ShellComponents"
+		"Windows\.Client\.ShellComponents",
+                
+                # Language components
+                "Language\."
 	)
 	#endregion Variables
 	#region XAML Markup
