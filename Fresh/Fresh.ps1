@@ -548,10 +548,6 @@ DisableWindowsFeatures
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
 DisableBackgroundUWPApps
 
-# Let UWP apps run in the background (current user only)
-# Разрешить UWP-приложениям работать в фоновом режиме (только для текущего пользователя)
-# EnableBackgroundUWPApps
-
 # Disable certain Feature On Demand v2 (FODv2) capabilities
 # Отключить определенные компоненты "Функции по требованию" (FODv2)
 DisableWindowsCapabilities
