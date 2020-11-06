@@ -3856,13 +3856,13 @@ function DisablePowerShellScriptsLogging {
 	}
 }
 
-# Do not check apps and files within Microsofot Defender SmartScreen
+# Do not check apps and files within Microsoft Defender SmartScreen
 # Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
 function DisableAppsSmartScreen {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Off -Force
 }
 
-# Check apps and files within Microsofot Defender SmartScreen
+# Check apps and files within Microsoft Defender SmartScreen
 # Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
 function EnableAppsSmartScreen {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Warn -Force
