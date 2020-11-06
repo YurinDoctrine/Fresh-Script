@@ -1005,7 +1005,8 @@ function ChangeTaskbarLocation {
 
 # Change desktop background
 function ChangeDesktopBackground {
-	Move-Item -Path Wallpaper.jpg -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+    Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
+	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/Wallpaper.jpg" -Destination C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
@@ -4093,7 +4094,6 @@ function InstallWSL {
 		# Поддержка платформы для виртуальных машин
 		"VirtualMachinePlatform"
 	)
-	Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
 	Enable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
 }
 
