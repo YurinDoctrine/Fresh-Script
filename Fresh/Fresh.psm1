@@ -1010,7 +1010,236 @@ function ChangeDesktopBackground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion UI & Personalization
-#region OneDrive
+#region UWP apps
+<#
+	Uninstall UWP apps
+	A dialog box that enables the user to select packages to remove
+	App packages will not be installed for new users if "Uninstall for All Users" is checked
+	Add UWP apps packages names to the $UncheckedAppXPackages array list by retrieving their packages names using the following command:
+		(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers).Name
+
+	Удалить UWP-приложения
+	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
+	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
+	Добавьте имена пакетов UWP-приложений в массив $UncheckedAppXPackages, получив названия их пакетов с помощью команды:
+		(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers).Name
+#>
+function UninstallUWPApps {
+	Add-Type -AssemblyName PresentationCore, PresentationFramework
+
+	#region Variables
+	# ArrayList containing the UWP apps to remove
+	# Массив имен UWP-приложений для удаления
+	$AppxPackages = New-Object -TypeName System.Collections.ArrayList($null)
+
+	# List of UWP apps that won't be recommended for removal
+	# UWP-приложения, которые не будут отмечены на удаление по умолчанию
+	$UncheckedAppxPackages = @(
+		# AMD Radeon UWP panel
+		# UWP-панель AMD Radeon
+		"AdvancedMicroDevicesInc*",
+
+		# NVIDIA Control Panel
+		# Панель управления NVidia
+		"NVIDIACorp.NVIDIAControlPanel",
+
+		# Realtek Audio Control
+		"RealtekSemiconductorCorp.RealtekAudioControl"
+	)
+
+	# UWP apps that won't be shown in the form
+	# UWP-приложения, которые не будут выводиться в форме
+	$ExcludedAppxPackages = @(
+		# Microsoft Desktop App Installer
+		"Microsoft.DesktopAppInstaller",
+
+		# Microsoft Store
+		"Microsoft.WindowsStore"
+	)
+	#endregion Variables
+	#region XAML Markup
+	[xml]$XAML = '
+	<Window
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Name="Window"
+		MinHeight="450" MinWidth="400"
+		SizeToContent="Width" WindowStartupLocation="CenterScreen"
+		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
+		FontFamily="Segoe UI" FontSize="12" ShowInTaskbar="False">
+		<Window.Resources>
+			<Style TargetType="StackPanel">
+				<Setter Property="Orientation" Value="Horizontal"/>
+			</Style>
+			<Style TargetType="CheckBox">
+				<Setter Property="Margin" Value="10, 10, 5, 10"/>
+				<Setter Property="IsChecked" Value="True"/>
+			</Style>
+			<Style TargetType="TextBlock">
+				<Setter Property="Margin" Value="5, 10, 10, 10"/>
+			</Style>
+			<Style TargetType="Button">
+				<Setter Property="Margin" Value="20"/>
+				<Setter Property="Padding" Value="10"/>
+			</Style>
+		</Window.Resources>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Grid.Column="1" Orientation="Horizontal">
+					<CheckBox Name="CheckboxRemoveAll" IsChecked="False"/>
+					<TextBlock Name="TextblockRemoveAll"/>
+				</StackPanel>
+			</Grid>
+			<ScrollViewer Name="Scroll" Grid.Row="1"
+				HorizontalScrollBarVisibility="Disabled"
+				VerticalScrollBarVisibility="Auto">
+				<StackPanel Name="PanelContainer" Orientation="Vertical"/>
+			</ScrollViewer>
+			<Button Name="Button" Grid.Row="2"/>
+		</Grid>
+	</Window>
+	'
+	#endregion XAML Markup
+	$Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
+	$Form = [Windows.Markup.XamlReader]::Load($Reader)
+	$XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
+		Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name) -Scope Global
+	}
+
+	#region Functions
+	function Get-CheckboxClicked {
+		[CmdletBinding()]
+		param
+		(
+			[Parameter(
+				Mandatory = $true,
+				ValueFromPipeline = $true
+			)]
+			[ValidateNotNull()]
+			$CheckBox
+		)
+
+		$AppxName = $CheckBox.Parent.Children[1].Text
+		if ($CheckBox.IsChecked) {
+			[void]$AppxPackages.Add($AppxName)
+		}
+		else {
+			[void]$AppxPackages.Remove($AppxName)
+		}
+		if ($AppxPackages.Count -gt 0) {
+			$Button.IsEnabled = $true
+		}
+		else {
+			$Button.IsEnabled = $false
+		}
+	}
+
+	function DeleteButton {
+		[void]$Window.Close()
+		$OFS = "|"
+		if ($CheckboxRemoveAll.IsChecked) {
+			Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cmatch $AppxPackages } | Remove-AppxPackage -AllUsers -Verbose
+		}
+		else {
+			Get-AppxPackage -PackageTypeFilter Bundle | Where-Object -FilterScript { $_.Name -cmatch $AppxPackages } | Remove-AppxPackage -Verbose
+		}
+		$OFS = " "
+	}
+
+	function Add-AppxControl {
+		[CmdletBinding()]
+		param
+		(
+			[Parameter(
+				Mandatory = $true,
+				ValueFromPipeline = $true
+			)]
+			[ValidateNotNull()]
+			[string]
+			$AppxName
+		)
+
+		$CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
+		$CheckBox.Add_Click( { Get-CheckboxClicked -CheckBox $_.Source })
+
+		$TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
+		$TextBlock.Text = $AppxName
+
+		$StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
+		[void]$StackPanel.Children.Add($CheckBox)
+		[void]$StackPanel.Children.Add($TextBlock)
+
+		[void]$PanelContainer.Children.Add($StackPanel)
+
+		if ($UncheckedAppxPackages.Contains($AppxName)) {
+			$CheckBox.IsChecked = $false
+			# Exit function, item is not checked
+			# Выход из функции, если элемент не выделен
+			return
+		}
+
+		# If package checked, add to the array list to uninstall
+		# Если пакет выделен, то добавить в массив для удаления
+		[void]$AppxPackages.Add($AppxName)
+	}
+	#endregion Functions
+	#region Events Handlers
+	# Window Loaded Event
+	$Window.Add_Loaded( {
+			$OFS = "|"
+			(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch $ExcludedAppxPackages }).Name | ForEach-Object -Process {
+				Add-AppxControl -AppxName $_
+			}
+			$OFS = " "
+
+			$TextblockRemoveAll.Text = $Localization.UninstallUWPForAll
+			$Window.Title = $Localization.UninstallUWPTitle
+			$Button.Content = $Localization.UninstallUWPUninstallButton
+		})
+
+	# Button Click Event
+	$Button.Add_Click( { DeleteButton })
+	#endregion Events Handlers
+	if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") }) {
+		Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+		# Display the dialog box
+		# Отобразить диалоговое окно
+		$Form.ShowDialog() | Out-Null
+	}
+	else {
+		Write-Verbose -Message $Localization.NoData -Verbose
+	}
+}
+
+# Turn off Cortana autostarting
+# Удалить Кортана из автозагрузки
+function DisableCortanaAutostart {
+	if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
+		if (-not (Test-Path -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId")) {
+			New-Item -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Force
+		}
+		New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -PropertyType DWord -Value 1 -Force
+	}
+}
+
+# Turn on Cortana autostarting
+# Добавить Кортана в автозагрузку
+function EnableCortanaAutostart {
+	if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
+		Remove-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -Force -ErrorAction SilentlyContinue
+	}
+}
+#endregion UWP apps
+#region System
 # Uninstall OneDrive
 # Удалить OneDrive
 function UninstallOneDrive {
@@ -1087,55 +1316,12 @@ function UninstallOneDrive {
 	}
 }
 
-# Install OneDrive (current user only)
-# Установить OneDrive (только для текущего пользователя)
-function InstallOneDrive {
-	$OneDrive = Get-Package -Name "Microsoft OneDrive" -ProviderName Programs -Force -ErrorAction Ignore
-	if (-not $OneDrive) {
-		if (Test-Path -Path $env:SystemRoot\SysWOW64\OneDriveSetup.exe) {
-			Write-Verbose -Message $Localization.OneDriveInstalling -Verbose
-			Start-Process -FilePath $env:SystemRoot\SysWOW64\OneDriveSetup.exe
-		}
-		else {
-			# Downloading the latest OneDrive
-			# Скачивание последней версии OneDrive
-			try {
-				if ((Invoke-WebRequest -Uri https://www.google.com -UseBasicParsing -DisableKeepAlive -Method Head).StatusDescription) {
-					Write-Verbose -Message $Localization.OneDriveDownloading -Verbose
-
-					[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-					$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
-					$Parameters = @{
-						Uri     = "https://go.microsoft.com/fwlink/p/?LinkID=2121808"
-						OutFile = "$DownloadsFolder\OneDriveSetup.exe"
-						Verbose = [switch]::Present
-					}
-					Invoke-WebRequest @Parameters
-
-					Start-Process -FilePath "$DownloadsFolder\OneDriveSetup.exe"
-				}
-			}
-			catch [System.Net.WebException] {
-				Write-Warning -Message $Localization.NoInternetConnection
-			}
-		}
-		Get-ScheduledTask -TaskName "Onedrive* Update*" | Start-ScheduledTask
-	}
-}
-
 # Do not show sync provider notification within File Explorer (current user only)
 # Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
 function HideOneDriveFileExplorerAd {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 0 -Force
 }
 
-# Show sync provider notification within File Explorer (current user only)
-# Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
-function ShowOneDriveFileExplorerAd {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 1 -Force
-}
-#endregion OneDrive
-#region System
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
 function EnableStorageSense {
@@ -1383,9 +1569,6 @@ function NeverWaitNetworkStartup {
 # Отключить следующие компоненты Windows
 function DisableWindowsFeatures {
 	$WindowsOptionalFeatures = @(
-		# Legacy Components
-		# Компоненты прежних версий
-		"LegacyComponents",
 
 		# Media Features
 		# Компоненты работы с мультимедиа
@@ -1464,7 +1647,7 @@ function InstallWSL {
 
 	https://github.com/microsoft/WSL/issues/5437
 #>
-function SetupWSL {
+function OptInWSL {
 	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -ne "Installed") {
 		try {
 			if ((Invoke-WebRequest -Uri https://www.google.com -UseBasicParsing -DisableKeepAlive -Method Head).StatusDescription) {
@@ -1501,62 +1684,6 @@ function SetupWSL {
 	}
 }
 
-<#
-	Disable swap file in WSL
-	Use only if the %TEMP% environment variable path changed
-
-	Отключить файл подкачки в WSL
-	Используйте только в случае, если изменился путь переменной среды для %TEMP%
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-function DisableWSLSwap {
-	if ((Get-ItemPropertyValue -Path HKCU:\Environment -Name TEMP) -ne "$env:LOCALAPPDATA\Temp") {
-		if (Test-Path -Path "$env:USERPROFILE\.wslconfig") {
-			$String = Get-Content -Path "$env:USERPROFILE\.wslconfig" | Select-String -Pattern "swap=" -SimpleMatch
-			if ($String) {
-				(Get-Content -Path "$env:USERPROFILE\.wslconfig").Replace("swap=1", "swap=0") | Set-Content -Path "$env:USERPROFILE\.wslconfig" -Force
-			}
-			else {
-				Add-Content -Path "$env:USERPROFILE\.wslconfig" -Value "`r`nswap=0" -Force
-			}
-		}
-		else {
-			$WSLConfig = @"
-[wsl2]
-swap=0
-"@
-			# Saving .wslconfig in UTF-8 encoding
-			# Сохраняем .wslconfig в кодировке UTF-8
-			Set-Content -Path "$env:USERPROFILE\.wslconfig" -Value $WSLConfig -Force
-		}
-	}
-}
-
-# Enable swap file in WSL
-# Включить файл подкачки в WSL
-# https://github.com/microsoft/WSL/issues/5437
-function EnableWSLSwap {
-	if (Test-Path -Path "$env:USERPROFILE\.wslconfig") {
-		$String = Get-Content -Path "$env:USERPROFILE\.wslconfig" | Select-String -Pattern "swap=" -SimpleMatch
-		if ($String) {
-			(Get-Content -Path "$env:USERPROFILE\.wslconfig").Replace("swap=0", "swap=1") | Set-Content -Path "$env:USERPROFILE\.wslconfig" -Force
-		}
-		else {
-			Add-Content -Path "$env:USERPROFILE\.wslconfig" -Value "`r`nswap=1" -Force
-		}
-	}
-	else {
-		$WSLConfig = @"
-[wsl2]
-swap=1
-"@
-		# Saving .wslconfig in UTF-8 encoding
-		# Сохраняем .wslconfig в кодировке UTF-8
-		Set-Content -Path "$env:USERPROFILE\.wslconfig" -Value $WSLConfig -Force
-	}
-}
-
 # Uninstall the Windows Subsystem for Linux (WSL2)
 # Удалить подсистему Windows для Linux (WSL2)
 function UninstallWSL {
@@ -1573,20 +1700,6 @@ function UninstallWSL {
 
 	Uninstall-Package -Name "Windows Subsystem for Linux Update" -Force
 	Remove-Item -Path "$env:USERPROFILE\.wslconfig" -Force -ErrorAction Ignore
-}
-
-# Opt-in to Microsoft Update service, so to receive updates for other Microsoft products
-# Подключаться к службе Microsoft Update так, чтобы при обновлении Windows получать обновления для других продуктов Майкрософт
-function EnableUpdatesMicrosoftProducts {
-	(New-Object -ComObject Microsoft.Update.ServiceManager).AddService2("7971f918-a847-4430-9279-4a52d1efe18d", 7, "")
-}
-
-# Opt-out of Microsoft Update service, so not to receive updates for other Microsoft products
-# Не подключаться к службе Microsoft Update так, чтобы при обновлении Windows не получать обновления для других продуктов Майкрософт
-function DisableUpdatesMicrosoftProducts {
-	if ((New-Object -ComObject Microsoft.Update.ServiceManager).Services | Where-Object { $_.ServiceID -eq "7971f918-a847-4430-9279-4a52d1efe18d" } ) {
-		(New-Object -ComObject Microsoft.Update.ServiceManager).RemoveService("7971f918-a847-4430-9279-4a52d1efe18d")
-	}
 }
 
 # Do not let UWP apps run in the background, except the followings... (current user only)
@@ -1678,10 +1791,6 @@ function DisableWindowsCapabilities {
 		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
 		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
 		"DirectX\.Configuration\.Database",
-
-		# Language components
-		# Языковые компоненты
-		"Language\.",
 
 		# Features critical to Windows functionality
 		# Компоненты, критичные для работоспособности Windows
@@ -3018,256 +3127,6 @@ function BestPriorityForeground {
 	netsh int tcp set global rsc=disabled
 }
 #endregion Gaming
-#region UWP apps
-<#
-	Uninstall UWP apps
-	A dialog box that enables the user to select packages to remove
-	App packages will not be installed for new users if "Uninstall for All Users" is checked
-	Add UWP apps packages names to the $UncheckedAppXPackages array list by retrieving their packages names using the following command:
-		(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers).Name
-
-	Удалить UWP-приложения
-	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
-	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
-	Добавьте имена пакетов UWP-приложений в массив $UncheckedAppXPackages, получив названия их пакетов с помощью команды:
-		(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers).Name
-#>
-function UninstallUWPApps {
-	Add-Type -AssemblyName PresentationCore, PresentationFramework
-
-	#region Variables
-	# ArrayList containing the UWP apps to remove
-	# Массив имен UWP-приложений для удаления
-	$AppxPackages = New-Object -TypeName System.Collections.ArrayList($null)
-
-	# List of UWP apps that won't be recommended for removal
-	# UWP-приложения, которые не будут отмечены на удаление по умолчанию
-	$UncheckedAppxPackages = @(
-		# AMD Radeon UWP panel
-		# UWP-панель AMD Radeon
-		"AdvancedMicroDevicesInc*",
-
-		# NVIDIA Control Panel
-		# Панель управления NVidia
-		"NVIDIACorp.NVIDIAControlPanel",
-
-		# Realtek Audio Control
-		"RealtekSemiconductorCorp.RealtekAudioControl"
-	)
-
-	# UWP apps that won't be shown in the form
-	# UWP-приложения, которые не будут выводиться в форме
-	$ExcludedAppxPackages = @(
-		# Microsoft Desktop App Installer
-		"Microsoft.DesktopAppInstaller",
-
-		# Microsoft Store
-		"Microsoft.WindowsStore"
-	)
-	#endregion Variables
-	#region XAML Markup
-	[xml]$XAML = '
-	<Window
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		Name="Window"
-		MinHeight="450" MinWidth="400"
-		SizeToContent="Width" WindowStartupLocation="CenterScreen"
-		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
-		FontFamily="Segoe UI" FontSize="12" ShowInTaskbar="False">
-		<Window.Resources>
-			<Style TargetType="StackPanel">
-				<Setter Property="Orientation" Value="Horizontal"/>
-			</Style>
-			<Style TargetType="CheckBox">
-				<Setter Property="Margin" Value="10, 10, 5, 10"/>
-				<Setter Property="IsChecked" Value="True"/>
-			</Style>
-			<Style TargetType="TextBlock">
-				<Setter Property="Margin" Value="5, 10, 10, 10"/>
-			</Style>
-			<Style TargetType="Button">
-				<Setter Property="Margin" Value="20"/>
-				<Setter Property="Padding" Value="10"/>
-			</Style>
-		</Window.Resources>
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
-			<Grid Grid.Row="0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<StackPanel Grid.Column="1" Orientation="Horizontal">
-					<CheckBox Name="CheckboxRemoveAll" IsChecked="False"/>
-					<TextBlock Name="TextblockRemoveAll"/>
-				</StackPanel>
-			</Grid>
-			<ScrollViewer Name="Scroll" Grid.Row="1"
-				HorizontalScrollBarVisibility="Disabled"
-				VerticalScrollBarVisibility="Auto">
-				<StackPanel Name="PanelContainer" Orientation="Vertical"/>
-			</ScrollViewer>
-			<Button Name="Button" Grid.Row="2"/>
-		</Grid>
-	</Window>
-	'
-	#endregion XAML Markup
-	$Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
-	$Form = [Windows.Markup.XamlReader]::Load($Reader)
-	$XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
-		Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name) -Scope Global
-	}
-
-	#region Functions
-	function Get-CheckboxClicked {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(
-				Mandatory = $true,
-				ValueFromPipeline = $true
-			)]
-			[ValidateNotNull()]
-			$CheckBox
-		)
-
-		$AppxName = $CheckBox.Parent.Children[1].Text
-		if ($CheckBox.IsChecked) {
-			[void]$AppxPackages.Add($AppxName)
-		}
-		else {
-			[void]$AppxPackages.Remove($AppxName)
-		}
-		if ($AppxPackages.Count -gt 0) {
-			$Button.IsEnabled = $true
-		}
-		else {
-			$Button.IsEnabled = $false
-		}
-	}
-
-	function DeleteButton {
-		[void]$Window.Close()
-		$OFS = "|"
-		if ($CheckboxRemoveAll.IsChecked) {
-			Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cmatch $AppxPackages } | Remove-AppxPackage -AllUsers -Verbose
-		}
-		else {
-			Get-AppxPackage -PackageTypeFilter Bundle | Where-Object -FilterScript { $_.Name -cmatch $AppxPackages } | Remove-AppxPackage -Verbose
-		}
-		$OFS = " "
-	}
-
-	function Add-AppxControl {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(
-				Mandatory = $true,
-				ValueFromPipeline = $true
-			)]
-			[ValidateNotNull()]
-			[string]
-			$AppxName
-		)
-
-		$CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
-		$CheckBox.Add_Click( { Get-CheckboxClicked -CheckBox $_.Source })
-
-		$TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
-		$TextBlock.Text = $AppxName
-
-		$StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
-		[void]$StackPanel.Children.Add($CheckBox)
-		[void]$StackPanel.Children.Add($TextBlock)
-
-		[void]$PanelContainer.Children.Add($StackPanel)
-
-		if ($UncheckedAppxPackages.Contains($AppxName)) {
-			$CheckBox.IsChecked = $false
-			# Exit function, item is not checked
-			# Выход из функции, если элемент не выделен
-			return
-		}
-
-		# If package checked, add to the array list to uninstall
-		# Если пакет выделен, то добавить в массив для удаления
-		[void]$AppxPackages.Add($AppxName)
-	}
-	#endregion Functions
-	#region Events Handlers
-	# Window Loaded Event
-	$Window.Add_Loaded( {
-			$OFS = "|"
-			(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch $ExcludedAppxPackages }).Name | ForEach-Object -Process {
-				Add-AppxControl -AppxName $_
-			}
-			$OFS = " "
-
-			$TextblockRemoveAll.Text = $Localization.UninstallUWPForAll
-			$Window.Title = $Localization.UninstallUWPTitle
-			$Button.Content = $Localization.UninstallUWPUninstallButton
-		})
-
-	# Button Click Event
-	$Button.Add_Click( { DeleteButton })
-	#endregion Events Handlers
-	if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") }) {
-		Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
-		# Display the dialog box
-		# Отобразить диалоговое окно
-		$Form.ShowDialog() | Out-Null
-	}
-	else {
-		Write-Verbose -Message $Localization.NoData -Verbose
-	}
-}
-
-<#
-	Open Microsoft Store "HEVC Video Extensions from Device Manufacturer" page
-	The extension can be installed without Microsoft account for free instead of $0.99
-	"Movies & TV" app required
-
-	Открыть страницу "Расширения для видео HEVC от производителя устройства" в Microsoft Store
-	Расширение может быть установлено без учетной записи Microsoft бесплатно вместо 0,99 $
-	Для работы необходимо приложение "Кино и ТВ"
-#>
-function InstallHEVC {
-	if (Get-AppxPackage -Name Microsoft.ZuneVideo) {
-		Start-Process -FilePath ms-windows-store://pdp/?ProductId=9n4wgh0z6vhq
-	}
-}
-
-# Turn off Cortana autostarting
-# Удалить Кортана из автозагрузки
-function DisableCortanaAutostart {
-	if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
-		if (-not (Test-Path -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId")) {
-			New-Item -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Force
-		}
-		New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Turn on Cortana autostarting
-# Добавить Кортана в автозагрузку
-function EnableCortanaAutostart {
-	if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
-		Remove-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Check for UWP apps updates
-# Проверить обновления UWP-приложений
-function CheckUWPAppsUpdates {
-	Get-CimInstance -Namespace "Root\cimv2\mdm\dmmap" -ClassName "MDM_EnterpriseModernAppManagement_AppManagement01" | Invoke-CimMethod -MethodName UpdateScanMethod
-}
-#endregion UWP apps
 #region Scheduled tasks
 <#
 	Create a task to clean up unused files and Windows updates in the Task Scheduler

@@ -411,24 +411,35 @@ ChangeTaskbarLocation
 # Change desktop background
 ChangeDesktopBackground
 #endregion UI & Personalization
-#region OneDrive
+#region UWP apps
+<#
+	Uninstall UWP apps
+	A dialog box that enables the user to select packages to remove
+	App packages will not be installed for new users if "Uninstall for All Users" is checked
+
+	Удалить UWP-приложения
+	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
+	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
+#>
+UninstallUWPApps
+
+# Turn off Cortana autostarting
+# Удалить Кортана из автозагрузки
+DisableCortanaAutostart
+
+# Turn on Cortana autostarting
+# Добавить Кортана в автозагрузку
+# EnableCortanaAutostart
+#endregion UWP apps
+#region System
 # Uninstall OneDrive
 # Удалить OneDrive
 UninstallOneDrive
-
-# Install OneDrive (current user only)
-# Установить OneDrive (только для текущего пользователя)
-# InstallOneDrive
 
 # Do not show sync provider notification within File Explorer (current user only)
 # Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
 HideOneDriveFileExplorerAd
 
-# Show sync provider notification within File Explorer (current user only)
-# Показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
-# ShowOneDriveFileExplorerAd
-#endregion OneDrive
-#region System
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
 # EnableStorageSense
@@ -553,38 +564,11 @@ InstallWSL
 
 	https://github.com/microsoft/WSL/issues/5437
 #>
-SetupWSL
-
-<#
-	Disable swap file in WSL
-	Use only if the %TEMP% environment variable path changed
-
-	Отключить файл подкачки в WSL
-	Используйте только в случае, если изменился путь переменной среды для %TEMP%
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-DisableWSLSwap
-
-<#
-	Enable swap file in WSL
-	Включить файл подкачки в WSL
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-# EnableWSLSwap
+OptInWSL
 
 # Uninstall the Windows Subsystem for Linux (WSL2)
 # Удалить подсистему Windows для Linux (WSL2)
 # UninstallWSL
-
-# Opt-in to Microsoft Update service, so to receive updates for other Microsoft products
-# Подключаться к службе Microsoft Update так, чтобы при обновлении Windows получать обновления для других продуктов Майкрософт
-# EnableUpdatesMicrosoftProducts
-
-# Opt-out of Microsoft Update service, so not to receive updates for other Microsoft products
-# Не подключаться к службе Microsoft Update так, чтобы при обновлении Windows не получать обновления для других продуктов Майкрософт
-DisableUpdatesMicrosoftProducts
 
 # Do not let UWP apps run in the background, except the followings... (current user only)
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
@@ -807,41 +791,6 @@ EnableGPUScheduling
 # Adjust best performance for all programs and also foreground services
 BestPriorityForeground
 #endregion Gaming
-#region UWP apps
-<#
-	Uninstall UWP apps
-	A dialog box that enables the user to select packages to remove
-	App packages will not be installed for new users if "Uninstall for All Users" is checked
-
-	Удалить UWP-приложения
-	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
-	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
-#>
-UninstallUWPApps
-
-<#
-	Open Microsoft Store "HEVC Video Extensions from Device Manufacturer" page
-	The extension can be installed without Microsoft account for free instead of $0.99
-	"Movies & TV" app required
-
-	Открыть страницу "Расширения для видео HEVC от производителя устройства" в Microsoft Store
-	Расширение может быть установлено без учетной записи Microsoft бесплатно вместо 0,99 $
-	Для работы необходимо приложение "Кино и ТВ"
-#>
-InstallHEVC
-
-# Turn off Cortana autostarting
-# Удалить Кортана из автозагрузки
-DisableCortanaAutostart
-
-# Turn on Cortana autostarting
-# Добавить Кортана в автозагрузку
-# EnableCortanaAutostart
-
-# Check for UWP apps updates
-# Проверить обновления UWP-приложений
-# CheckUWPAppsUpdates
-#endregion UWP apps
 #region Scheduled tasks
 <#
 	Create a task to clean up unused files and Windows updates in the Task Scheduler
