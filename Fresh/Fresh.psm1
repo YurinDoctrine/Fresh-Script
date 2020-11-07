@@ -1029,8 +1029,6 @@ function UninstallUWPApps {
 	# UWP apps that won't be shown in the form
 	# UWP-приложения, которые не будут выводиться в форме
 	$ExcludedAppxPackages = @(
-		# Microsoft Desktop App Installer
-		#"Microsoft.DesktopAppInstaller",
 
 		# Microsoft Store
 		"Microsoft.WindowsStore",
