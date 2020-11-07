@@ -544,13 +544,13 @@ DisableWindowsFeatures
 # Включить следующие компоненты Windows
 # EnableWindowsFeatures
 
-# Do not let UWP apps run in the background, except the followings... (current user only)
-# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
-DisableBackgroundUWPApps
-
 # Disable certain Feature On Demand v2 (FODv2) capabilities
 # Отключить определенные компоненты "Функции по требованию" (FODv2)
 DisableWindowsCapabilities
+
+# Do not let UWP apps run in the background, except the followings... (current user only)
+# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
+DisableBackgroundUWPApps
 
 # Use latest installed .NET runtime for all apps
 # Использовать последнюю установленную среду выполнения .NET для всех приложений

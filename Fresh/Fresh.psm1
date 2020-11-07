@@ -1007,7 +1007,7 @@ function ChangeTaskbarLocation {
 function ChangeDesktopBackground {
     Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
 	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "$env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion UI & Personalization
@@ -1026,16 +1026,15 @@ function ChangeDesktopBackground {
 		(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers).Name
 #>
 function UninstallUWPApps {
-	Add-Type -AssemblyName PresentationCore, PresentationFramework
+	# UWP apps that won't be shown in the form
+	# UWP-приложения, которые не будут выводиться в форме
+	$ExcludedAppxPackages = @(
+		# Microsoft Desktop App Installer
+		#"Microsoft.DesktopAppInstaller",
 
-	#region Variables
-	# ArrayList containing the UWP apps to remove
-	# Массив имен UWP-приложений для удаления
-	$AppxPackages = New-Object -TypeName System.Collections.ArrayList($null)
-
-	# List of UWP apps that won't be recommended for removal
-	# UWP-приложения, которые не будут отмечены на удаление по умолчанию
-	$UncheckedAppxPackages = @(
+		# Microsoft Store
+		"Microsoft.WindowsStore",
+		
 		# AMD Radeon UWP panel
 		# UWP-панель AMD Radeon
 		"AdvancedMicroDevicesInc*",
@@ -1046,175 +1045,11 @@ function UninstallUWPApps {
 
 		# Realtek Audio Control
 		"RealtekSemiconductorCorp.RealtekAudioControl"
+		
 	)
-
-	# UWP apps that won't be shown in the form
-	# UWP-приложения, которые не будут выводиться в форме
-	$ExcludedAppxPackages = @(
-		# Microsoft Desktop App Installer
-		"Microsoft.DesktopAppInstaller",
-
-		# Microsoft Store
-		"Microsoft.WindowsStore"
-	)
-	#endregion Variables
-	#region XAML Markup
-	[xml]$XAML = '
-	<Window
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		Name="Window"
-		MinHeight="450" MinWidth="400"
-		SizeToContent="Width" WindowStartupLocation="CenterScreen"
-		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
-		FontFamily="Segoe UI" FontSize="12" ShowInTaskbar="False">
-		<Window.Resources>
-			<Style TargetType="StackPanel">
-				<Setter Property="Orientation" Value="Horizontal"/>
-			</Style>
-			<Style TargetType="CheckBox">
-				<Setter Property="Margin" Value="10, 10, 5, 10"/>
-				<Setter Property="IsChecked" Value="True"/>
-			</Style>
-			<Style TargetType="TextBlock">
-				<Setter Property="Margin" Value="5, 10, 10, 10"/>
-			</Style>
-			<Style TargetType="Button">
-				<Setter Property="Margin" Value="20"/>
-				<Setter Property="Padding" Value="10"/>
-			</Style>
-		</Window.Resources>
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
-			<Grid Grid.Row="0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<StackPanel Grid.Column="1" Orientation="Horizontal">
-					<CheckBox Name="CheckboxRemoveAll" IsChecked="False"/>
-					<TextBlock Name="TextblockRemoveAll"/>
-				</StackPanel>
-			</Grid>
-			<ScrollViewer Name="Scroll" Grid.Row="1"
-				HorizontalScrollBarVisibility="Disabled"
-				VerticalScrollBarVisibility="Auto">
-				<StackPanel Name="PanelContainer" Orientation="Vertical"/>
-			</ScrollViewer>
-			<Button Name="Button" Grid.Row="2"/>
-		</Grid>
-	</Window>
-	'
-	#endregion XAML Markup
-	$Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
-	$Form = [Windows.Markup.XamlReader]::Load($Reader)
-	$XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
-		Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name) -Scope Global
-	}
-
-	#region Functions
-	function Get-CheckboxClicked {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(
-				Mandatory = $true,
-				ValueFromPipeline = $true
-			)]
-			[ValidateNotNull()]
-			$CheckBox
-		)
-
-		$AppxName = $CheckBox.Parent.Children[1].Text
-		if ($CheckBox.IsChecked) {
-			[void]$AppxPackages.Add($AppxName)
-		}
-		else {
-			[void]$AppxPackages.Remove($AppxName)
-		}
-		if ($AppxPackages.Count -gt 0) {
-			$Button.IsEnabled = $true
-		}
-		else {
-			$Button.IsEnabled = $false
-		}
-	}
-
-	function DeleteButton {
-		[void]$Window.Close()
-		$OFS = "|"
-		if ($CheckboxRemoveAll.IsChecked) {
-			Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cmatch $AppxPackages } | Remove-AppxPackage -AllUsers -Verbose
-		}
-		else {
-			Get-AppxPackage -PackageTypeFilter Bundle | Where-Object -FilterScript { $_.Name -cmatch $AppxPackages } | Remove-AppxPackage -Verbose
-		}
-		$OFS = " "
-	}
-
-	function Add-AppxControl {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(
-				Mandatory = $true,
-				ValueFromPipeline = $true
-			)]
-			[ValidateNotNull()]
-			[string]
-			$AppxName
-		)
-
-		$CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
-		$CheckBox.Add_Click( { Get-CheckboxClicked -CheckBox $_.Source })
-
-		$TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
-		$TextBlock.Text = $AppxName
-
-		$StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
-		[void]$StackPanel.Children.Add($CheckBox)
-		[void]$StackPanel.Children.Add($TextBlock)
-
-		[void]$PanelContainer.Children.Add($StackPanel)
-
-		if ($UncheckedAppxPackages.Contains($AppxName)) {
-			$CheckBox.IsChecked = $false
-			# Exit function, item is not checked
-			# Выход из функции, если элемент не выделен
-			return
-		}
-
-		# If package checked, add to the array list to uninstall
-		# Если пакет выделен, то добавить в массив для удаления
-		[void]$AppxPackages.Add($AppxName)
-	}
-	#endregion Functions
-	#region Events Handlers
-	# Window Loaded Event
-	$Window.Add_Loaded( {
-			$OFS = "|"
-			(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch $ExcludedAppxPackages }).Name | ForEach-Object -Process {
-				Add-AppxControl -AppxName $_
-			}
-			$OFS = " "
-
-			$TextblockRemoveAll.Text = $Localization.UninstallUWPForAll
-			$Window.Title = $Localization.UninstallUWPTitle
-			$Button.Content = $Localization.UninstallUWPUninstallButton
-		})
-
-	# Button Click Event
-	$Button.Add_Click( { DeleteButton })
-	#endregion Events Handlers
-	if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") }) {
-		Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
-		# Display the dialog box
-		# Отобразить диалоговое окно
-		$Form.ShowDialog() | Out-Null
+	
+	if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") } | Remove-AppxPackage -AllUsers ) {
+		Write-Verbose -Message 'Removed UWP apps' -Verbose
 	}
 	else {
 		Write-Verbose -Message $Localization.NoData -Verbose
@@ -1576,7 +1411,6 @@ function NeverWaitNetworkStartup {
 # Отключить следующие компоненты Windows
 function DisableWindowsFeatures {
 	$WindowsOptionalFeatures = @(
-
 		# Media Features
 		# Компоненты работы с мультимедиа
 		"MediaPlayback",
@@ -1623,6 +1457,32 @@ function EnableWindowsFeatures {
 	Enable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
 }
 
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+function DisableWindowsCapabilities {
+	# The following FODv2 items will be shown, but their checkboxes would be clear
+	# Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
+	$ExcludedCapabilities = @(
+		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
+		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
+		"DirectX\.Configuration\.Database",
+
+		# Features critical to Windows functionality
+		# Компоненты, критичные для работоспособности Windows
+		"Windows\.Client\.ShellComponents",
+                
+        # Language components
+		"Language\."
+	)
+	
+	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) } | Remove-WindowsCapability -Online ) {
+		Write-Verbose -Message 'Removed Capabilities' -Verbose
+	}
+	else {
+		Write-Verbose -Message $Localization.NoData -Verbose
+	}
+}
+
 # Do not let UWP apps run in the background, except the followings... (current user only)
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
 function DisableBackgroundUWPApps {
@@ -1656,206 +1516,6 @@ function DisableBackgroundUWPApps {
 		New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
 	}
 	$OFS = " "
-}
-
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-function DisableWindowsCapabilities {
-	Add-Type -AssemblyName PresentationCore, PresentationFramework
-
-	#region Variables
-	# Initialize an array list to store the FODv2 items to remove
-	# Создать массив имен дополнительных компонентов для удаления
-	$Capabilities = New-Object -TypeName System.Collections.ArrayList($null)
-
-	# The following FODv2 items will have their checkboxes checked, recommending the user to remove them
-	# Следующие дополнительные компоненты будут иметь чекбоксы отмеченными. Рекомендуются к удалению
-	$CheckedCapabilities = @(
-		# Steps Recorder
-		# Средство записи действий
-		"App.StepsRecorder*",
-
-		# Windows Hello Face
-		# Распознавание лиц Windows Hello
-		"Hello.Face*",
-
-		# Microsoft Quick Assist
-		# Быстрая поддержка (Майкрософт)
-		"App.Support.QuickAssist*",
-
-		# Windows Media Player
-		# Проигрыватель Windows Media
-		"Media.WindowsMediaPlayer*",
-
-		# Microsoft Paint
-		"Microsoft.Windows.MSPaint*",
-
-		# WordPad
-		"Microsoft.Windows.WordPad*",
-
-		# Integrated faxing and scanning application for Windows
-		# Факсы и сканирование Windows
-		"Print.Fax.Scan*"
-	)
-
-	# The following FODv2 items will be shown, but their checkboxes would be clear
-	# Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
-	$ExcludedCapabilities = @(
-		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
-		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
-		"DirectX\.Configuration\.Database",
-
-		# Features critical to Windows functionality
-		# Компоненты, критичные для работоспособности Windows
-		"Windows\.Client\.ShellComponents",
-                
-                # Language components
-                "Language\."
-	)
-	#endregion Variables
-	#region XAML Markup
-	# The section defines the design of the upcoming dialog box
-	# Раздел, определяющий форму диалогового окна
-	[xml]$XAML = '
-	<Window
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		Name="Window"
-		MinHeight="450" MinWidth="400"
-		SizeToContent="Width" WindowStartupLocation="CenterScreen"
-		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
-		FontFamily="Segoe UI" FontSize="12" ShowInTaskbar="False">
-		<Window.Resources>
-			<Style TargetType="StackPanel">
-				<Setter Property="Orientation" Value="Horizontal"/>
-			</Style>
-			<Style TargetType="CheckBox">
-				<Setter Property="Margin" Value="10, 10, 5, 10"/>
-				<Setter Property="IsChecked" Value="True"/>
-			</Style>
-			<Style TargetType="TextBlock">
-				<Setter Property="Margin" Value="5, 10, 10, 10"/>
-			</Style>
-			<Style TargetType="Button">
-				<Setter Property="Margin" Value="20"/>
-				<Setter Property="Padding" Value="10"/>
-			</Style>
-		</Window.Resources>
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
-			<ScrollViewer Name="Scroll" Grid.Row="0"
-				HorizontalScrollBarVisibility="Disabled"
-				VerticalScrollBarVisibility="Auto">
-				<StackPanel Name="PanelContainer" Orientation="Vertical"/>
-			</ScrollViewer>
-			<Button Name="Button" Grid.Row="1"/>
-		</Grid>
-	</Window>
-	'
-	#endregion XAML Markup
-	$Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
-	$Form = [Windows.Markup.XamlReader]::Load($Reader)
-	$XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
-		Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name) -Scope Global
-	}
-	#region Functions
-	function Get-CheckboxClicked {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(
-				Mandatory = $true,
-				ValueFromPipeline = $true
-			)]
-			[ValidateNotNull()]
-			$CheckBox
-		)
-
-		$Capability = $CheckBox.Parent.Children[1].Text
-		if ($CheckBox.IsChecked) {
-			[void]$Capabilities.Add($Capability)
-		}
-		else {
-			[void]$Capabilities.Remove($Capability)
-		}
-		if ($Capabilities.Count -gt 0) {
-			$Button.IsEnabled = $true
-		}
-		else {
-			$Button.IsEnabled = $false
-		}
-	}
-
-	function DeleteButton {
-		[void]$Window.Close()
-		$OFS = "|"
-		Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -cmatch $Capabilities } | Remove-WindowsCapability -Online
-		$OFS = " "
-	}
-
-	function Add-CapabilityControl {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(
-				Mandatory = $true,
-				ValueFromPipeline = $true
-			)]
-			[ValidateNotNull()]
-			[string]
-			$Capability
-		)
-
-		$CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
-		$CheckBox.Add_Click( { Get-CheckboxClicked -CheckBox $_.Source })
-
-		$TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
-		$TextBlock.Text = $Capability
-
-		$StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
-		[void]$StackPanel.Children.Add($CheckBox)
-		[void]$StackPanel.Children.Add($TextBlock)
-
-		[void]$PanelContainer.Children.Add($StackPanel)
-
-		$CheckBox.IsChecked = $false
-
-		if ($CheckedCapabilities | Where-Object -FilterScript { $Capability -like $_ }) {
-			$CheckBox.IsChecked = $true
-			# If capability checked, add to the array list to remove
-			# Если пакет выделен, то добавить в массив для удаления
-			[void]$Capabilities.Add($Capability)
-		}
-	}
-	#endregion Functions
-	#region Events Handlers
-	# Window Loaded Event
-	$Window.Add_Loaded( {
-			$OFS = "|"
-			(Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch $ExcludedCapabilities) }).Name | ForEach-Object -Process {
-				Add-CapabilityControl -Capability $_
-			}
-			$OFS = " "
-
-			$Window.Title = $Localization.FODWindowTitle
-			$Button.Content = $Localization.FODWindowButton
-		})
-
-	# Button Click Event
-	$Button.Add_Click( { DeleteButton })
-	#endregion Events Handlers
-	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) }) {
-		Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
-		# Display the dialog box
-		# Отобразить диалоговое окно
-		$Form.ShowDialog() | Out-Null
-	}
-	else {
-		Write-Verbose -Message $Localization.NoData -Verbose
-	}
 }
 
 # Use latest installed .NET runtime for all apps
@@ -2823,14 +2483,6 @@ function DisableRemoteAssistance {
 function DisableSuperfetch {
 	Stop-Service "SysMain" -WarningAction SilentlyContinue
 	Set-Service "SysMain" -StartupType Disabled
-}
-
-# Disable built-in Flash in Edge
-function DisableAdobeFlash {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" -Force | Out-Null
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" -Name "FlashPlayerEnabled" -Type DWord -Value 0 -Force
 }
 
 <#
