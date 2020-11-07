@@ -2679,12 +2679,12 @@ function DisableGPUScheduling {
 # Adjust best performance for all programs and also foreground services
 function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{d1f83304-4133-4c30-82d2-07078e47d5a7}")) {
-	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{d1f83304-4133-4c30-82d2-07078e47d5a7}" -Force | Out-Null
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{d1f83304-4133-4c30-82d2-07078e47d5a7}" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{d1f83304-4133-4c30-82d2-07078e47d5a7}" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{d1f83304-4133-4c30-82d2-07078e47d5a7}" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	#if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}")) {
+		#	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Force | Out-Null
+		#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
+		#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+		#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	#}
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force | Out-Null
 	}
