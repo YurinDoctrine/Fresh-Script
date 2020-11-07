@@ -1056,6 +1056,41 @@ function UninstallUWPApps {
 	}
 }
 
+# Do not let UWP apps run in the background, except the followings... (current user only)
+# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
+function DisableBackgroundUWPApps {
+	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
+		Remove-ItemProperty -Path $_.PsPath -Name * -Force
+	}
+
+	$ExcludedBackgroundApps = @(
+
+		# Windows Search
+		"Microsoft.Windows.Search",
+
+		# Windows Security
+		# Безопасность Windows
+		"Microsoft.Windows.SecHealthUI",
+
+		# Windows Shell Experience (Action center, snipping support, toast notification, touch screen keyboard)
+		# Windows Shell Experience (Центр уведомлений, приложение "Ножницы", тостовые уведомления, сенсорная клавиатура)
+		"Microsoft.Windows.ShellExperienceHost",
+
+		# The Start menu
+		# Меню "Пуск"
+		"Microsoft.Windows.StartMenuExperienceHost",
+
+		# Microsoft Store
+		"Microsoft.WindowsStore"
+	)
+	$OFS = "|"
+	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | Where-Object -FilterScript { $_.PSChildName -notmatch "^$($ExcludedBackgroundApps.ForEach({[regex]::Escape($_)}))" } | ForEach-Object -Process {
+		New-ItemProperty -Path $_.PsPath -Name Disabled -PropertyType DWord -Value 1 -Force
+		New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
+	}
+	$OFS = " "
+}
+
 # Turn off Cortana autostarting
 # Удалить Кортана из автозагрузки
 function DisableCortanaAutostart {
@@ -1481,41 +1516,6 @@ function DisableWindowsCapabilities {
 	else {
 		Write-Verbose -Message $Localization.NoData -Verbose
 	}
-}
-
-# Do not let UWP apps run in the background, except the followings... (current user only)
-# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
-function DisableBackgroundUWPApps {
-	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
-		Remove-ItemProperty -Path $_.PsPath -Name * -Force
-	}
-
-	$ExcludedBackgroundApps = @(
-
-		# Windows Search
-		"Microsoft.Windows.Search",
-
-		# Windows Security
-		# Безопасность Windows
-		"Microsoft.Windows.SecHealthUI",
-
-		# Windows Shell Experience (Action center, snipping support, toast notification, touch screen keyboard)
-		# Windows Shell Experience (Центр уведомлений, приложение "Ножницы", тостовые уведомления, сенсорная клавиатура)
-		"Microsoft.Windows.ShellExperienceHost",
-
-		# The Start menu
-		# Меню "Пуск"
-		"Microsoft.Windows.StartMenuExperienceHost",
-
-		# Microsoft Store
-		"Microsoft.WindowsStore"
-	)
-	$OFS = "|"
-	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | Where-Object -FilterScript { $_.PSChildName -notmatch "^$($ExcludedBackgroundApps.ForEach({[regex]::Escape($_)}))" } | ForEach-Object -Process {
-		New-ItemProperty -Path $_.PsPath -Name Disabled -PropertyType DWord -Value 1 -Force
-		New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
-	}
-	$OFS = " "
 }
 
 # Use latest installed .NET runtime for all apps
