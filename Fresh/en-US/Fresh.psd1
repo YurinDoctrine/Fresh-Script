@@ -1,8 +1,7 @@
-﻿# Do not remove double quotes in double-quoted strings where they are present
-
-ConvertFrom-StringData -StringData @'
+﻿ConvertFrom-StringData -StringData @'
 UnsupportedOSBitness = The script supports Windows 10 x64 only
 ControlledFolderAccessDisabled = Controlled folder access disabled
+NoData = Nothing to do
 
 # OneDrive
 OneDriveUninstalling = Uninstalling OneDrive...
@@ -14,16 +13,6 @@ NoInternetConnection = No Internet connection
 
 # SetTempPath
 LOCALAPPDATANotEmptyFolder = "The $env:LOCALAPPDATA\\Temp folder is not empty `nDeleteClear it manually and try again"
-
-# WSL
-WSLUpdateDownloading = Downloading the Linux kernel update package... ~14 MB
-WSLUpdateInstalling = Installing the Linux kernel update package...
-
-# DisableWindowsCapabilities
-FODWindowTitle = Optional features (FODv2) to remove
-FODWindowButton = Uninstall
-DialogBoxOpening = Displaying the dialog box...
-NoData = Nothing to display
 
 # ChangeUserShellFolderLocation
 UserShellFolderNotEmpty = "Some files left in the $UserShellFolderRegValue folder `nMove them manually to a new location"
@@ -88,14 +77,13 @@ VideosDefaultFolder = Would you like to change the location of the Videos folder
 # DisableReservedStorage
 ReservedStorageIsInUse = This operation is not supported when reserved storage is in use `nPlease wait for any servicing operations to complete and then try again later
 
-# UninstallUWPApps
-UninstallUWPForAll = Uninstall for All Users
-UninstallUWPTitle = UWP Packages to Uninstall
-UninstallUWPUninstallButton = Uninstall
-
 # CreateEventViewerCustomView
 EventViewerCustomViewName = Process Creation
 EventViewerCustomViewDescription = Process Creation and Command-line Auditing Events
+
+# WSL
+WSLUpdateDownloading = Downloading the Linux kernel update package... ~14 MB
+WSLUpdateInstalling = Installing the Linux kernel update package...
 
 # ChocolateyPackageManager
 OOShutup = Running O&O Shutup with Recommended Settings
