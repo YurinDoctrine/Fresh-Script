@@ -2558,7 +2558,7 @@ function PreventRequireSignInWhenAfterSleep {
 function DisableIndexing {
 	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
 	$Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
-	Stop-Service WSearch
+	Stop-Service WSearch -WarningAction SilentlyContinue
 	Set-Service WSearch -StartupType Disabled
 	if ($DriveLetters.Count -notmatch 2) {
 		if (($Object.IndexingEnabled -match $True)) {
@@ -2606,7 +2606,7 @@ function SetBootTimeoutValue {
 
 # Disable tablet input service(non-tablet only)
 function DisableTabletInputService {
-	Stop-Service -Force -Name "TabletInputService"; Set-Service -Name "TabletInputService" -StartupType Disabled
+	Stop-Service -Force -Name "TabletInputService" -WarningAction SilentlyContinue; Set-Service -Name "TabletInputService" -StartupType Disabled
 }
 #endregion Performance
 #region Gaming
