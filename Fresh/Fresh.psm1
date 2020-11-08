@@ -2558,7 +2558,8 @@ function PreventRequireSignInWhenAfterSleep {
 function DisableIndexing {
 	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
 	$Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
-    
+	Stop-Service WSearch
+	Set-Service WSearch -StartupType Disabled
 	if ($DriveLetters.Count -notmatch 2) {
 		if (($Object.IndexingEnabled -match $True)) {
 			Write-Output "Disabling indexing of drive C:"
@@ -2582,7 +2583,6 @@ function DisableIndexing {
 	else {
 		Write-Output "Unable to find the right option. SKIPPING..."
 	}
-
 }
 
 # Adjust best performance(that would able to increase the overall performance)
@@ -2601,6 +2601,11 @@ function AdjustBestPerformance {
 # Set current boot timeout value to 0
 function SetBootTimeoutValue {
 	bcdedit /timeout 0
+}
+
+# Disable superfetch service(SSD only)
+function DisableSuperFetchService {
+	Stop-Service -Force -Name "SysMain"; Set-Service -Name "SysMain" -StartupType Disabled
 }
 #endregion Performance
 #region Gaming
