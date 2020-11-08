@@ -1005,7 +1005,7 @@ function ChangeTaskbarLocation {
 
 # Change desktop background
 function ChangeDesktopBackground {
-    Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
+	Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
 	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
@@ -1157,11 +1157,11 @@ function UninstallOneDrive {
 		Clear-Variable -Name OpenedFolders -Force -ErrorAction Ignore
 		$OpenedFolders = { (New-Object -ComObject Shell.Application).Windows() | ForEach-Object -Process { $_.Document.Folder.Self.Path } }.Invoke()
         
-        # Terminate File Explorer process
+		# Terminate File Explorer process
 		# Завершить процесс проводника
 		TASKKILL /F /IM explorer.exe
 		
-        # Attempt to unregister FileSyncShell64.dll and remove
+		# Attempt to unregister FileSyncShell64.dll and remove
 		# Попытка разрегистрировать FileSyncShell64.dll и удалить
 		$FileSyncShell64dlls = Get-ChildItem -Path "$OneDriveFolder\*\amd64\FileSyncShell64.dll" -Force
 		foreach ($FileSyncShell64dll in $FileSyncShell64dlls.FullName) {
@@ -1410,9 +1410,9 @@ function DisableMappedDrivesAppElevatedAccess {
 # Отказаться от загрузки обновлений с помощью оптимизации доставки
 function DisableDeliveryOptimization {
 	if ((Test-Path "Registry::HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings")) {
-            New-ItemProperty -Path Registry::HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings -Name DownloadMode -PropertyType DWord -Value 0 -Force
+		New-ItemProperty -Path Registry::HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings -Name DownloadMode -PropertyType DWord -Value 0 -Force
 	}
-    Delete-DeliveryOptimizationCache -Force
+	Delete-DeliveryOptimizationCache -Force
 }
 
 # Opt-in to the Delivery Optimization-assisted updates downloading
@@ -1504,7 +1504,7 @@ function DisableWindowsCapabilities {
 		# Компоненты, критичные для работоспособности Windows
 		"Windows\.Client\.ShellComponents",
                 
-        # Language components
+		# Language components
 		"Language\."
 	)
 	
@@ -2660,7 +2660,7 @@ function EnableGPUScheduling {
 		if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual") {
 			# Checking whether a WDDM verion is 2.7 or higher
 			# Проверка: имеет ли WDDM версию 2.7 или выше
-			$WddmVersion_Min = 	if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) { Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min }
+			$WddmVersion_Min = if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) { Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min }
 			if ($WddmVersion_Min -ge 2700) {
 				New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 2 -Force
 			}
@@ -2678,10 +2678,10 @@ function DisableGPUScheduling {
 function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
 	#if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}")) {
-		#	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Force | Out-Null
-		#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
-		#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-		#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	#	New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Force | Out-Null
+	#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
+	#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+	#	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{1b6f5cbc-cc85-4718-95ce-0fca8d19d64b}" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
 	#}
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force | Out-Null
@@ -3172,6 +3172,11 @@ function DismissSmartScreenFilter {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force | Out-Null
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force | Out-Null
+	}
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name EnableWebContentEvaluation -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name PreventOverride -Type DWord -Value 0 -Force
 }
 
 <#
@@ -3201,7 +3206,7 @@ function EnableAuditCommandLineProcess {
 # Не включать командную строку в событиях создания процесса
 function DisableAuditCommandLineProcess {
 	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
-	        New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
+		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
 	} 
 }
 
@@ -3243,7 +3248,7 @@ function CreateEventViewerCustomView {
 # Удалить настаиваемое представление "Создание процесса" в Просмотре событий
 function RemoveEventViewerCustomView {
 	if ((Test-Path -Path "$env:ProgramData\Microsoft\Event Viewer\Views\")) {
-	        Remove-Item -Path "$env:ProgramData\Microsoft\Event Viewer\Views\ProcessCreation.xml" -Force -ErrorAction SilentlyContinue
+		Remove-Item -Path "$env:ProgramData\Microsoft\Event Viewer\Views\ProcessCreation.xml" -Force -ErrorAction SilentlyContinue
 	}
 }
 
@@ -3279,7 +3284,7 @@ function EnablePowerShellScriptsLogging {
 # Не вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
 function DisablePowerShellScriptsLogging {
 	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging")) {
-	        Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -Force -ErrorAction SilentlyContinue
 	}
 }
 
@@ -3349,12 +3354,12 @@ function EnableDotNetStrongCrypto {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1")) {
 		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" | Out-Null
-    }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000")) {
 		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" | Out-Null
-    }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 }
 
 <#
@@ -3743,7 +3748,7 @@ function EnablePreviousVersionsPage {
 	https://github.com/microsoft/WSL/issues/5437
 #>
 function InstallWSL {
-    $WSLFeatures = @(
+	$WSLFeatures = @(
 		# Windows Subsystem for Linux
 		# Подсистема Windows для Linux
 		"Microsoft-Windows-Subsystem-Linux",
