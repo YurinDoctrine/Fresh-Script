@@ -2603,9 +2603,9 @@ function SetBootTimeoutValue {
 	bcdedit /timeout 0
 }
 
-# Disable superfetch service(SSD only)
-function DisableSuperFetchService {
-	Stop-Service -Force -Name "SysMain"; Set-Service -Name "SysMain" -StartupType Disabled
+# Disable tablet input service(non-tablet only)
+function DisableTabletInputService {
+	Stop-Service -Force -Name "TabletInputService"; Set-Service -Name "TabletInputService" -StartupType Disabled
 }
 #endregion Performance
 #region Gaming
