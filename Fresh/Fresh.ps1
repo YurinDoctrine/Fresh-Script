@@ -725,8 +725,8 @@ AdjustBestPerformance
 # Set current boot timeout value to 0
 SetBootTimeoutValue
 
-# Disable superfetch service(SSD only)
-DisableSuperFetchService
+# Disable tablet input service(non-tablet only)
+DisableTabletInputService
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
