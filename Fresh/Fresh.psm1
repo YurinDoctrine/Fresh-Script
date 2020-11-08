@@ -2479,7 +2479,7 @@ function DisableRemoteAssistance {
 
 # Stop and disable superfetch service
 function DisableSuperfetch {
-	Stop-Service "SysMain" -WarningAction SilentlyContinue
+	Stop-Service -Force "SysMain" -WarningAction SilentlyContinue
 	Set-Service "SysMain" -StartupType Disabled
 }
 
@@ -2558,8 +2558,8 @@ function PreventRequireSignInWhenAfterSleep {
 function DisableIndexing {
 	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
 	$Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
-	Stop-Service WSearch -WarningAction SilentlyContinue
-	Set-Service WSearch -StartupType Disabled
+	Stop-Service -Force "WSearch" -WarningAction SilentlyContinue
+	Set-Service "WSearch" -StartupType Disabled
 	if ($DriveLetters.Count -notmatch 2) {
 		if (($Object.IndexingEnabled -match $True)) {
 			Write-Output "Disabling indexing of drive C:"
