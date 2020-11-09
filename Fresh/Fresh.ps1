@@ -730,6 +730,99 @@ SetBootTimeoutValue
 
 # Disable tablet input service(non-tablet only)
 DisableTabletInputService
+
+# Ntfs allow extended character 8dot3 rename
+NtfsAllowExtendedCharacter8dot3Rename
+
+# Ntfs disable 8dot3 name creation
+NtfsDisable8dot3NameCreation
+
+# Auto end tasks 
+AutoEndTasks
+
+# Hung app timeout
+HungAppTimeout
+
+# Wait to kill app timeout
+WaitToKillAppTimeout
+
+# Low-level hooks timeout
+LowLevelHooksTimeout
+
+# Foreground lock timeout
+ForegroundLockTimeout
+
+# No low disk space checks
+NoLowDiskSpaceChecks
+
+# Link resolve ignore link info
+LinkResolveIgnoreLinkInfo
+
+# No resolve search
+NoResolveSearch
+
+# No resolve track
+NoResolveTrack
+
+# No internet open with
+NoInternetOpenWith
+
+# Wait to kill service timeout
+WaitToKillServiceTimeout
+
+# Disable paging executive
+DisablePagingExecutive
+
+# Large system cache
+LargeSystemCache
+
+# Paging files
+PagingFiles
+
+# Second-level data cache
+SecondLevelDataCache
+
+# Existing page files
+ExistingPageFiles
+
+# Enable prefetcher
+EnablePrefetcher
+
+# Wait to kill service timeout
+WaitToKillServiceTimeout1
+
+# Disable paging executive
+DisablePagingExecutive1
+
+# Enable boot optimization function
+EnableBootOptimizationFunction
+
+# Ntfs disable last access update
+NtfsDisableLastAccessUpdate
+
+# Max connections per 1_0 server
+MaxConnectionsPer1_0Server
+
+# Max connections per server
+MaxConnectionsPerServer
+
+# Feature max connections per 1_0 server
+FeatureMaxConnectionsPer1_0Server
+
+# Feature max connections per server
+FeatureMaxConnectionsPerServer
+
+# Non best effort limit
+NonBestEffortLimit
+
+# Double click height width
+DoubleClickHeightWidth
+
+# ValueMax
+ValueMax
+
+# Allow auto game mode
+AllowAutoGameMode
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
