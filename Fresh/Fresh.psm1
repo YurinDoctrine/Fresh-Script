@@ -1070,10 +1070,6 @@ function DisableBackgroundUWPApps {
 		# Безопасность Windows
 		"Microsoft.Windows.SecHealthUI",
 
-		# Windows Shell Experience (Action center, snipping support, toast notification, touch screen keyboard)
-		# Windows Shell Experience (Центр уведомлений, приложение "Ножницы", тостовые уведомления, сенсорная клавиатура)
-		"Microsoft.Windows.ShellExperienceHost",
-
 		# The Start menu
 		# Меню "Пуск"
 		"Microsoft.Windows.StartMenuExperienceHost",
@@ -2505,6 +2501,12 @@ function DisableAutoUpdateDriver {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" | Out-Null
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1 -Force
+}
+
+# Turn off action center
+function TurnOffActionCenter {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableNotificationCenter" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "ToastEnabled" -PropertyType DWord -Value 1 -Force
 }
 #endregion System
 #region Performance

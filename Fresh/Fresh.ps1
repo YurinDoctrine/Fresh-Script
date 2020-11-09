@@ -702,6 +702,9 @@ Note: This doesn't work properly if you use a driver intended for another hardwa
 Therefore Windows update will repeatedly try and fail to install I219-V driver indefinitely even if you use the tweak.
 #>
 DisableAutoUpdateDriver
+
+# Turn off action center
+TurnOffActionCenter
 #endregion System
 #region Performance
 # Force disable battery saver
