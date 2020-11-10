@@ -2535,6 +2535,8 @@ function PreventBatterySaver {
 
 # Disable default disk defragmenter
 function DisableDefaultDiskDefragmenter {
+	Stop-Service -Force "defragsvc" -WarningAction SilentlyContinue
+	Set-Service "defragsvc" -StartupType Disabled
 	Disable-ScheduledTask -TaskName 'ScheduledDefrag' -TaskPath '\Microsoft\Windows\Defrag'
 }
 
