@@ -1648,74 +1648,8 @@ public extern static int SHSetKnownFolderPath(ref Guid folderId, uint flags, Int
 		}
 	}
 
-	<#
-		.SYNOPSIS
-		The "Show menu" function using PowerShell with the up/down arrow keys and enter key to make a selection
-
-		.EXAMPLE
-		ShowMenu -Menu $ListOfItems -Default $DefaultChoice
-
-		.NOTES
-		Doesn't work in PowerShell ISE
-	#>
-	function ShowMenu {
-		[CmdletBinding()]
-		param
-		(
-			[Parameter()]
-			[string]
-			$Title,
-
-			[Parameter(Mandatory = $true)]
-			[array]
-			$Menu,
-
-			[Parameter(Mandatory = $true)]
-			[int]
-			$Default
-		)
-
-		Write-Information -MessageData $Title -InformationAction Continue
-
-		$minY = [Console]::CursorTop
-		$y = [Math]::Max([Math]::Min($Default, $Menu.Count), 0)
-		do {
-			[Console]::CursorTop = $minY
-			[Console]::CursorLeft = 0
-			$i = 0
-			foreach ($item in $Menu) {
-				if ($i -ne $y) {
-					Write-Information -MessageData ('  {0}. {1}  ' -f ($i + 1), $item) -InformationAction Continue
-				}
-				else {
-					Write-Information -MessageData ('[ {0}. {1} ]' -f ($i + 1), $item) -InformationAction Continue
-				}
-				$i++
-			}
-
-			$k = [Console]::ReadKey()
-			switch ($k.Key) {
-				"UpArrow" {
-					if ($y -gt 0) {
-						$y--
-					}
-				}
-				"DownArrow" {
-					if ($y -lt ($Menu.Count - 1)) {
-						$y++
-					}
-				}
-				"Enter" {
-					return $Menu[$y]
-				}
-			}
-		}
-		while ($k.Key -notin ([ConsoleKey]::Escape, [ConsoleKey]::Enter))
-	}
-
 	# Store all drives letters to use them within ShowMenu function
 	# Сохранить все буквы диска, чтобы использовать их в функции ShowMenu
-	Write-Verbose $Localization.RetrievingDrivesList -Verbose
 	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
 
 	# If the number of disks is more than one, set the second drive in the list as default drive
@@ -1732,444 +1666,46 @@ public extern static int SHSetKnownFolderPath(ref Guid folderId, uint flags, Int
 	Write-Verbose -Message $Localization.DesktopDriveSelect -Verbose
 	Write-Warning -Message $Localization.DesktopFilesWontBeMoved
 
-	$Title = ""
-	$Message = $Localization.DesktopFolderRequest
-	$Change = $Localization.DesktopFolderChange
-	$Skip = $Localization.DesktopFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			$SelectedDrive = ShowMenu -Title $Localization.DesktopDriveSelect -Menu $DriveLetters -Default $Default
-			UserShellFolder -UserFolder Desktop -FolderPath "${SelectedDrive}:\Desktop" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.DesktopSkipped -Verbose
-		}
-	}
-
+	$SelectedDrive = ShowMenu -Title $Localization.DesktopDriveSelect -Menu $DriveLetters -Default $Default
+	UserShellFolder -UserFolder Desktop -FolderPath "${SelectedDrive}:\Desktop" -RemoveDesktopINI
 	# Documents
 	# Документы
 	Write-Verbose -Message $Localization.DocumentsDriveSelect -Verbose
 	Write-Warning -Message $Localization.DocumentsFilesWontBeMoved
 
-	$Title = ""
-	$Message = $Localization.DocumentsFolderRequest
-	$Change = $Localization.DocumentsFolderChange
-	$Skip = $Localization.DocumentsFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			$SelectedDrive = ShowMenu -Title $Localization.DocumentsDriveSelect -Menu $DriveLetters -Default $Default
-			UserShellFolder -UserFolder Documents -FolderPath "${SelectedDrive}:\Documents" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.DocumentsSkipped -Verbose
-		}
-	}
-
+	$SelectedDrive = ShowMenu -Title $Localization.DocumentsDriveSelect -Menu $DriveLetters -Default $Default
+	UserShellFolder -UserFolder Documents -FolderPath "${SelectedDrive}:\Documents" -RemoveDesktopINI
 	# Downloads
 	# Загрузки
 	Write-Verbose -Message $Localization.DownloadsDriveSelect -Verbose
 	Write-Warning -Message $Localization.DownloadsFilesWontBeMoved
 
-	$Title = ""
-	$Message = $Localization.DownloadsFolderRequest
-	$Change = $Localization.DownloadsFolderChange
-	$Skip = $Localization.DownloadsFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			$SelectedDrive = ShowMenu -Title $Localization.DownloadsDriveSelect -Menu $DriveLetters -Default $Default
-			UserShellFolder -UserFolder Downloads -FolderPath "${SelectedDrive}:\Downloads" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.DownloadsSkipped -Verbose
-		}
-	}
+	$SelectedDrive = ShowMenu -Title $Localization.DownloadsDriveSelect -Menu $DriveLetters -Default $Default
+	UserShellFolder -UserFolder Downloads -FolderPath "${SelectedDrive}:\Downloads" -RemoveDesktopINI
 
 	# Music
 	# Музыка
 	Write-Verbose -Message $Localization.MusicDriveSelect -Verbose
 	Write-Warning -Message $Localization.MusicFilesWontBeMoved
 
-	$Title = ""
-	$Message = $Localization.MusicFolderRequest
-	$Change = $Localization.MusicFolderChange
-	$Skip = $Localization.MusicFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			$SelectedDrive = ShowMenu -Title $Localization.MusicDriveSelect -Menu $DriveLetters -Default $Default
-			UserShellFolder -UserFolder Music -FolderPath "${SelectedDrive}:\Music" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.MusicSkipped -Verbose
-		}
-	}
+	$SelectedDrive = ShowMenu -Title $Localization.MusicDriveSelect -Menu $DriveLetters -Default $Default
+	UserShellFolder -UserFolder Music -FolderPath "${SelectedDrive}:\Music" -RemoveDesktopINI
 
 	# Pictures
 	# Изображения
 	Write-Verbose -Message $Localization.PicturesDriveSelect -Verbose
 	Write-Warning -Message $Localization.PicturesFilesWontBeMoved
 
-	$Title = ""
-	$Message = $Localization.PicturesFolderRequest
-	$Change = $Localization.PicturesFolderChange
-	$Skip = $Localization.PicturesFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			$SelectedDrive = ShowMenu -Title $Localization.PicturesDriveSelect -Menu $DriveLetters -Default $Default
-			UserShellFolder -UserFolder Pictures -FolderPath "${SelectedDrive}:\Pictures" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.PicturesSkipped -Verbose
-		}
-	}
+	$SelectedDrive = ShowMenu -Title $Localization.PicturesDriveSelect -Menu $DriveLetters -Default $Default
+	UserShellFolder -UserFolder Pictures -FolderPath "${SelectedDrive}:\Pictures" -RemoveDesktopINI
 
 	# Videos
 	# Видео
 	Write-Verbose -Message $Localization.VideosDriveSelect -Verbose
 	Write-Warning -Message $Localization.VideosFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.VideosFolderRequest
-	$Change = $Localization.VideosFolderChange
-	$Skip = $Localization.VideosFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			$SelectedDrive = ShowMenu -Title $Localization.VideosDriveSelect -Menu $DriveLetters -Default $Default
-			UserShellFolder -UserFolder Videos -FolderPath "${SelectedDrive}:\Videos" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.VideosSkipped -Verbose
-		}
-	}
-}
-
-<#
-	Change the location of the user folders to the default values (current user only)
-	User files or folders won't me moved to the new location
-
-	Изменить расположение пользовательских папок на значения по умолчанию (только для текущего пользователя)
-	Пользовательские файлы и папки не будут перемещены в новое расположение
-#>
-function SetDefaultUserShellFolderLocation {
-	function UserShellFolder {
-		<#
-		.SYNOPSIS
-		Change the location of the each user folders using SHSetKnownFolderPath function
-		https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
-
-		.EXAMPLE
-		UserShellFolder -UserFolder Desktop -FolderPath "$env:SystemDrive:\Desktop" -RemoveDesktopINI
-
-		.NOTES
-		User files or folders won't me moved to the new location
-		The RemoveDesktopINI argument removes desktop.ini in the old user shell folder
-	#>
-		[CmdletBinding()]
-		param
-		(
-			[Parameter(Mandatory = $true)]
-			[ValidateSet("Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos")]
-			[string]
-			$UserFolder,
-
-			[Parameter(Mandatory = $true)]
-			[string]
-			$FolderPath,
-
-			[switch]
-			$RemoveDesktopINI
-		)
-
-		function KnownFolderPath {
-			<#
-			.SYNOPSIS
-			Redirect user folders to a new location
-
-			.EXAMPLE
-			KnownFolderPath -KnownFolder Desktop -Path "C:\Desktop"
-
-			.NOTES
-			User files or folders won't me moved to the new location
-		#>
-			[CmdletBinding()]
-			param
-			(
-				[Parameter(Mandatory = $true)]
-				[ValidateSet("Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos")]
-				[string]
-				$KnownFolder,
-
-				[Parameter(Mandatory = $true)]
-				[string]
-				$Path
-			)
-
-			$KnownFolders = @{
-				"Desktop"   = @("B4BFCC3A-DB2C-424C-B029-7FE99A87C641");
-				"Documents"	= @("FDD39AD0-238F-46AF-ADB4-6C85480369C7", "f42ee2d3-909f-4907-8871-4c22fc0bf756");
-				"Downloads"	= @("374DE290-123F-4565-9164-39C4925E467B", "7d83ee9b-2244-4e70-b1f5-5393042af1e4");
-				"Music"     = @("4BD8D571-6D19-48D3-BE97-422220080E43", "a0c69a99-21c8-4671-8703-7934162fcf1d");
-				"Pictures"  = @("33E28130-4E1E-4676-835A-98395C3BC3BB", "0ddd015d-b06c-45d5-8c4c-f59713854639");
-				"Videos"    = @("18989B1D-99B5-455B-841C-AB7C74E4DDFC", "35286a68-3c57-41a1-bbb1-0eae73d76c95");
-			}
-
-			$Signature = @{
-				Namespace        = "WinAPI"
-				Name             = "KnownFolders"
-				Language         = "CSharp"
-				MemberDefinition = @"
-[DllImport("shell32.dll")]
-public extern static int SHSetKnownFolderPath(ref Guid folderId, uint flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] string path);
-"@
-			}
-			if (-not ("WinAPI.KnownFolders" -as [type])) {
-				Add-Type @Signature
-			}
-
-			foreach ($guid in $KnownFolders[$KnownFolder]) {
-				[WinAPI.KnownFolders]::SHSetKnownFolderPath([ref]$guid, 0, 0, $Path)
-			}
-			(Get-Item -Path $Path -Force).Attributes = "ReadOnly"
-		}
-
-		$UserShellFoldersRegName = @{
-			"Desktop"   =	"Desktop"
-			"Documents"	=	"Personal"
-			"Downloads"	=	"{374DE290-123F-4565-9164-39C4925E467B}"
-			"Music"     =	"My Music"
-			"Pictures"  =	"My Pictures"
-			"Videos"    =	"My Video"
-		}
-
-		$UserShellFoldersGUID = @{
-			"Desktop"   =	"{754AC886-DF64-4CBA-86B5-F7FBF4FBCEF5}"
-			"Documents"	=	"{F42EE2D3-909F-4907-8871-4C22FC0BF756}"
-			"Downloads"	=	"{7D83EE9B-2244-4E70-B1F5-5393042AF1E4}"
-			"Music"     =	"{A0C69A99-21C8-4671-8703-7934162FCF1D}"
-			"Pictures"  =	"{0DDD015D-B06C-45D5-8C4C-F59713854639}"
-			"Videos"    =	"{35286A68-3C57-41A1-BBB1-0EAE73D76C95}"
-		}
-
-		# Contents of the hidden desktop.ini file for each type of user folders
-		# Содержимое скрытого файла desktop.ini для каждого типа пользовательских папок
-		$DesktopINI = @{
-			"Desktop"   =	"",
-			"[.ShellClassInfo]",
-			"LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21769",
-			"IconResource=%SystemRoot%\system32\imageres.dll,-183"
-			"Documents"	=	"",
-			"[.ShellClassInfo]",
-			"LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21770",
-			"IconResource=%SystemRoot%\system32\imageres.dll,-112",
-			"IconFile=%SystemRoot%\system32\shell32.dll",
-			"IconIndex=-235"
-			"Downloads"	=	"",
-			"[.ShellClassInfo]", "LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21798",
-			"IconResource=%SystemRoot%\system32\imageres.dll,-184"
-			"Music"     =	"",
-			"[.ShellClassInfo]", "LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21790",
-			"InfoTip=@%SystemRoot%\system32\shell32.dll,-12689",
-			"IconResource=%SystemRoot%\system32\imageres.dll,-108",
-			"IconFile=%SystemRoot%\system32\shell32.dll", "IconIndex=-237"
-			"Pictures"  =	"",
-			"[.ShellClassInfo]",
-			"LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21779",
-			"InfoTip=@%SystemRoot%\system32\shell32.dll,-12688",
-			"IconResource=%SystemRoot%\system32\imageres.dll,-113",
-			"IconFile=%SystemRoot%\system32\shell32.dll",
-			"IconIndex=-236"
-			"Videos"    =	"",
-			"[.ShellClassInfo]",
-			"LocalizedResourceName=@%SystemRoot%\system32\shell32.dll,-21791",
-			"InfoTip=@%SystemRoot%\system32\shell32.dll,-12690",
-			"IconResource=%SystemRoot%\system32\imageres.dll,-189",
-			"IconFile=%SystemRoot%\system32\shell32.dll", "IconIndex=-238"
-		}
-
-		# Determining the current user folder path
-		# Определяем текущее значение пути пользовательской папки
-		$UserShellFolderRegValue = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name $UserShellFoldersRegName[$UserFolder]
-		if ($UserShellFolderRegValue -ne $FolderPath) {
-			if ((Get-ChildItem -Path $UserShellFolderRegValue | Measure-Object).Count -ne 0) {
-				Write-Error -Message $Localization.UserShellFolderNotEmpty -ErrorAction SilentlyContinue
-			}
-
-			# Creating a new folder if there is no one
-			# Создаем новую папку, если таковая отсутствует
-			if (-not (Test-Path -Path $FolderPath)) {
-				New-Item -Path $FolderPath -ItemType Directory -Force
-			}
-
-			# Removing old desktop.ini
-			# Удаляем старый desktop.ini
-			if ($RemoveDesktopINI.IsPresent) {
-				Remove-Item -Path "$UserShellFolderRegValue\desktop.ini" -Force
-			}
-
-			KnownFolderPath -KnownFolder $UserFolder -Path $FolderPath
-			New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name $UserShellFoldersGUID[$UserFolder] -PropertyType ExpandString -Value $FolderPath -Force
-
-			Set-Content -Path "$FolderPath\desktop.ini" -Value $DesktopINI[$UserFolder] -Encoding Unicode -Force
-			(Get-Item -Path "$FolderPath\desktop.ini" -Force).Attributes = "Hidden", "System", "Archive"
-			(Get-Item -Path "$FolderPath\desktop.ini" -Force).Refresh()
-		}
-	}
-
-	# Desktop
-	# Рабочий стол
-	Write-Verbose -Message $Localization.DesktopDriveSelect -Verbose
-	Write-Warning -Message $Localization.DesktopFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.DesktopDefaultFolder
-	$Change = $Localization.DesktopFolderChange
-	$Skip = $Localization.DesktopFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			UserShellFolder -UserFolder Desktop -FolderPath "$env:USERPROFILE\Desktop" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.DesktopSkipped -Verbose
-		}
-	}
-
-	# Documents
-	# Документы
-	Write-Verbose -Message $Localization.DocumentsDriveSelect -Verbose
-	Write-Warning -Message $Localization.DocumentsFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.DocumentsDefaultFolder
-	$Change = $Localization.DocumentsFolderChange
-	$Skip = $Localization.DocumentsFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			UserShellFolder -UserFolder Documents -FolderPath "$env:USERPROFILE\Documents" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.DocumentsSkipped -Verbose
-		}
-	}
-
-	# Downloads
-	# Загрузки
-	Write-Verbose -Message $Localization.DownloadsDriveSelect -Verbose
-	Write-Warning -Message $Localization.DownloadsFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.DownloadsDefaultFolder
-	$Change = $Localization.DownloadsFolderChange
-	$Skip = $Localization.DownloadsFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			UserShellFolder -UserFolder Downloads -FolderPath "$env:USERPROFILE\Downloads" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.DownloadsSkipped -Verbose
-		}
-	}
-
-	# Music
-	# Музыка
-	Write-Verbose -Message $Localization.MusicDriveSelect -Verbose
-	Write-Warning -Message $Localization.MusicFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.MusicDefaultFolder
-	$Change = $Localization.MusicFolderChange
-	$Skip = $Localization.MusicFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			UserShellFolder -UserFolder Music -FolderPath "$env:USERPROFILE\Music" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.MusicSkipped -Verbose
-		}
-	}
-
-
-	# Pictures
-	# Изображения
-	Write-Verbose -Message $Localization.PicturesDriveSelect -Verbose
-	Write-Warning -Message $Localization.PicturesFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.PicturesDefaultFolder
-	$Change = $Localization.PicturesFolderChange
-	$Skip = $Localization.PicturesFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			UserShellFolder -UserFolder Pictures -FolderPath "$env:USERPROFILE\Pictures" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.PicturesSkipped -Verbose
-		}
-	}
-
-	# Videos
-	# Видео
-	Write-Verbose -Message $Localization.VideosDriveSelect -Verbose
-	Write-Warning -Message $Localization.VideosFilesWontBeMoved
-
-	$Title = ""
-	$Message = $Localization.VideosDefaultFolder
-	$Change = $Localization.VideosFolderChange
-	$Skip = $Localization.VideosFolderSkip
-	$Options = "&$Change", "&$Skip"
-	$DefaultChoice = 1
-	$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-
-	switch ($Result) {
-		"0" {
-			UserShellFolder -UserFolder Videos -FolderPath "$env:USERPROFILE\Videos" -RemoveDesktopINI
-		}
-		"1" {
-			Write-Verbose -Message $Localization.VideosSkipped -Verbose
-		}
-	}
+	
+	$SelectedDrive = ShowMenu -Title $Localization.VideosDriveSelect -Menu $DriveLetters -Default $Default
+	UserShellFolder -UserFolder Videos -FolderPath "${SelectedDrive}:\Videos" -RemoveDesktopINI
 }
 
 # Save screenshots by pressing Win+PrtScr to the Desktop folder (current user only)

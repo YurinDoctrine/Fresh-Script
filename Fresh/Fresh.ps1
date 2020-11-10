@@ -547,15 +547,6 @@ EnableLatestInstalled.NET
 #>
 ChangeUserShellFolderLocation
 
-<#
-	Change the location of the user folders to the default values (current user only)
-	User files or folders won't me moved to the new location
-
-	Изменить расположение пользовательских папок на значения по умолчанию (только для текущего пользователя)
-	Пользовательские файлы и папки не будут перемещены в новое расположение
-#>
-# SetDefaultUserShellFolderLocation
-
 # Save screenshots by pressing Win+PrtScr to the Desktop folder (current user only)
 # Сохранять скриншоты по нажатию Win+PrtScr в папку "рабочий стол" (только для текущего пользователя)
 # WinPrtScrDesktopFolder
