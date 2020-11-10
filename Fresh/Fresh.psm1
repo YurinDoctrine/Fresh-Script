@@ -1209,56 +1209,6 @@ function DisableStorageSense {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01 -PropertyType DWord -Value 0 -Force
 }
 
-# Run Storage Sense every month (current user only)
-# Запускать Контроль памяти каждый месяц (только для текущего пользователя)
-function StorageSenseMonthFrequency {
-	if ((Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01) -eq "1") {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 2048 -PropertyType DWord -Value 30 -Force
-	}
-}
-
-# Run Storage Sense during low free disk space (default value) (current user only)
-# Запускать Контроль памяти, когда остается мало место на диске (значение по умолчанию) (только для текущего пользователя)
-function StorageSenseDefaultFrequency {
-	if ((Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01) -eq "1") {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 2048 -PropertyType DWord -Value 0 -Force
-	}
-}
-
-# Delete temporary files that apps aren't using (current user only)
-# Удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-function EnableStorageSenseTempFiles {
-	if ((Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01) -eq "1") {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 04 -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Do not delete temporary files that apps aren't using (current user only)
-# Не удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-function DisableStorageSenseTempFiles {
-	if ((Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01) -eq "1") {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 04 -PropertyType DWord -Value 0 -Force
-	}
-}
-
-# Delete files in recycle bin if they have been there for over 30 days (current user only)
-# Удалять файлы из корзины, если они находятся в корзине более 30 дней (только для текущего пользователя)
-function EnableStorageSenseRecycleBin {
-	if ((Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01) -eq "1") {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 08 -PropertyType DWord -Value 1 -Force
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 256 -PropertyType DWord -Value 30 -Force
-	}
-}
-
-# Do not delete files in recycle bin if they have been there for over 30 days (current user only)
-# Не удалять файлы из корзины, если они находятся в корзине более 30 дней(только для текущего пользователя)
-function DisableStorageSenseRecycleBin {
-	if ((Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01) -eq "1") {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 08 -PropertyType DWord -Value 0 -Force
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 256 -PropertyType DWord -Value 0 -Force
-	}
-}
-
 # Disable hibernation if the device is not a laptop
 # Отключить режим гибернации, если устройство не является ноутбуком
 function DisableHibernate {
@@ -1276,10 +1226,6 @@ function EnableHibernate {
 # Change the %TEMP% environment variable path to the %SystemDrive%\Temp (both machine-wide, and for the current user)
 # Изменить путь переменной среды для %TEMP% на %SystemDrive%\Temp (для всех пользователей)
 function SetTempPath {
-	if (-not (Test-Path -Path $env:SystemDrive\Temp)) {
-		New-Item -Path $env:SystemDrive\Temp -ItemType Directory -Force
-	}
-
 	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\Temp", "User")
 	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\Temp", "Machine")
 	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\Temp", "Process")

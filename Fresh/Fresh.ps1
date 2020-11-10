@@ -452,30 +452,6 @@ HideOneDriveFileExplorerAd
 # Выключить Контроль памяти (только для текущего пользователя)
 DisableStorageSense
 
-# Run Storage Sense every month (current user only)
-# Запускать Контроль памяти каждый месяц (только для текущего пользователя)
-# StorageSenseMonthFrequency
-
-# Run Storage Sense during low free disk space (default value) (current user only)
-# Запускать Контроль памяти, когда остается мало место на диске (значение по умолчанию) (только для текущего пользователя)
-# StorageSenseDefaultFrequency
-
-# Delete temporary files that apps aren't using (current user only)
-# Удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-# EnableStorageSenseTempFiles
-
-# Do not delete temporary files that apps aren't using (current user only)
-# Не удалять временные файлы, не используемые в приложениях (только для текущего пользователя)
-DisableStorageSenseTempFiles
-
-# Delete files in recycle bin if they have been there for over 30 days (current user only)
-# Удалять файлы из корзины, если они находятся в корзине более 30 дней (только для текущего пользователя)
-# EnableStorageSenseRecycleBin
-
-# Do not delete files in recycle bin if they have been there for over 30 days (current user only)
-# Не удалять файлы из корзины, если они находятся в корзине более 30 дней(только для текущего пользователя)
-DisableStorageSenseRecycleBin
-
 # Disable hibernation if the device is not a laptop
 # Отключить режим гибернации, если устройство не является ноутбуком
 DisableHibernate
