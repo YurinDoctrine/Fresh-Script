@@ -672,6 +672,12 @@ DisableAutoUpdateDriver
 
 # Turn off action center
 TurnOffActionCenter
+
+# SvcHost split threshold in KB
+SvcHostSplitThresholdInKB
+
+# Function discovery resource publication
+FDResPub
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
