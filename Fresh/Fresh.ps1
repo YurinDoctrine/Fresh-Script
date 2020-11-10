@@ -300,11 +300,11 @@ HideQuickAccessRecentFiles
 
 # Hide the search box or the search icon from the taskbar (current user only)
 # Скрыть поле или значок поиска на панели задач (только для текущего пользователя)
-# HideTaskbarSearch
+HideTaskbarSearch
 
 # Show the search box from the taskbar (current user only)
 # Показать поле поиска на панели задач (только для текущего пользователя)
-ShowTaskbarSearch
+# ShowTaskbarSearch
 
 # Do not show the "Windows Ink Workspace" button on the taskbar (current user only)
 # Не показывать кнопку Windows Ink Workspace на панели задач (current user only)
@@ -707,6 +707,9 @@ DisableAutoUpdateDriver
 TurnOffActionCenter
 #endregion System
 #region Performance
+# Adjust best performance(that would able to increase the overall performance)
+AdjustBestPerformance
+
 # Force disable battery saver
 PreventBatterySaver
 
@@ -721,9 +724,6 @@ PreventRequireSignInWhenAfterSleep
 
 # Disable indexing
 DisableIndexing
-
-# Adjust best performance(that would able to increase the overall performance)
-AdjustBestPerformance
 
 # Set current boot timeout value to 0
 SetBootTimeoutValue
