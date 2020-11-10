@@ -536,17 +536,6 @@ EnableLatestInstalled.NET
 # Не использовать последнюю установленную версию .NET для всех приложений
 # DisableLatestInstalled.NET
 
-<#
-	Change the location of the user folders to any drives root (current user only)
-	It is suggested to move it to any disks root of your choice using the interactive menu by default
-	User files or folders won't me moved to a new location
-
-	Изменить расположение пользовательских папок (только для текущего пользователя)
-	По умолчанию предлагается переместить в корень любого диска на выбор с помощью интерактивного меню
-	Пользовательские файлы и папки не будут перемещены в новое расположение
-#>
-ChangeUserShellFolderLocation
-
 # Save screenshots by pressing Win+PrtScr to the Desktop folder (current user only)
 # Сохранять скриншоты по нажатию Win+PrtScr в папку "рабочий стол" (только для текущего пользователя)
 # WinPrtScrDesktopFolder
