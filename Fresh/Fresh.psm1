@@ -172,7 +172,16 @@ function DisableScheduledTasks {
 		"FamilySafetyRefreshTask",
 
 		# XblGameSave Standby Task
-		"XblGameSaveTask"
+		"XblGameSaveTask",
+	
+		# Microsoft Edge update task
+		"MicrosoftEdgeUpdateTaskMachineCore",
+		
+		# Microsoft Edge update task
+		"MicrosoftEdgeUpdateTaskMachineUA",
+		
+		# klcp_update task
+		"klcp_update"
 	)
 
 	# If device is not a laptop disable FODCleanupTask too
@@ -183,72 +192,6 @@ function DisableScheduledTasks {
 	}
 
 	Get-ScheduledTask -TaskName $ScheduledTaskList | Disable-ScheduledTask
-}
-
-# Turn on diagnostics tracking scheduled tasks
-# Включить задачи диагностического отслеживания
-function EnableScheduledTasks {
-	$ScheduledTaskList = @(
-		# Collects program telemetry information if opted-in to the Microsoft Customer Experience Improvement Program.
-		# Собирает телеметрические данные программы при участии в Программе улучшения качества программного обеспечения Майкрософт
-		"Microsoft Compatibility Appraiser",
-
-		# Collects program telemetry information if opted-in to the Microsoft Customer Experience Improvement Program
-		# Сбор телеметрических данных программы при участии в программе улучшения качества ПО
-		"ProgramDataUpdater",
-
-		# This task collects and uploads autochk SQM data if opted-in to the Microsoft Customer Experience Improvement Program
-		# Эта задача собирает и загружает данные SQM при участии в программе улучшения качества программного обеспечения
-		"Proxy",
-
-		# If the user has consented to participate in the Windows Customer Experience Improvement Program, this job collects and sends usage data to Microsoft
-		# Если пользователь изъявил желание участвовать в программе по улучшению качества программного обеспечения Windows, эта задача будет собирать и отправлять сведения о работе программного обеспечения в Майкрософт
-		"Consolidator",
-
-		# The USB CEIP (Customer Experience Improvement Program) task collects Universal Serial Bus related statistics and information about your machine and sends it to the Windows Device Connectivity engineering group at Microsoft
-		# При выполнении задачи программы улучшения качества ПО шины USB (USB CEIP) осуществляется сбор статистических данных об использовании универсальной последовательной шины USB и с ведений о компьютере, которые направляются инженерной группе Майкрософт по вопросам подключения устройств в Windows
-		"UsbCeip",
-
-		# The Windows Disk Diagnostic reports general disk and system information to Microsoft for users participating in the Customer Experience Program
-		# Для пользователей, участвующих в программе контроля качества программного обеспечения, служба диагностики дисков Windows предоставляет общие сведения о дисках и системе в корпорацию Майкрософт
-		"Microsoft-Windows-DiskDiagnosticDataCollector",
-
-		# Protects user files from accidental loss by copying them to a backup location when the system is unattended
-		# Защищает файлы пользователя от случайной потери за счет их копирования в резервное расположение, когда система находится в автоматическом режиме
-		"File History (maintenance mode)",
-
-		# Measures a system's performance and capabilities
-		# Измеряет быстродействие и возможности системы
-		"WinSAT",
-
-		# This task shows various Map related toasts
-		# Эта задача показывает различные тосты (всплывающие уведомления) приложения "Карты"
-		"MapsToastTask",
-
-		# This task checks for updates to maps which you have downloaded for offline use
-		# Эта задача проверяет наличие обновлений для карт, загруженных для автономного использования
-		"MapsUpdateTask",
-
-		# Initializes Family Safety monitoring and enforcement
-		# Инициализация контроля и применения правил семейной безопасности
-		"FamilySafetyMonitor",
-
-		# Synchronizes the latest settings with the Microsoft family features service
-		# Синхронизирует последние параметры со службой функций семьи учетных записей Майкрософт
-		"FamilySafetyRefreshTask",
-
-		# XblGameSave Standby Task
-		"XblGameSaveTask"
-	)
-
-	# If device is not a laptop disable FODCleanupTask too
-	# Если устройство не является ноутбуком, отключить также и FODCleanupTask
-	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2) {
-		# HelloFace
-		$ScheduledTaskList += "FODCleanupTask"
-	}
-
-	Get-ScheduledTask -TaskName $ScheduledTaskList | Enable-ScheduledTask
 }
 
 # Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
@@ -1764,6 +1707,13 @@ function SvcHostSplitThresholdInKB {
 function FDResPub {
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Services\FDResPub -Name Start -PropertyType DWord -Value 2 -Force	
 }
+
+# Disable microsoft edge services
+function DisableMSEdgeServices {
+	Set-Service edgeupdatem -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service edgeupdate -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service MicrosoftEdgeElevationService -StartupType Disabled
+}
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -2898,6 +2848,28 @@ function DisableNetDevicesAutoInst {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force | Out-Null
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
+}
+
+# Disable realtime monitoring
+function DisableRealtimeMonitoring {
+	Set-MpPreference -DisableRealtimeMonitoring $true
+}
+
+# Hide tray icon
+function HideTrayIcon {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force | Out-Null
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1 -Force
+}
+
+# Disable defender cloud
+function DisableDefenderCloud {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force | Out-Null
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SpynetReporting" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
 }
 #endregion Microsoft Defender & Security
 #region Context menu

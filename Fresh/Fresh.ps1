@@ -667,6 +667,9 @@ SvcHostSplitThresholdInKB
 
 # Function discovery resource publication
 FDResPub
+
+# Disable microsoft edge services
+DisableMSEdgeServices
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -1037,6 +1040,9 @@ SetUnknownNetworksPublic
 
 # Disable automatic installation of network devices
 DisableNetDevicesAutoInst
+
+# Disable realtime monitoring
+DisableRealtimeMonitoring
 #endregion Microsoft Defender & Security
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
