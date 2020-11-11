@@ -670,6 +670,12 @@ FDResPub
 
 # Disable microsoft edge services
 DisableMSEdgeServices
+
+# Hide tray icon
+HideTrayIcon
+
+# Disable defender cloud
+DisableDefenderCloud
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
