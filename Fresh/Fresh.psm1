@@ -1028,6 +1028,55 @@ function DisableBackgroundUWPApps {
 	$OFS = " "
 }
 
+# Disable the following Windows features
+# Отключить следующие компоненты Windows
+function DisableWindowsFeatures {
+	$WindowsOptionalFeatures = @(
+		# Media Features
+		# Компоненты работы с мультимедиа
+		"MediaPlayback",
+
+		# PowerShell 2.0
+		"MicrosoftWindowsPowerShellV2",
+		"MicrosoftWindowsPowershellV2Root",
+
+		# Microsoft XPS Document Writer
+		# Средство записи XPS-документов (Microsoft)
+		"Printing-XPSServices-Features",
+
+		# Work Folders Client
+		# Клиент рабочих папок
+		"WorkFolders-Client"
+	)
+	Disable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
+}
+
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+function DisableWindowsCapabilities {
+	# The following FODv2 items will be shown, but their checkboxes would be clear
+	# Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
+	$ExcludedCapabilities = @(
+		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
+		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
+		"DirectX\.Configuration\.Database",
+
+		# Features critical to Windows functionality
+		# Компоненты, критичные для работоспособности Windows
+		"Windows\.Client\.ShellComponents",
+                
+		# Language components
+		"Language\."
+	)
+	
+	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) } | Remove-WindowsCapability -Online ) {
+		Write-Verbose -Message 'Removed Capabilities' -Verbose
+	}
+	else {
+		Write-Verbose -Message $Localization.NoData -Verbose
+	}
+}
+
 # Turn off Cortana autostarting
 # Удалить Кортана из автозагрузки
 function DisableCortanaAutostart {
@@ -1322,82 +1371,6 @@ function AlwaysWaitNetworkStartup {
 function NeverWaitNetworkStartup {
 	if ((Get-CimInstance -ClassName CIM_ComputerSystem).PartOfDomain -eq $true) {
 		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name SyncForegroundPolicy -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Disable the following Windows features
-# Отключить следующие компоненты Windows
-function DisableWindowsFeatures {
-	$WindowsOptionalFeatures = @(
-		# Media Features
-		# Компоненты работы с мультимедиа
-		"MediaPlayback",
-
-		# PowerShell 2.0
-		"MicrosoftWindowsPowerShellV2",
-		"MicrosoftWindowsPowershellV2Root",
-
-		# Microsoft XPS Document Writer
-		# Средство записи XPS-документов (Microsoft)
-		"Printing-XPSServices-Features",
-
-		# Work Folders Client
-		# Клиент рабочих папок
-		"WorkFolders-Client"
-	)
-	Disable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
-}
-
-# Enable the following Windows features
-# Включить следующие компоненты Windows
-function EnableWindowsFeatures {
-	$WindowsOptionalFeatures = @(
-		# Legacy Components
-		# Компоненты прежних версий
-		"LegacyComponents",
-
-		# Media Features
-		# Компоненты работы с мультимедиа
-		"MediaPlayback",
-
-		# PowerShell 2.0
-		"MicrosoftWindowsPowerShellV2",
-		"MicrosoftWindowsPowershellV2Root",
-
-		# Microsoft XPS Document Writer
-		# Средство записи XPS-документов (Microsoft)
-		"Printing-XPSServices-Features",
-
-		# Work Folders Client
-		# Клиент рабочих папок
-		"WorkFolders-Client"
-	)
-	Enable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
-}
-
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-function DisableWindowsCapabilities {
-	# The following FODv2 items will be shown, but their checkboxes would be clear
-	# Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
-	$ExcludedCapabilities = @(
-		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
-		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
-		"DirectX\.Configuration\.Database",
-
-		# Features critical to Windows functionality
-		# Компоненты, критичные для работоспособности Windows
-		"Windows\.Client\.ShellComponents",
-                
-		# Language components
-		"Language\."
-	)
-	
-	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) } | Remove-WindowsCapability -Online ) {
-		Write-Verbose -Message 'Removed Capabilities' -Verbose
-	}
-	else {
-		Write-Verbose -Message $Localization.NoData -Verbose
 	}
 }
 

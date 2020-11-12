@@ -427,6 +427,14 @@ UninstallUWPApps
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
 DisableBackgroundUWPApps
 
+# Disable the following Windows features
+# Отключить следующие компоненты Windows
+DisableWindowsFeatures
+
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+DisableWindowsCapabilities
+
 # Turn off Cortana autostarting
 # Удалить Кортана из автозагрузки
 DisableCortanaAutostart
@@ -515,18 +523,6 @@ DisableDeliveryOptimization
 # Never wait for the network at computer startup and logon for workgroup networks
 # Никогда ждать сеть при запуске и входе в систему для рабочих групп
 NeverWaitNetworkStartup
-
-# Disable the following Windows features
-# Отключить следующие компоненты Windows
-DisableWindowsFeatures
-
-# Enable the following Windows features
-# Включить следующие компоненты Windows
-# EnableWindowsFeatures
-
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-DisableWindowsCapabilities
 
 # Use latest installed .NET runtime for all apps
 # Использовать последнюю установленную среду выполнения .NET для всех приложений
