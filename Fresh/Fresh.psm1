@@ -1687,6 +1687,11 @@ function DisableMSEdgeServices {
 	Set-Service edgeupdate -StartupType Disabled -ErrorAction SilentlyContinue
 	Set-Service MicrosoftEdgeElevationService -StartupType Disabled
 }
+
+# Turn off lock screen background
+function TurnOffLockScreenBackground {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name DisableLogonBackgroundImage -PropertyType DWord -Value 1 -Force
+}
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)

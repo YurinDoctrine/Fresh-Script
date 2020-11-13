@@ -667,11 +667,8 @@ FDResPub
 # Disable microsoft edge services
 DisableMSEdgeServices
 
-# Hide tray icon
-HideTrayIcon
-
-# Disable defender cloud
-DisableDefenderCloud
+# Turn off lock screen background
+TurnOffLockScreenBackground
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -1045,6 +1042,12 @@ DisableNetDevicesAutoInst
 
 # Disable realtime monitoring
 DisableRealtimeMonitoring
+
+# Hide tray icon
+HideTrayIcon
+
+# Disable defender cloud
+DisableDefenderCloud
 #endregion Microsoft Defender & Security
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
