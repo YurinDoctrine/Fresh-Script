@@ -1145,9 +1145,9 @@ function UninstallOneDrive {
 		Clear-Variable -Name OpenedFolders -Force -ErrorAction Ignore
 		$OpenedFolders = { (New-Object -ComObject Shell.Application).Windows() | ForEach-Object -Process { $_.Document.Folder.Self.Path } }.Invoke()
         
-		# Terminate File Explorer process
-		# Завершить процесс проводника
+		# Restart explorer process
 		TASKKILL /F /IM explorer.exe
+		Start-Process "explorer.exe"
 		
 		# Attempt to unregister FileSyncShell64.dll and remove
 		# Попытка разрегистрировать FileSyncShell64.dll и удалить
@@ -1619,6 +1619,7 @@ function EnableF8BootMenuLegacy {
 # Set data execution prevention (DEP) policy to optout
 Function SetDEPOptOut {
 	bcdedit /set `{current`} nx OptOut | Out-Null
+	Set-ProcessMitigation -System -Enable DEP
 }
 
 # Stop and disable home groups services
@@ -1691,6 +1692,12 @@ function DisableMSEdgeServices {
 # Turn off lock screen background
 function TurnOffLockScreenBackground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name DisableLogonBackgroundImage -PropertyType DWord -Value 1 -Force
+}
+
+# Import policy definitions
+function ImportPolicyDefinitions {
+	Start-Job -ScriptBlock {takeown /f C:\WINDOWS\Policydefinitions /r /a; icacls C:\WINDOWS\PolicyDefinitions /grant "Administrators:(OI)(CI)F" /t}
+	Copy-Item -Path .\Files\PolicyDefinitions\* -Destination C:\Windows\PolicyDefinitions -Force -Recurse -ErrorAction SilentlyContinue	
 }
 #endregion System
 #region Performance
@@ -1977,15 +1984,10 @@ function DisableXboxGameBar {
 		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 0 -Force
 		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 0 -Force
 	}
-}
-
-# Turn on Xbox Game Bar
-# Включить Xbox Game Bar
-function EnableXboxGameBar {
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 1 -Force
-		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR")) {
+	New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force | Out-Null
 	}
+	New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type DWord -Value 0 -Force
 }
 
 # Turn off Xbox Game Bar tips
@@ -2090,6 +2092,7 @@ function BestPriorityForeground {
 	}
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	netsh int tcp set global rsc=disabled
+	netsh int tcp set global timestamps=disabled
 }
 #endregion Gaming
 #region Scheduled tasks

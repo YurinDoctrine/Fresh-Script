@@ -669,6 +669,9 @@ DisableMSEdgeServices
 
 # Turn off lock screen background
 TurnOffLockScreenBackground
+
+# Import policy definitions
+ImportPolicyDefinitions
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -792,10 +795,6 @@ AllowAutoGameMode
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
 DisableXboxGameBar
-
-# Turn on Xbox Game Bar
-# Включить Xbox Game Bar
-# EnableXboxGameBar
 
 # Turn off Xbox Game Bar tips
 # Отключить советы Xbox Game Bar
