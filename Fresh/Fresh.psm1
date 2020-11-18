@@ -2007,14 +2007,6 @@ function EnableXboxGameTips {
 }
 
 <#
-	Set "High performance" in graphics performance preference for an app
-	Only with a dedicated GPU
-
-	Установить параметры производительности графики для отдельных приложений на "Высокая производительность"
-	Только при наличии внешней видеокарты
-#>
-
-<#
 	Turn on hardware-accelerated GPU scheduling. Restart needed
 	Only with a dedicated GPU and WDDM verion is 2.7 or higher
 

@@ -4,9 +4,9 @@
 Clear-Host
 
 Remove-Module -Name Fresh -Force -ErrorAction Ignore
-Import-Module -Name .\Fresh.psd1 -PassThru -Force
+Import-Module -Name $PSScriptRoot\Fresh.psd1 -PassThru -Force
 
-Import-LocalizedData -BindingVariable Global:Localization
+Import-LocalizedData -BindingVariable Global:Localization  -FileName Fresh
 
 # Checking
 # Проверка
