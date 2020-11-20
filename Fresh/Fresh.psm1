@@ -1960,11 +1960,6 @@ function DoubleClickHeightWidth {
 function ValueMax {
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name ValueMax -PropertyType DWord -Value 0 -Force
 }
-
-# Allow auto game mode
-function AllowAutoGameMode {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
-}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -2075,6 +2070,19 @@ function BestPriorityForeground {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	netsh int tcp set global rsc=disabled
 	netsh int tcp set global timestamps=disabled
+}
+
+# Allow auto game mode
+function AllowAutoGameMode {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name AutoGameModeEnabled -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
+}
+
+# Disable mouse feedback
+function DisableMouseFeedback {
+	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name ContactVisualization -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name GestureVisualization -PropertyType DWord -Value 0 -Force
 }
 #endregion Gaming
 #region Scheduled tasks

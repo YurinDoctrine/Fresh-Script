@@ -781,9 +781,6 @@ DoubleClickHeightWidth
 
 # ValueMax
 ValueMax
-
-# Allow auto game mode
-AllowAutoGameMode
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -813,6 +810,12 @@ EnableGPUScheduling
 
 # Adjust best performance for all programs and also foreground services
 BestPriorityForeground
+
+# Allow auto game mode
+AllowAutoGameMode
+
+# Disable mouse feedback
+DisableMouseFeedback
 #endregion Gaming
 #region Scheduled tasks
 <#
