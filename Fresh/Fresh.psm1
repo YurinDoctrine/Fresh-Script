@@ -1942,16 +1942,6 @@ function MaxConnectionsPerServer {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "MaxConnectionsPerServer" -PropertyType DWord -Value 10 -Force
 }
 
-# Feature max connections per 1_0 server
-function FeatureMaxConnectionsPer1_0Server {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPER1_0SERVER" -Name "explore.exe" -PropertyType String -Value 10 -Force
-}
-
-# Feature max connections per server
-function FeatureMaxConnectionsPerServer {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_MAXCONNECTIONSPERSERVER" -Name "explore.exe" -PropertyType String -Value 10 -Force
-}
-
 # Non best effort limit
 function NonBestEffortLimit {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched")) {

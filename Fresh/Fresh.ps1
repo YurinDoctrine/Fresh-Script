@@ -773,12 +773,6 @@ MaxConnectionsPer1_0Server
 # Max connections per server
 MaxConnectionsPerServer
 
-# Feature max connections per 1_0 server
-FeatureMaxConnectionsPer1_0Server
-
-# Feature max connections per server
-FeatureMaxConnectionsPerServer
-
 # Non best effort limit
 NonBestEffortLimit
 
