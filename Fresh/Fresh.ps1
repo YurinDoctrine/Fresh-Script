@@ -781,6 +781,9 @@ DoubleClickHeightWidth
 
 # ValueMax
 ValueMax
+
+# Debloat microsoft services
+DebloatMicrosoftServices
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
