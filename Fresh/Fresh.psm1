@@ -938,7 +938,7 @@ function DisablePrtScnSnippingTool {
 
 # Change taskbar location
 function ChangeTaskbarLocation {
-	$Value = "28,00,00,00,ff,ff,ff,ff,02,00,00,00,00,00,00,00,3e,00,00,00,2e,00,00,00,00,00,00,00,00,00,00,00,3e,00,00,00,b0,04,00,00"
+	$Value = "30,00,00,00,fe,ff,ff,ff,02,00,00,00,03,00,00,00,3e,00,00,00,28,00,00,00,00,00,00,00,d8,02,00,00,56,05,00,00,00,03,00,00,60,00,00,00,01,00,00,00"
 	$RegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3"
 	$Name = "Settings"
 	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
