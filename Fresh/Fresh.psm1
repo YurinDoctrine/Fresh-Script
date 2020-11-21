@@ -1624,9 +1624,9 @@ Function SetDEPOptOut {
 
 # Stop and disable home groups services
 function DisableHomeGroups {
-	Stop-Service "HomeGroupListener" -WarningAction SilentlyContinue
+	Stop-Service "HomeGroupListener" -Force -WarningAction SilentlyContinue
 	Set-Service "HomeGroupListener" -StartupType Disabled
-	Stop-Service "HomeGroupProvider" -WarningAction SilentlyContinue
+	Stop-Service "HomeGroupProvider" -Force -WarningAction SilentlyContinue
 	Set-Service "HomeGroupProvider" -StartupType Disabled
 }
 
@@ -1637,7 +1637,7 @@ function DisableRemoteAssistance {
 
 # Stop and disable superfetch service
 function DisableSuperfetch {
-	Stop-Service -Force "SysMain" -WarningAction SilentlyContinue
+	Stop-Service -Force "SysMain" -Force -WarningAction SilentlyContinue
 	Set-Service "SysMain" -StartupType Disabled
 }
 
@@ -1685,7 +1685,7 @@ function FDResPub {
 function DisableMSEdgeServices {
 	Set-Service edgeupdatem -StartupType Disabled -ErrorAction SilentlyContinue
 	Set-Service edgeupdate -StartupType Disabled -ErrorAction SilentlyContinue
-	Set-Service MicrosoftEdgeElevationService -StartupType Disabled
+	Set-Service MicrosoftEdgeElevationService -StartupType Disabled -ErrorAction SilentlyContinue
 }
 
 # Turn off lock screen background
@@ -1727,8 +1727,8 @@ function PreventBatterySaver {
 
 # Disable default disk defragmenter
 function DisableDefaultDiskDefragmenter {
-	Stop-Service -Force "defragsvc" -WarningAction SilentlyContinue
-	Set-Service "defragsvc" -StartupType Disabled
+	Stop-Service "defragsvc" -Force -WarningAction SilentlyContinue
+	Set-Service "defragsvc" -StartupType Disabled -ErrorAction SilentlyContinue
 	Disable-ScheduledTask -TaskName 'ScheduledDefrag' -TaskPath '\Microsoft\Windows\Defrag'
 }
 
@@ -1771,8 +1771,8 @@ function PreventRequireSignInWhenAfterSleep {
 function DisableIndexing {
 	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
 	$Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
-	Stop-Service -Force "WSearch" -WarningAction SilentlyContinue
-	Set-Service "WSearch" -StartupType Disabled
+	Stop-Service "WSearch" -Force -WarningAction SilentlyContinue
+	Set-Service "WSearch" -StartupType Disabled -ErrorAction SilentlyContinue
 	if ($DriveLetters.Count -notmatch 2) {
 		if (($Object.IndexingEnabled -match $True)) {
 			Write-Output "Disabling indexing of drive C:"
@@ -1805,7 +1805,7 @@ function SetBootTimeoutValue {
 
 # Disable tablet input service(non-tablet only)
 function DisableTabletInputService {
-	Stop-Service -Force -Name "TabletInputService" -WarningAction SilentlyContinue; Set-Service -Name "TabletInputService" -StartupType Disabled
+	Stop-Service -Name "TabletInputService" -Force -WarningAction SilentlyContinue; Set-Service -Name "TabletInputService" -StartupType Disabled -ErrorAction SilentlyContinue
 }
 
 # Ntfs allow extended character 8dot3 rename
@@ -1962,42 +1962,78 @@ function ValueMax {
 
 # Debloat microsoft services
 function DebloatMicrosoftServices {
-	Set-Service AxInstSV -StartupType Disabled
-	Set-Service tzautoupdate -StartupType Disabled
-	Set-Service bthserv -StartupType Disabled
-	Set-Service MapsBroker -StartupType Disabled
-	Set-Service lfsvc -StartupType Disabled
-	Set-Service SharedAccess -StartupType Disabled
-	Set-Service lltdsvc -StartupType Disabled
-	Set-Service AppVClient -StartupType Disabled
-	Set-Service NetTcpPortSharing -StartupType Disabled
-	Set-Service NcbService -StartupType Disabled
-	Set-Service CscService -StartupType Disabled
-	Set-Service PhoneSvc -StartupType Disabled
-	Set-Service Spooler -StartupType Disabled
-	Set-Service PrintNotify -StartupType Disabled
-	Set-Service QWAVE -StartupType Disabled
-	Set-Service RmSvc -StartupType Disabled
-	Set-Service RemoteAccess -StartupType Disabled
-	Set-Service SensorDataService -StartupType Disabled
-	Set-Service SensrSvc -StartupType Disabled
-	Set-Service SensorService -StartupType Disabled
-	Set-Service ShellHWDetection -StartupType Disabled
-	Set-Service SEMgrSvc -StartupType Disabled
-	Set-Service SCardSvr -StartupType Disabled
-	Set-Service ScDeviceEnum -StartupType Disabled
-	Set-Service SSDPSRV -StartupType Disabled
-	Set-Service WiaRpc -StartupType Disabled
-	Set-Service upnphost -StartupType Disabled
-	Set-Service UserDataSvc -StartupType Disabled
-	Set-Service UevAgentService -StartupType Disabled
-	Set-Service WalletService -StartupType Disabled
-	Set-Service FrameServer -StartupType Disabled
-	Set-Service stisvc -StartupType Disabled
-	Set-Service wisvc -StartupType Disabled
-	Set-Service icssvc -StartupType Disabled
-	Set-Service XblAuthManager -StartupType Disabled
-	Set-Service XblGameSave -StartupType Disabled
+	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
+	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
+	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
+	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
+	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
+	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service "SharedAccess" -Force -WarningAction SilentlyContinue
+	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
+	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "AppVClient" -Force -WarningAction SilentlyContinue
+	Set-Service AppVClient -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "NetTcpPortSharing" -Force -WarningAction SilentlyContinue
+	Set-Service NetTcpPortSharing -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "NcbService" -Force -WarningAction SilentlyContinue
+	Set-Service NcbService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CscService" -Force -WarningAction SilentlyContinue
+	Set-Service CscService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PhoneSvc" -Force -WarningAction SilentlyContinue
+	Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
+	Set-Service Spooler -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PrintNotify" -Force -WarningAction SilentlyContinue
+	Set-Service PrintNotify -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "QWAVE" -Force -WarningAction SilentlyContinue
+	Set-Service QWAVE -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RmSvc" -Force -WarningAction SilentlyContinue
+	Set-Service RmSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RemoteAccess" -Force -WarningAction SilentlyContinue
+	Set-Service RemoteAccess -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SensorDataService" -Force -WarningAction SilentlyContinue
+	Set-Service SensorDataService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SensrSvc" -Force -WarningAction SilentlyContinue
+	Set-Service SensrSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SensorService" -Force -WarningAction SilentlyContinue
+	Set-Service SensorService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "ShellHWDetection" -Force -WarningAction SilentlyContinue
+	Set-Service ShellHWDetection -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SEMgrSvc" -Force -WarningAction SilentlyContinue
+	Set-Service SEMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SCardSvr" -Force -WarningAction SilentlyContinue
+	Set-Service SCardSvr -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "ScDeviceEnum" -Force -WarningAction SilentlyContinue
+	Set-Service ScDeviceEnum -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SSDPSRV" -Force -WarningAction SilentlyContinue
+	Set-Service SSDPSRV -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WiaRpc" -Force -WarningAction SilentlyContinue
+	Set-Service WiaRpc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "upnphost" -Force -WarningAction SilentlyContinue
+	Set-Service upnphost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
+	Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "UevAgentService" -Force -WarningAction SilentlyContinue
+	Set-Service UevAgentService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
+	Set-Service WalletService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
+	Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "stisvc" -Force -WarningAction SilentlyContinue
+	Set-Service stisvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "wisvc" -Force -WarningAction SilentlyContinue
+	Set-Service wisvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "icssvc" -Force -WarningAction SilentlyContinue
+	Set-Service icssvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XblAuthManager" -Force -WarningAction SilentlyContinue
+	Set-Service XblAuthManager -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XblGameSave" -Force -WarningAction SilentlyContinue
+	Set-Service XblGameSave -StartupType Disabled -ErrorAction SilentlyContinue
 }
 #endregion Performance
 #region Gaming
@@ -2775,7 +2811,7 @@ function DisableMapUpdates {
 
 # Disable wap push service
 function DisableWAPPush {
-	Stop-Service "dmwappushservice" -WarningAction SilentlyContinue
+	Stop-Service "dmwappushservice" -Force -WarningAction SilentlyContinue
 	Set-Service "dmwappushservice" -StartupType Disabled
 }
 
