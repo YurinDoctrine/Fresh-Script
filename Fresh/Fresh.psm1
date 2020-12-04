@@ -178,10 +178,8 @@ function DisableScheduledTasks {
 		"MicrosoftEdgeUpdateTaskMachineCore",
 		
 		# Microsoft Edge update task
-		"MicrosoftEdgeUpdateTaskMachineUA",
-		
-		# klcp_update task
-		"klcp_update"
+		"MicrosoftEdgeUpdateTaskMachineUA"
+
 	)
 
 	# If device is not a laptop disable FODCleanupTask too
@@ -1637,7 +1635,7 @@ function DisableRemoteAssistance {
 
 # Stop and disable superfetch service
 function DisableSuperfetch {
-	Stop-Service -Force "SysMain" -Force -WarningAction SilentlyContinue
+	Stop-Service "SysMain" -Force -WarningAction SilentlyContinue
 	Set-Service "SysMain" -StartupType Disabled
 }
 
@@ -1972,7 +1970,7 @@ function DebloatMicrosoftServices {
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Set-Service "SharedAccess" -Force -WarningAction SilentlyContinue
+	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
 	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
