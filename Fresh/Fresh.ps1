@@ -502,11 +502,11 @@ DisableAdminApprovalMode
 
 # Turn on access to mapped drives from app running with elevated permissions with Admin Approval Mode enabled
 # Включить доступ к сетевым дискам при включенном режиме одобрения администратором при доступе из программ, запущенных с повышенными правами
-# EnableMappedDrivesAppElevatedAccess
+EnableMappedDrivesAppElevatedAccess
 
 # Turn off access to mapped drives from app running with elevated permissions with Admin Approval Mode enabled
 # Выключить доступ к сетевым дискам при включенном режиме одобрения администратором при доступе из программ, запущенных с повышенными правами
-DisableMappedDrivesAppElevatedAccess
+# DisableMappedDrivesAppElevatedAccess
 
 # Opt out of the Delivery Optimization-assisted updates downloading
 # Отказаться от загрузки обновлений с помощью оптимизации доставки
