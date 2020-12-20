@@ -1693,7 +1693,7 @@ function TurnOffLockScreenBackground {
 
 # Import policy definitions
 function ImportPolicyDefinitions {
-	Start-Job -ScriptBlock {takeown /f C:\WINDOWS\Policydefinitions /r /a; icacls C:\WINDOWS\PolicyDefinitions /grant "Administrators:(OI)(CI)F" /t}
+	Start-Job -ScriptBlock { takeown /f C:\WINDOWS\Policydefinitions /r /a; icacls C:\WINDOWS\PolicyDefinitions /grant "Administrators:(OI)(CI)F" /t }
 	Copy-Item -Path .\Files\PolicyDefinitions\* -Destination C:\Windows\PolicyDefinitions -Force -Recurse -ErrorAction SilentlyContinue	
 }
 #endregion System
@@ -2032,6 +2032,8 @@ function DebloatMicrosoftServices {
 	Set-Service XblAuthManager -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "XblGameSave" -Force -WarningAction SilentlyContinue
 	Set-Service XblGameSave -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XboxNetApiSvc" -Force -WarningAction SilentlyContinue
+	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
 #endregion Performance
 #region Gaming
@@ -2043,7 +2045,7 @@ function DisableXboxGameBar {
 		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 0 -Force
 	}
 	if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR")) {
-	New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force | Out-Null
+		New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force | Out-Null
 	}
 	New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type DWord -Value 0 -Force
 }
