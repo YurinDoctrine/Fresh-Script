@@ -348,6 +348,18 @@ function EnableBingSearch {
 		Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name DisableSearchBoxSuggestions -Force -ErrorAction SilentlyContinue
 	}
 }
+
+# Disable find my device
+function DisableFindMyDevice {
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Force
+	}
+	if (-not (Test-Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice)) {
+		New-Item -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Name AllowFindMyDevice -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Name LocationSyncEnabled -PropertyType DWord -Value 0 -Force
+}
 #endregion Privacy & Telemetry
 #region Start menu
 # Unpin all the Start tiles

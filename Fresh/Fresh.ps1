@@ -147,6 +147,9 @@ DisableBingSearch
 # Enable Bing search in the Start Menu
 # Включить поиск через Bing в меню "Пуск"
 # EnableBingSearch
+
+# Disable find my device
+DisableFindMyDevice
 #endregion Privacy & Telemetry
 #region Start menu
 # Unpin all the Start tiles
