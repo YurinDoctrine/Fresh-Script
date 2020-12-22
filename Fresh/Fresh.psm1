@@ -426,6 +426,14 @@ function HideAppSuggestions {
 function ShowAppSuggestions {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338388Enabled -PropertyType DWord -Value 1 -Force
 }
+
+# Hide live tiles
+function HideLiveTiles {
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications -Name NoCloudApplicationNotification -PropertyType DWord -Value 1 -Force
+}
 #endregion Start menu
 #region UI & Personalization
 # Do not use check boxes to select items (current user only)
@@ -1707,6 +1715,22 @@ function TurnOffLockScreenBackground {
 function ImportPolicyDefinitions {
 	Start-Job -ScriptBlock { takeown /f C:\WINDOWS\Policydefinitions /r /a; icacls C:\WINDOWS\PolicyDefinitions /grant "Administrators:(OI)(CI)F" /t }
 	Copy-Item -Path .\Files\PolicyDefinitions\* -Destination C:\Windows\PolicyDefinitions -Force -Recurse -ErrorAction SilentlyContinue	
+}
+
+# Disable license manager
+function DisableLicenseManager {
+	if (-not (Test-Path HKLM:\System\CurrentControlSet\Services\LicenseManager)) {
+		New-Item -Path HKLM:\System\CurrentControlSet\Services\LicenseManager -Force
+	}
+	New-ItemProperty -Path HKLM:\System\CurrentControlSet\Services\LicenseManager -Name Start -PropertyType DWord -Value 3 -Force
+}
+
+# Disable network connection status indicator
+function NetworkConnectionStatusIndicator {
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator -Name NoActiveProbe -PropertyType DWord -Value 1 -Force
 }
 #endregion System
 #region Performance

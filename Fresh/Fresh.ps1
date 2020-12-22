@@ -150,6 +150,7 @@ DisableBingSearch
 
 # Disable find my device
 DisableFindMyDevice
+
 #endregion Privacy & Telemetry
 #region Start menu
 # Unpin all the Start tiles
@@ -171,6 +172,9 @@ HideAppSuggestions
 # Show app suggestions in the Start menu
 # Показывать рекомендации в меню "Пуск"
 # ShowAppSuggestions
+
+# Hide live tiles
+HideLiveTiles
 #endregion Start menu
 #region UI & Personalization
 # Do not use check boxes to select items (current user only)
@@ -675,6 +679,12 @@ TurnOffLockScreenBackground
 
 # Import policy definitions
 ImportPolicyDefinitions
+
+# Disable license manager
+DisableLicenseManager
+
+# Disable network connection status indicator
+NetworkConnectionStatusIndicator
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
