@@ -150,7 +150,6 @@ DisableBingSearch
 
 # Disable find my device
 DisableFindMyDevice
-
 #endregion Privacy & Telemetry
 #region Start menu
 # Unpin all the Start tiles
