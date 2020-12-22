@@ -2070,6 +2070,8 @@ function DebloatMicrosoftServices {
 	Set-Service XblGameSave -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "XboxNetApiSvc" -Force -WarningAction SilentlyContinue
 	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
+	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
 #endregion Performance
 #region Gaming
@@ -3354,8 +3356,7 @@ function UninstallWSL {
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-	choco install -y --allow-empty-checksums chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all transmission-qt jpegview mpc-hc k-litecodecpackfull notepadplusplus.install 7zip.install
+	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco install -y --allow-empty-checksums pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all transmission-qt jpegview mpc-hc k-litecodecpackfull notepadplusplus.install 7zip.install; choco upgrade all; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; Get-WuInstall -AcceptAll -IgnoreReboot; Get-WuInstall -AcceptAll -Install -IgnoreReboot
 	Write-Warning -Message $Localization.OOShutup
 	Import-Module BitsTransfer
 	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
