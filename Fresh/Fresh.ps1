@@ -1243,17 +1243,4 @@ OptInWSL
 # Install chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
 #endregion chocolatey
-<#
-	Simulate pressing F5 to refresh the desktop
-	Refresh desktop icons, environment variables, taskbar
-	Restart the Start menu
-
-	Симулировать нажатие F5 для обновления рабочего стола
-	Обновить иконки рабочего стола, переменные среды, панель задач
-	Перезапустить меню "Пуск"
-#>
-Refresh
-
-# Errors output
-# Вывод ошибок
 Errors
