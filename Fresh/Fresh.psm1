@@ -2073,6 +2073,13 @@ function DebloatMicrosoftServices {
 	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
 	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
+
+# Fix timers
+function FixTimers {
+    	bcdedit /deletevalue useplatformclock
+    	bcdedit /set useplatformtick yes
+    	bcdedit /set disabledynamictick yes
+}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
