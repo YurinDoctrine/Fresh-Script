@@ -796,6 +796,9 @@ ValueMax
 
 # Debloat microsoft services
 DebloatMicrosoftServices
+
+# Fix timers
+FixTimers
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
