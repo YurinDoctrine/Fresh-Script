@@ -417,6 +417,10 @@ ChangeTaskbarLocation
 # Change desktop background
 ChangeDesktopBackground
 #endregion UI & Personalization
+#region chocolatey
+# Install chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion chocolatey
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -1252,13 +1256,5 @@ InstallWSL
 	https://github.com/microsoft/WSL/issues/5437
 #>
 OptInWSL
-
-# Uninstall the Windows Subsystem for Linux (WSL2)
-# Удалить подсистему Windows для Linux (WSL2)
-# UninstallWSL
 #endregion WSL
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion chocolatey
 Errors

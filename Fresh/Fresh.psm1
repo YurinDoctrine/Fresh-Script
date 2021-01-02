@@ -972,6 +972,16 @@ function ChangeDesktopBackground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion UI & Personalization
+#region chocolatey
+# Install chocolatey package manager and pre-installs as well
+function ChocolateyPackageManager {
+	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco install -y --allow-empty-checksums pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all visualstudio2019buildtools vcbuildtools visualstudio2017buildtools chocolatey-visualstudio.extension transmission-qt jpegview mpc-hc k-litecodecpackfull notepadplusplus.install 7zip.install; choco upgrade all; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; Get-WuInstall -AcceptAll -IgnoreReboot; Get-WuInstall -AcceptAll -Install -IgnoreReboot
+	Write-Warning -Message $Localization.OOShutup
+	Import-Module BitsTransfer
+	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
+	./OOSU10.exe ooshutup.cfg /quiet
+}
+#endregion chocolatey
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -2093,7 +2103,7 @@ function DisableBootSplashAnimations {
 }
 
 # Disable trusted platform module
-function DisableTrustedPlatformModule
+function DisableTrustedPlatformModule {
 	bcdedit /set tpmbootentropy ForceDisable | Out-Null
 }
 
@@ -2304,7 +2314,7 @@ $ToastXml.LoadXml($ToastTemplate.OuterXml)
 Start-Sleep -Seconds 60
 
 # Process startup info
-# Параметры запуска процесса
+# Параме�ры запуска процесса
 $ProcessInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
 $ProcessInfo.FileName = "$env:SystemRoot\system32\cleanmgr.exe"
 $ProcessInfo.Arguments = "/sagerun:1337"
@@ -2312,7 +2322,7 @@ $ProcessInfo.UseShellExecute = $true
 $ProcessInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Minimized
 
 # Process object using the startup info
-# Объект процесса, используя заданные параметры
+# Объек� процесса, используя заданные параме�ры
 $Process = New-Object -TypeName System.Diagnostics.Process
 $Process.StartInfo = $ProcessInfo
 
@@ -2363,14 +2373,14 @@ while ($true)
 
 $ProcessInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
 # Cleaning up unused updates
-# Очистка неиспользованных обновлений
+# Очис�ка неиспользованных обновлений
 $ProcessInfo.FileName = "$env:SystemRoot\system32\dism.exe"
 $ProcessInfo.Arguments = "/Online /English /Cleanup-Image /StartComponentCleanup /NoRestart"
 $ProcessInfo.UseShellExecute = $true
 $ProcessInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Minimized
 
 # Process object using the startup info
-# Объект процесса, используя заданные параметры
+# Объек� процесса используя заданные параме�ры
 $Process = New-Object -TypeName System.Diagnostics.Process
 $Process.StartInfo = $ProcessInfo
 
@@ -3368,35 +3378,7 @@ function OptInWSL {
 		wsl --set-default-version 2
 	}
 }
-
-# Uninstall the Windows Subsystem for Linux (WSL2)
-# Удалить подсистему Windows для Linux (WSL2)
-function UninstallWSL {
-	$WSLFeatures = @(
-		# Windows Subsystem for Linux
-		# Подсистему Windows для Linux
-		"Microsoft-Windows-Subsystem-Linux",
-
-		# Virtual Machine Platform
-		# Поддержка платформы для виртуальных машин
-		"VirtualMachinePlatform"
-	)
-	Disable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
-
-	Uninstall-Package -Name "Windows Subsystem for Linux Update" -Force
-	Remove-Item -Path "$env:USERPROFILE\.wslconfig" -Force -ErrorAction Ignore
-}
 #endregion WSL
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-function ChocolateyPackageManager {
-	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco install -y --allow-empty-checksums pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all visualstudio2019buildtools vcbuildtools visualstudio2017buildtools chocolatey-visualstudio.extension transmission-qt jpegview mpc-hc k-litecodecpackfull notepadplusplus.install 7zip.install; choco upgrade all; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; Get-WuInstall -AcceptAll -IgnoreReboot; Get-WuInstall -AcceptAll -Install -IgnoreReboot
-	Write-Warning -Message $Localization.OOShutup
-	Import-Module BitsTransfer
-	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
-	./OOSU10.exe ooshutup.cfg /quiet
-}
-#endregion chocolatey
 function Errors {
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
