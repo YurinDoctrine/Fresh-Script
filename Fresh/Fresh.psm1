@@ -1,4 +1,4 @@
-﻿#region Check
+#region Check
 function Check {
 	Set-StrictMode -Version Latest
 
@@ -1629,9 +1629,9 @@ function DisableDeviceRestartAfterUpdate {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
 }
 
-# Disable standart F8 boot menu policy
-function EnableF8BootMenuLegacy {
-	bcdedit /set `{current`} bootmenupolicy Legacy | Out-Null
+# Enable standart F8 boot menu policy
+function EnableF8BootMenuStandart {
+	bcdedit /set `{current`} bootmenupolicy Standart | Out-Null
 }
 
 # Set data execution prevention (DEP) policy to optout
@@ -1731,6 +1731,18 @@ function NetworkConnectionStatusIndicator {
 		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator -Force
 	}
 	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator -Name NoActiveProbe -PropertyType DWord -Value 1 -Force
+}
+
+# Fix timers
+function FixTimers {
+    	bcdedit /deletevalue useplatformclock | Out-Null
+    	bcdedit /set useplatformtick yes | Out-Null
+    	bcdedit /set disabledynamictick yes | Out-Null
+}
+
+# Don't use firmware pci settings
+function DontUseFirmwarePciSettings {
+	bcdedit /deletevalue usefirmwarepcisettings | Out-Null
 }
 #endregion System
 #region Performance
@@ -1834,7 +1846,7 @@ function DisableIndexing {
 
 # Set current boot timeout value to 0
 function SetBootTimeoutValue {
-	bcdedit /timeout 0
+	bcdedit /timeout 0 | Out-Null
 }
 
 # Disable tablet input service(non-tablet only)
@@ -2074,11 +2086,26 @@ function DebloatMicrosoftServices {
 	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
 
-# Fix timers
-function FixTimers {
-    	bcdedit /deletevalue useplatformclock
-    	bcdedit /set useplatformtick yes
-    	bcdedit /set disabledynamictick yes
+# Disable boot splash animations
+function DisableBootSplashAnimations {
+	bcdedit /set bootux disabled | Out-Null
+	bcdedit /set quietboot yes | Out-Null
+}
+
+# Disable trusted platform module
+function DisableTrustedPlatformModule
+	bcdedit /set tpmbootentropy ForceDisable | Out-Null
+}
+
+# Disable legacy apic mode
+function DisableLegacyApicMode {
+	bcdedit /set uselegacyapicmode no | Out-Null
+}
+
+# Disable integrity checks
+function DisableIntegrityChecks {
+	bcdedit /set loadoptions DISABLE_INTEGRITY_CHECKS | Out-Null
+	bcdedit /set nointegritychecks off | Out-Null
 }
 #endregion Performance
 #region Gaming
