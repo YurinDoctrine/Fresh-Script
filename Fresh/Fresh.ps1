@@ -1,4 +1,4 @@
-﻿#Requires -RunAsAdministrator
+#Requires -RunAsAdministrator
 #Requires -Version 5.1
 
 Clear-Host
@@ -639,8 +639,8 @@ SetActiveHours
 # Do not restart this device as soon as possible when a restart is required to install an update
 DisableDeviceRestartAfterUpdate
 
-# Disable standart F8 boot menu policy
-EnableF8BootMenuLegacy
+# Enable standart F8 boot menu policy
+EnableF8BootMenuStandart
 
 # Set data execution prevention (DEP) policy to optout
 SetDEPOptOut
@@ -684,6 +684,12 @@ DisableLicenseManager
 
 # Disable network connection status indicator
 NetworkConnectionStatusIndicator
+
+# Fix timers
+FixTimers
+
+# Don't use firmware pci settings
+DontUseFirmwarePciSettings
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -797,8 +803,17 @@ ValueMax
 # Debloat microsoft services
 DebloatMicrosoftServices
 
-# Fix timers
-FixTimers
+# Disable boot splash animations
+DisableBootSplashAnimations
+
+# Disable trusted platform module
+DisableTrustedPlatformModule
+
+# Disable legacy apic mode
+DisableLegacyApicMode
+
+# Disable integrity checks
+DisableIntegrityChecks
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
