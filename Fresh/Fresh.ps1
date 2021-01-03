@@ -833,6 +833,9 @@ SetMemoryUsage
 
 # Disable encrypt paging file
 DisableEncryptPagingFile
+
+# Disable boot logging
+DisableBootLogging
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar

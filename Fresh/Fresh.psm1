@@ -1882,6 +1882,7 @@ function NtfsAllowExtendedCharacter8dot3Rename {
 # Ntfs disable 8dot3 name creation
 function NtfsDisable8dot3NameCreation {
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
+	fsutil behavior set disable8dot3 1 | Out-Null
 }
 
 # Auto end tasks
@@ -2141,6 +2142,13 @@ function SetMemoryUsage {
 # Disable encrypt paging file
 function DisableEncryptPagingFile {
 	fsutil behavior set encryptpagingfile 0 | Out-Null
+}
+
+# Disable boot logging
+function DisableBootLogging {
+	bcdedit /bootdebug off | Out-Null
+	bcdedit /debug off | Out-Null
+	bcdedit /set bootlog no | Out-Null
 }
 #endregion Performance
 #region Gaming
