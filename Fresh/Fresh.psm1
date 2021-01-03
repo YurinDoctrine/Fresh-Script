@@ -2137,6 +2137,11 @@ function DisableLastAccess {
 function SetMemoryUsage {
 	fsutil behavior set memoryusage 2 | Out-Null
 }
+
+# Disable encrypt paging file
+function DisableEncryptPagingFile {
+	fsutil behavior set encryptpagingfile 0 | Out-Null
+}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
