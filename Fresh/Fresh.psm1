@@ -2251,15 +2251,26 @@ function BestPriorityForeground {
 
 # Allow auto game mode
 function AllowAutoGameMode {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name AutoGameModeEnabled -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AutoGameModeEnabled -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
 }
 
 # Disable mouse feedback
 function DisableMouseFeedback {
 	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name ContactVisualization -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name GestureVisualization -PropertyType DWord -Value 0 -Force
+}
+
+# Enable full-screen optimization
+function EnableFullScreenOptimization {
+	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -ErrorAction SilentlyContinue
+	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
+		New-Item -Path "HKCU:\System\GameConfigStore" -Force | Out-Null
+	}
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 0 -Force
 }
 #endregion Gaming
 #region Scheduled tasks

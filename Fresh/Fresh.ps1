@@ -865,6 +865,9 @@ AllowAutoGameMode
 
 # Disable mouse feedback
 DisableMouseFeedback
+
+# Enable full-screen optimization
+EnableFullScreenOptimization
 #endregion Gaming
 #region Scheduled tasks
 <#
