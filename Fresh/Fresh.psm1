@@ -1745,9 +1745,9 @@ function NetworkConnectionStatusIndicator {
 
 # Fix timers
 function FixTimers {
-    	bcdedit /deletevalue useplatformclock | Out-Null
-    	bcdedit /set useplatformtick yes | Out-Null
-    	bcdedit /set disabledynamictick yes | Out-Null
+	bcdedit /deletevalue useplatformclock | Out-Null
+	bcdedit /set useplatformtick yes | Out-Null
+	bcdedit /set disabledynamictick yes | Out-Null
 }
 
 # Don't use firmware pci settings
@@ -2358,7 +2358,7 @@ $ToastXml.LoadXml($ToastTemplate.OuterXml)
 Start-Sleep -Seconds 60
 
 # Process startup info
-# Параме�ры запуска процесса
+# Параме�ры запуска процесса
 $ProcessInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
 $ProcessInfo.FileName = "$env:SystemRoot\system32\cleanmgr.exe"
 $ProcessInfo.Arguments = "/sagerun:1337"
@@ -2366,7 +2366,7 @@ $ProcessInfo.UseShellExecute = $true
 $ProcessInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Minimized
 
 # Process object using the startup info
-# Объек� процесса, используя заданные параме�ры
+# Объек� процесса, используя заданные параме�ры
 $Process = New-Object -TypeName System.Diagnostics.Process
 $Process.StartInfo = $ProcessInfo
 
@@ -2417,14 +2417,14 @@ while ($true)
 
 $ProcessInfo = New-Object -TypeName System.Diagnostics.ProcessStartInfo
 # Cleaning up unused updates
-# Очис�ка неиспользованных обновлений
+# Очис�ка неиспользованных обновлений
 $ProcessInfo.FileName = "$env:SystemRoot\system32\dism.exe"
 $ProcessInfo.Arguments = "/Online /English /Cleanup-Image /StartComponentCleanup /NoRestart"
 $ProcessInfo.UseShellExecute = $true
 $ProcessInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Minimized
 
 # Process object using the startup info
-# Объек� процесса используя заданные параме�ры
+# Объек� процесса используя заданные параме�ры
 $Process = New-Object -TypeName System.Diagnostics.Process
 $Process.StartInfo = $ProcessInfo
 
