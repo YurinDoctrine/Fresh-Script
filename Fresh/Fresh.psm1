@@ -1754,6 +1754,16 @@ function FixTimers {
 function DontUseFirmwarePciSettings {
 	bcdedit /deletevalue usefirmwarepcisettings | Out-Null
 }
+
+# Disable hyper virtualization
+function DisableHyperVirtualization {
+	bcdedit /set hypervisorlaunchtype off | Out-Null
+}
+
+# Enable pae
+function EnablePae {
+	bcdedit /set pae ForceEnable | Out-Null
+}
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -2116,6 +2126,16 @@ function DisableLegacyApicMode {
 function DisableIntegrityChecks {
 	bcdedit /set loadoptions DISABLE_INTEGRITY_CHECKS | Out-Null
 	bcdedit /set nointegritychecks off | Out-Null
+}
+
+# Disable last access
+function DisableLastAccess {
+	fsutil behavior set disablelastaccess 1 | Out-Null
+}
+
+# Set memory usage
+function SetMemoryUsage {
+	fsutil behavior set memoryusage 2 | Out-Null
 }
 #endregion Performance
 #region Gaming

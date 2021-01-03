@@ -694,6 +694,12 @@ FixTimers
 
 # Don't use firmware pci settings
 DontUseFirmwarePciSettings
+
+# Disable hyper virtualization
+DisableHyperVirtualization
+
+# Enable pae
+EnablePae
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -818,6 +824,12 @@ DisableLegacyApicMode
 
 # Disable integrity checks
 DisableIntegrityChecks
+
+# Disable last access
+DisableLastAccess
+
+# Set memory usage
+SetMemoryUsage
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
