@@ -411,9 +411,6 @@ EnablePrtScnSnippingTool
 # Не использовать кнопку PRINT SCREEN, чтобы запустить функцию создания фрагмента экрана (только для текущего пользователя)
 # DisablePrtScnSnippingTool
 
-# Change taskbar location
-ChangeTaskbarLocation
-
 # Change desktop background
 ChangeDesktopBackground
 #endregion UI & Personalization

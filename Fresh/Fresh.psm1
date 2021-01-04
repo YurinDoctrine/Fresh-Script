@@ -954,16 +954,6 @@ function DisablePrtScnSnippingTool {
 	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name PrintScreenKeyForSnippingEnabled -PropertyType DWord -Value 0 -Force
 }
 
-# Change taskbar location
-function ChangeTaskbarLocation {
-	$Value = "30,00,00,00,fe,ff,ff,ff,02,00,00,00,03,00,00,00,3e,00,00,00,28,00,00,00,00,00,00,00,d8,02,00,00,56,05,00,00,00,03,00,00,60,00,00,00,01,00,00,00"
-	$RegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StuckRects3"
-	$Name = "Settings"
-	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
-	
-	New-ItemProperty -Path $RegPath -Name $Name -PropertyType Binary -Value ([byte[]]$hexified) -Force
-}
-
 # Change desktop background
 function ChangeDesktopBackground {
 	Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
