@@ -2,7 +2,6 @@
 
 ## RUNNING
 
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
-.\Fresh.ps1
+```markdown
+Right-click and Run as Administrator setup.bat file inside of the directory
 ```
