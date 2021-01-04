@@ -18,4 +18,3 @@ if %errorlevel%==0 (
         exit 1
 )
 PowerShell -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force | .\Fresh.ps1"
-pause > NUL

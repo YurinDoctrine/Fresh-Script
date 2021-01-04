@@ -2267,7 +2267,7 @@ function DisableMouseFeedback {
 
 # Enable full-screen optimization
 function EnableFullScreenOptimization {
-	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -ErrorAction SilentlyContinue
+	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Force -ErrorAction SilentlyContinue
 	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
 		New-Item -Path "HKCU:\System\GameConfigStore" -Force | Out-Null
 	}
@@ -2896,15 +2896,6 @@ function DisableSaveZoneInformation {
 # Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
 function EnableSaveZoneInformation {
 	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -Force -ErrorAction SilentlyContinue
-}
-
-# Turn off Windows Script Host (current user only)
-# Отключить Windows Script Host (только для текущего пользователя)
-function DisableWindowsScriptHost {
-	if (-not (Test-Path -Path "HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Force
-	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name Enabled -PropertyType DWord -Value 0 -Force
 }
 
 # Turn on Windows Script Host (current user only)

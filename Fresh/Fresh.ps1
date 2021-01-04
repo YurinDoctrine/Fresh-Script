@@ -1043,13 +1043,9 @@ DisableSaveZoneInformation
 # Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
 # EnableSaveZoneInformation
 
-# Turn off Windows Script Host (current user only)
-# Отключить Windows Script Host (только для текущего пользователя)
-DisableWindowsScriptHost
-
 # Turn on Windows Script Host (current user only)
 # Включить Windows Script Host (только для текущего пользователя)
-# EnableWindowsScriptHost
+EnableWindowsScriptHost
 
 # Disable activity history
 DisableActivityHistory
