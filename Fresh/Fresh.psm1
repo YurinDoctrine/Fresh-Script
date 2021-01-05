@@ -1631,7 +1631,7 @@ function DisableDeviceRestartAfterUpdate {
 
 # Set data execution prevention (DEP) policy to optout
 function SetDEPOptOut {
-	bcdedit /set `{current`} nx optout | Out-Null
+	bcdedit /set `{current`} nx optout
 	Set-ProcessMitigation -System -Enable DEP
 }
 
@@ -1661,19 +1661,19 @@ Therefore Windows update will repeatedly try and fail to install I219-V driver i
 #>
 function DisableAutoUpdateDriver {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Name "PreventDeviceMetadataFromNetwork" -Type DWord -Value 1 -Force
 	
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontPromptForWindowsUpdate" -Type DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontSearchWindowsUpdate" -Type DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DriverUpdateWizardWuSearchEnabled" -Type DWord -Value 0 -Force
 	
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1 -Force
 }
@@ -1730,25 +1730,25 @@ function NetworkConnectionStatusIndicator {
 
 # Fix timers
 function FixTimers {
-	bcdedit /deletevalue `{current`} useplatformclock | Out-Null
-	bcdedit /set `{current`} useplatformclock false | Out-Null
-	bcdedit /set `{current`} useplatformtick yes | Out-Null
-	bcdedit /set `{current`} disabledynamictick yes | Out-Null
+	bcdedit /deletevalue `{current`} useplatformclock
+	bcdedit /set `{current`} useplatformclock false
+	bcdedit /set `{current`} useplatformtick yes
+	bcdedit /set `{current`} disabledynamictick yes
 }
 
 # Don't use firmware pci settings
 function DontUseFirmwarePciSettings {
-	bcdedit /deletevalue `{current`} usefirmwarepcisettings | Out-Null
+	bcdedit /deletevalue `{current`} usefirmwarepcisettings
 }
 
 # Disable hyper virtualization
 function DisableHyperVirtualization {
-	bcdedit /set `{current`} hypervisorlaunchtype off | Out-Null
+	bcdedit /set `{current`} hypervisorlaunchtype off
 }
 
 # Enable pae
 function EnablePae {
-	bcdedit /set `{current`} pae ForceEnable | Out-Null
+	bcdedit /set `{current`} pae ForceEnable
 }
 #endregion System
 #region Performance
@@ -1828,7 +1828,7 @@ function DisableIndexing {
 	if ($DriveLetters.Count -notmatch 2) {
 		if (($Object.IndexingEnabled -match $True)) {
 			Write-Output "Disabling indexing of drive C:"
-			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False } | Out-Null
+			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
 		}
 		else {
 			Write-Output "Indexing already disabled. SKIPPING..."
@@ -1838,7 +1838,7 @@ function DisableIndexing {
 	if ($DriveLetters.Count -notmatch 3) {
 		if (($Object.IndexingEnabled -match $True)) {
 			Write-Output "Disabling indexing of drive C:"
-			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False } | Out-Null
+			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
 		}
 		else {
 			Write-Output "Indexing already disabled. SKIPPING..."
@@ -1852,7 +1852,7 @@ function DisableIndexing {
 
 # Set current boot timeout value to 0
 function SetBootTimeoutValue {
-	bcdedit /timeout 0 | Out-Null
+	bcdedit /timeout 0
 }
 
 # Disable tablet input service(non-tablet only)
@@ -1868,7 +1868,7 @@ function NtfsAllowExtendedCharacter8dot3Rename {
 # Ntfs disable 8dot3 name creation
 function NtfsDisable8dot3NameCreation {
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
-	fsutil behavior set disable8dot3 1 | Out-Null
+	fsutil behavior set disable8dot3 1
 }
 
 # Auto end tasks
@@ -1899,7 +1899,7 @@ function ForegroundLockTimeout {
 # No low disk space checks
 function NoLowDiskSpaceChecks {
 	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
-		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Force | Out-Null
+		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Force
 	}
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 1 -Force
 }
@@ -1997,7 +1997,7 @@ function MaxConnectionsPerServer {
 # Non best effort limit
 function NonBestEffortLimit {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
 }
@@ -2095,46 +2095,46 @@ function DebloatMicrosoftServices {
 
 # Disable boot splash animations
 function DisableBootSplashAnimations {
-	bcdedit /set `{current`} bootux disabled | Out-Null
-	bcdedit /set `{current`} quietboot yes | Out-Null
+	bcdedit /set `{current`} bootux disabled
+	bcdedit /set `{current`} quietboot yes
 }
 
 # Disable trusted platform module
 function DisableTrustedPlatformModule {
-	bcdedit /set `{current`} tpmbootentropy ForceDisable | Out-Null
+	bcdedit /set `{current`} tpmbootentropy ForceDisable
 }
 
 # Disable legacy apic mode
 function DisableLegacyApicMode {
-	bcdedit /set `{current`} uselegacyapicmode no | Out-Null
+	bcdedit /set `{current`} uselegacyapicmode no
 }
 
 # Disable integrity checks
 function DisableIntegrityChecks {
-	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS | Out-Null
-	bcdedit /set `{current`} nointegritychecks off | Out-Null
+	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
+	bcdedit /set `{current`} nointegritychecks off
 }
 
 # Disable last access
 function DisableLastAccess {
-	fsutil behavior set disablelastaccess 1 | Out-Null
+	fsutil behavior set disablelastaccess 1
 }
 
 # Set memory usage
 function SetMemoryUsage {
-	fsutil behavior set memoryusage 2 | Out-Null
+	fsutil behavior set memoryusage 2
 }
 
 # Disable encrypt paging file
 function DisableEncryptPagingFile {
-	fsutil behavior set encryptpagingfile 0 | Out-Null
+	fsutil behavior set encryptpagingfile 0
 }
 
 # Disable boot logging
 function DisableBootLogging {
-	bcdedit /bootdebug `{current`} off | Out-Null
-	bcdedit /debug `{current`} off | Out-Null
-	bcdedit /set `{current`} bootlog no | Out-Null
+	bcdedit /bootdebug `{current`} off
+	bcdedit /debug `{current`} off
+	bcdedit /set `{current`} bootlog no
 }
 #endregion Performance
 #region Gaming
@@ -2146,7 +2146,7 @@ function DisableXboxGameBar {
 		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 0 -Force
 	}
 	if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR")) {
-		New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force | Out-Null
+		New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force
 	}
 	New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type DWord -Value 0 -Force
 }
@@ -2203,12 +2203,12 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
 
 	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force | Out-Null
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
 	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
 
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 0 -Force
@@ -2230,7 +2230,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUBHDetect -PropertyType DWord -Value 0 -Force
 
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
@@ -2241,7 +2241,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "GPU Priority" -PropertyType DWord -Value 2 -Force
 
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
 	}
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	netsh int tcp set global rsc=disabled
@@ -2265,7 +2265,7 @@ function DisableMouseFeedback {
 function EnableFullScreenOptimization {
 	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Force -ErrorAction SilentlyContinue
 	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
-		New-Item -Path "HKCU:\System\GameConfigStore" -Force | Out-Null
+		New-Item -Path "HKCU:\System\GameConfigStore" -Force
 	}
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 0 -Force
@@ -2358,7 +2358,7 @@ $Process.StartInfo = $ProcessInfo
 
 # Start the process
 # Запуск процесса
-$Process.Start() | Out-Null
+$Process.Start()
 
 Start-Sleep -Seconds 3
 $SourceMainWindowHandle = (Get-Process -Name cleanmgr).MainWindowHandle
@@ -2416,7 +2416,7 @@ $Process.StartInfo = $ProcessInfo
 
 # Start the process
 # Запуск процесса
-$Process.Start() | Out-Null
+$Process.Start()
 '
 	# Encode $PS1Script variable to be able to pipeline it as an argument
 	# Закодировать переменную $PS1Script, чтобы передать ее как аргумент
@@ -2748,11 +2748,11 @@ function DismissSmartScreenFilter {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Type DWord -Value 0 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
 	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")) {
-		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force | Out-Null
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force
 	}
 	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name EnableWebContentEvaluation -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name PreventOverride -Type DWord -Value 0 -Force
@@ -2923,11 +2923,11 @@ function EnableDotNetStrongCrypto {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1")) {
-		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1"
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000")) {
-		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000"
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
 }
@@ -2939,7 +2939,7 @@ Use the tweak only if you have confirmed that your AV is compatible but unable t
 #>
 function EnableMeltdownCompatFlag {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat"
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -Type DWord -Value 0 -Force
 }
@@ -2949,7 +2949,7 @@ function DisablePasswordPolicy {
 	$tmpfile = New-TemporaryFile
 	secedit /export /cfg $tmpfile /quiet
 	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
-	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY | Out-Null
+	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
 	Remove-Item -Path $tmpfile
 }
 
@@ -2961,7 +2961,7 @@ function AutomaticMaintenanceHours {
 # Turn on memory integry(virtualization based security)
 function TurnOnMemoryIntegry {
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force | Out-Null
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -PropertyType DWord -Value 1 -Force
 }
@@ -2980,7 +2980,7 @@ function DisableSMB {
 # Disable link-local multicast name resolution(LLMNR) protocol
 function DisableLLMNR {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -PropertyType DWord -Value 0 -Force
 }
@@ -2995,7 +2995,7 @@ function SetUnknownNetworksPublic {
 # Disable automatic installation of network devices
 function DisableNetDevicesAutoInst {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
 }
@@ -3008,7 +3008,7 @@ function DisableRealtimeMonitoring {
 # Hide tray icon
 function HideTrayIcon {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1 -Force
 }
@@ -3016,7 +3016,7 @@ function HideTrayIcon {
 # Disable defender cloud
 function DisableDefenderCloud {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force | Out-Null
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SpynetReporting" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
