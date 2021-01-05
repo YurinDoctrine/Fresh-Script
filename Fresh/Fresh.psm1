@@ -1730,25 +1730,25 @@ function NetworkConnectionStatusIndicator {
 
 # Fix timers
 function FixTimers {
-	bcdedit /deletevalue useplatformclock | Out-Null
-	bcdedit /set useplatformclock false | Out-Null
-	bcdedit /set useplatformtick yes | Out-Null
-	bcdedit /set disabledynamictick yes | Out-Null
+	bcdedit /deletevalue `{current`} useplatformclock | Out-Null
+	bcdedit /set `{current`} useplatformclock false | Out-Null
+	bcdedit /set `{current`} useplatformtick yes | Out-Null
+	bcdedit /set `{current`} disabledynamictick yes | Out-Null
 }
 
 # Don't use firmware pci settings
 function DontUseFirmwarePciSettings {
-	bcdedit /deletevalue usefirmwarepcisettings | Out-Null
+	bcdedit /deletevalue `{current`} usefirmwarepcisettings | Out-Null
 }
 
 # Disable hyper virtualization
 function DisableHyperVirtualization {
-	bcdedit /set hypervisorlaunchtype off | Out-Null
+	bcdedit /set `{current`} hypervisorlaunchtype off | Out-Null
 }
 
 # Enable pae
 function EnablePae {
-	bcdedit /set pae ForceEnable | Out-Null
+	bcdedit /set `{current`} pae ForceEnable | Out-Null
 }
 #endregion System
 #region Performance
@@ -2095,24 +2095,24 @@ function DebloatMicrosoftServices {
 
 # Disable boot splash animations
 function DisableBootSplashAnimations {
-	bcdedit /set bootux disabled | Out-Null
-	bcdedit /set quietboot yes | Out-Null
+	bcdedit /set `{current`} bootux disabled | Out-Null
+	bcdedit /set `{current`} quietboot yes | Out-Null
 }
 
 # Disable trusted platform module
 function DisableTrustedPlatformModule {
-	bcdedit /set tpmbootentropy ForceDisable | Out-Null
+	bcdedit /set `{current`} tpmbootentropy ForceDisable | Out-Null
 }
 
 # Disable legacy apic mode
 function DisableLegacyApicMode {
-	bcdedit /set uselegacyapicmode no | Out-Null
+	bcdedit /set `{current`} uselegacyapicmode no | Out-Null
 }
 
 # Disable integrity checks
 function DisableIntegrityChecks {
-	bcdedit /set loadoptions DISABLE_INTEGRITY_CHECKS | Out-Null
-	bcdedit /set nointegritychecks off | Out-Null
+	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS | Out-Null
+	bcdedit /set `{current`} nointegritychecks off | Out-Null
 }
 
 # Disable last access
@@ -2132,9 +2132,9 @@ function DisableEncryptPagingFile {
 
 # Disable boot logging
 function DisableBootLogging {
-	bcdedit /bootdebug off | Out-Null
-	bcdedit /debug off | Out-Null
-	bcdedit /set bootlog no | Out-Null
+	bcdedit /bootdebug `{current`} off | Out-Null
+	bcdedit /debug `{current`} off | Out-Null
+	bcdedit /set `{current`} bootlog no | Out-Null
 }
 #endregion Performance
 #region Gaming
