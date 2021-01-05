@@ -1736,6 +1736,7 @@ function NetworkConnectionStatusIndicator {
 # Fix timers
 function FixTimers {
 	bcdedit /deletevalue useplatformclock | Out-Null
+	bcdedit /set useplatformclock false | Out-Null
 	bcdedit /set useplatformtick yes | Out-Null
 	bcdedit /set disabledynamictick yes | Out-Null
 }
