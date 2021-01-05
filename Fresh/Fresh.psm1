@@ -956,7 +956,7 @@ function DisablePrtScnSnippingTool {
 
 # Change desktop background
 function ChangeDesktopBackground {
-	Read-Host 'Please make sure your internet is available [ENTER TO CONTINUE]'
+	Read-Host 'Please make sure your network connection is available... [HIT RETURN]'
 	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/W10-Fresh/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
