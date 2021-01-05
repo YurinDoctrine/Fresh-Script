@@ -1631,12 +1631,12 @@ function DisableDeviceRestartAfterUpdate {
 
 # Enable standart F8 boot menu policy
 function EnableF8BootMenuStandart {
-	bcdedit /set `{current`} bootmenupolicy Standart | Out-Null
+	bcdedit /set { default } bootmenupolicy standart | Out-Null
 }
 
 # Set data execution prevention (DEP) policy to optout
 Function SetDEPOptOut {
-	bcdedit /set `{current`} nx OptOut | Out-Null
+	bcdedit /set { default } nx OptOut | Out-Null
 	Set-ProcessMitigation -System -Enable DEP
 }
 
