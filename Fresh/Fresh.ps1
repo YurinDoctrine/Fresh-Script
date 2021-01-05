@@ -640,9 +640,6 @@ SetActiveHours
 # Do not restart this device as soon as possible when a restart is required to install an update
 DisableDeviceRestartAfterUpdate
 
-# Enable standart F8 boot menu policy
-EnableF8BootMenuStandart
-
 # Set data execution prevention (DEP) policy to optout
 SetDEPOptOut
 

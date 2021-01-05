@@ -1629,14 +1629,9 @@ function DisableDeviceRestartAfterUpdate {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
 }
 
-# Enable standart F8 boot menu policy
-function EnableF8BootMenuStandart {
-	bcdedit /set { default } bootmenupolicy standart | Out-Null
-}
-
 # Set data execution prevention (DEP) policy to optout
-Function SetDEPOptOut {
-	bcdedit /set { default } nx OptOut | Out-Null
+function SetDEPOptOut {
+	bcdedit /set `{current`} nx optout | Out-Null
 	Set-ProcessMitigation -System -Enable DEP
 }
 
