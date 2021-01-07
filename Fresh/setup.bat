@@ -13,8 +13,9 @@ if %errorlevel%==0 (
         echo.
         echo  Right-click and select ^'Run as Administrator^' and try again.
         echo.
-        echo  Hit RETURN to exit...
+        echo  [HIT RETURN]
         pause > NUL
         exit 1
 )
+
 PowerShell -Command ".\Fresh.ps1"
