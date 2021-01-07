@@ -2894,12 +2894,6 @@ function EnableSaveZoneInformation {
 	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -Force -ErrorAction SilentlyContinue
 }
 
-# Turn on Windows Script Host (current user only)
-# Включить Windows Script Host (только для текущего пользователя)
-function EnableWindowsScriptHost {
-	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name Enabled -Force -ErrorAction SilentlyContinue
-}
-
 # Disable activity history
 function DisableActivityHistory {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableActivityFeed -Type DWord -Value 0 -Force

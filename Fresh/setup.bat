@@ -18,4 +18,4 @@ if %errorlevel%==0 (
         exit 1
 )
 
-PowerShell -Command ".\Fresh.ps1"
+PowerShell -Command "Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings" -Name Enabled -Force -ErrorAction SilentlyContinue | .\Fresh.ps1"

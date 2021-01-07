@@ -1040,12 +1040,11 @@ DisableSaveZoneInformation
 # Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
 # EnableSaveZoneInformation
 
-# Turn on Windows Script Host (current user only)
-# Включить Windows Script Host (только для текущего пользователя)
-EnableWindowsScriptHost
-
 # Disable activity history
 DisableActivityHistory
+
+# Disable automatic map updates
+DisableMapUpdates
 
 # Disable wap push service
 DisableWAPPush
