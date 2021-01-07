@@ -17,4 +17,4 @@ if %errorlevel%==0 (
         pause > NUL
         exit 1
 )
-PowerShell -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force | .\Fresh.ps1"
+PowerShell -Command ".\Fresh.ps1"
