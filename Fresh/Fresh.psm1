@@ -962,6 +962,316 @@ function ChangeDesktopBackground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 #endregion UI & Personalization
+#region Context menu
+# Add the "Extract all" item to Windows Installer (.msi) context menu
+# Добавить пункт "Извлечь все" в контекстное меню Windows Installer (.msi)
+function AddMSIExtractContext {
+	if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\Command)) {
+		New-Item -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\Command -Force
+	}
+	$Value = "{0}" -f 'msiexec.exe /a "%1" /qb TARGETDIR="%1 extracted"'
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\Command -Name "(Default)" -PropertyType String -Value $Value -Force
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract -Name MUIVerb -PropertyType String -Value "@shell32.dll,-37514" -Force
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract -Name Icon -PropertyType String -Value "shell32.dll,-16817" -Force
+}
+
+# Remove the "Extract all" item from Windows Installer (.msi) context menu
+# Удалить пункт "Извлечь все" из контекстного меню Windows Installer (.msi)
+function RemoveMSIExtractContext {
+	Remove-Item -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+# Add the "Install" item to the .cab archives context menu
+# Добавить пункт "Установить" в контекстное меню .cab архивов
+function AddCABInstallContext {
+	if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command)) {
+		New-Item -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command -Force
+	}
+	$Value = "{0}" -f "cmd /c DISM.exe /Online /Add-Package /PackagePath:`"%1`" /NoRestart & pause"
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command -Name "(Default)" -PropertyType String -Value $Value -Force
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs -Name MUIVerb -PropertyType String -Value "@shell32.dll,-10210" -Force
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs -Name HasLUAShield -PropertyType String -Value "" -Force
+}
+
+# Remove the "Install" item from the .cab archives context menu
+# Удалить пункт "Установить" из контекстного меню .cab архивов
+function RemoveCABInstallContext {
+	Remove-Item -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command -Recurse -Force -ErrorAction SilentlyContinue
+}
+
+# Add the "Run as different user" item to the .exe files types context menu
+# Добавить пункт "Запуск от имени другого пользователя" в контекстное меню .exe файлов
+function AddExeRunAsDifferentUserContext {
+	Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\exefile\shell\runasuser -Name Extended -Force -ErrorAction Ignore
+}
+
+# Remove the "Run as different user" item from the .exe files types context menu
+# Удалить пункт "Запуск от имени другого пользователя" из контекстное меню .exe файлов
+function RemoveExeRunAsDifferentUserContext {
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\exefile\shell\runasuser -Name Extended -PropertyType String -Value "" -Force
+}
+
+# Hide the "Cast to Device" item from the context menu
+# Скрыть пункт "Передать на устройство" из контекстного меню
+function HideCastToDeviceContext {
+	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{7AD84985-87B4-4a16-BE58-8B72A5B390F7}" -PropertyType String -Value "Play to menu" -Force
+}
+
+# Show the "Cast to Device" item in the context menu
+# Показывать пункт "Передать на устройство" в контекстном меню
+function ShowCastToDeviceContext {
+	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{7AD84985-87B4-4a16-BE58-8B72A5B390F7}" -Force -ErrorAction SilentlyContinue
+}
+
+# Hide the "Share" item from the context menu
+# Скрыть пункт "Отправить" (поделиться) из контекстного меню
+function HideShareContext {
+	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{E2BF9676-5F8F-435C-97EB-11607A5BEDF7}" -PropertyType String -Value "" -Force
+}
+
+# Show the "Share" item in the context menu
+# Показывать пункт "Отправить" (поделиться) в контекстном меню
+function ShowShareContext {
+	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{E2BF9676-5F8F-435C-97EB-11607A5BEDF7}" -Force -ErrorAction SilentlyContinue
+}
+
+# Hide the "Edit with Paint 3D" item from the context menu
+# Скрыть пункт "Изменить с помощью Paint 3D" из контекстного меню
+function HideEditWithPaint3DContext {
+	$Extensions = @(".bmp", ".gif", ".jpe", ".jpeg", ".jpg", ".png", ".tif", ".tiff")
+	foreach ($extension in $extensions) {
+		New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\$Extension\Shell\3D Edit" -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+	}
+}
+
+# Show the "Edit with Paint 3D" item in the context menu
+# Показывать пункт "Изменить с помощью Paint 3D" в контекстном меню
+function ShowEditWithPaint3DContext {
+	$Extensions = @(".bmp", ".gif", ".jpe", ".jpeg", ".jpg", ".png", ".tif", ".tiff")
+	foreach ($Extension in $Extensions) {
+		Remove-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\$Extension\Shell\3D Edit" -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Hide the "Edit with Photos" item from the context menu
+# Скрыть пункт "Изменить с помощью приложения "Фотографии"" из контекстного меню
+function HideEditWithPhotosContext {
+	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellEdit -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+	}
+}
+
+# Show the "Edit with Photos" item in the context menu
+# Показывать пункт "Изменить с помощью приложения "Фотографии"" в контекстном меню
+function ShowEditWithPhotosContext {
+	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellEdit -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Hide the "Create a new video" item from the context menu
+# Скрыть пункт "Создать новое видео" из контекстного меню
+function HideCreateANewVideoContext {
+	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellCreateVideo -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+	}
+}
+
+# Show the "Create a new video" item in the context menu
+# Показывать пункт "Создать новое видео" в контекстном меню
+function ShowCreateANewVideoContext {
+	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellCreateVideo -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Hide the "Edit" item from the images context menu
+# Скрыть пункт "Изменить" из контекстного меню изображений
+function HideImagesEditContext {
+	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\edit -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+	}
+}
+
+# Show the "Edit" item from in images context menu
+# Показывать пункт "Изменить" в контекстном меню изображений
+function ShowImagesEditContext {
+	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\edit -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Hide the "Print" item from the .bat and .cmd context menu
+# Скрыть пункт "Печать" из контекстного меню .bat и .cmd файлов
+function HidePrintCMDContext {
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\batfile\shell\print -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\cmdfile\shell\print -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+}
+
+# Show the "Print" item in the .bat and .cmd context menu
+# Показывать пункт "Печать" в контекстном меню .bat и .cmd файлов
+function ShowPrintCMDContext {
+	Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\batfile\shell\print -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+	Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\cmdfile\shell\print -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+}
+
+# Hide the "Include in Library" item from the context menu
+# Скрыть пункт "Добавить в библиотеку" из контекстного меню
+function HideIncludeInLibraryContext {
+	New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Library Location" -Name "(Default)" -PropertyType String -Value "-{3dad6c5d-2167-4cae-9914-f99e41c12cfa}" -Force
+}
+
+# Show the "Include in Library" item in the context menu
+# Показывать пункт "Добавить в библиотеку" в контекстном меню
+function ShowIncludeInLibraryContext {
+	New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Library Location" -Name "(Default)" -PropertyType String -Value "{3dad6c5d-2167-4cae-9914-f99e41c12cfa}" -Force
+}
+
+# Hide the "Send to" item from the folders context menu
+# Скрыть пункт "Отправить" из контекстного меню папок
+function HideSendToContext {
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\ContextMenuHandlers\SendTo -Name "(Default)" -PropertyType String -Value "-{7BA4C740-9E81-11CF-99D3-00AA004AE837}" -Force
+}
+
+# Show the "Send to" item in the folders context menu
+# Показывать пункт "Отправить" в контекстном меню папок
+function ShowSendToContext {
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\ContextMenuHandlers\SendTo -Name "(Default)" -PropertyType String -Value "{7BA4C740-9E81-11CF-99D3-00AA004AE837}" -Force
+}
+
+# Hide the "Turn on BitLocker" item from the context menu
+# Скрыть пункт "Включить BitLocker" из контекстного меню
+function HideBitLockerContext {
+	if (Get-WindowsEdition -Online | Where-Object -FilterScript { $_.Edition -eq "Professional" -or $_.Edition -like "Enterprise*" }) {
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde-elev -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\manage-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde-elev -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\unlock-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
+	}
+}
+
+# Show the "Turn on BitLocker" item in the context menu
+# Показывать пункт "Включить BitLocker" в контекстном меню
+function ShowBitLockerContext {
+	if (Get-WindowsEdition -Online | Where-Object -FilterScript { $_.Edition -eq "Professional" -or $_.Edition -like "Enterprise*" }) {
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde-elev -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\manage-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde-elev -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\unlock-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Remove the "Bitmap image" item from the "New" context menu
+# Удалить пункт "Точечный рисунок" из контекстного меню "Создать"
+function RemoveBitmapImageNewContext {
+	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
+		Remove-Item -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Restore the "Bitmap image" item in the "New" context menu
+# Восстановить пункт "Точечный рисунок" в контекстного меню "Создать"
+function RestoreBitmapImageNewContext {
+	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
+		if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew)) {
+			New-Item -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Force
+		}
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Name ItemName -PropertyType ExpandString -Value "@%systemroot%\system32\mspaint.exe,-59414" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Name NullFile -PropertyType String -Value "" -Force
+	}
+	else {
+		Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*" | Add-WindowsCapability -Online
+	}
+}
+
+# Remove the "Rich Text Document" item from the "New" context menu
+# Удалить пункт "Документ в формате RTF" из контекстного меню "Создать"
+function RemoveRichTextDocumentNewContext {
+	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*").State -eq "Installed") {
+		Remove-Item -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Force -ErrorAction Ignore
+	}
+}
+
+# Restore the "Rich Text Document" item in the "New" context menu
+# Восстановить пункт "Документ в формате RTF" в контекстного меню "Создать"
+function RestoreRichTextDocumentNewContext {
+	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*").State -eq "Installed") {
+		if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew)) {
+			New-Item -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Force
+		}
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Name Data -PropertyType String -Value "{\rtf1}" -Force
+		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Name ItemName -PropertyType ExpandString -Value "@%ProgramFiles%\Windows NT\Accessories\WORDPAD.EXE,-213" -Force
+	}
+	else {
+		Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*" | Add-WindowsCapability -Online
+	}
+}
+
+# Remove the "Compressed (zipped) Folder" item from the "New" context menu
+# Удалить пункт "Сжатая ZIP-папка" из контекстного меню "Создать"
+function RemoveCompressedFolderNewContext {
+	Remove-Item -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Force -ErrorAction Ignore
+}
+
+# Restore the "Compressed (zipped) Folder" item from the "New" context menu
+# Восстановить пункт "Сжатая ZIP-папка" в контекстном меню "Создать"
+function RestoreCompressedFolderNewContext {
+	if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew)) {
+		New-Item -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Force
+	}
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Name Data -PropertyType Binary -Value ([byte[]](80, 75, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) -Force
+	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Name ItemName -PropertyType ExpandString -Value "@%SystemRoot%\system32\zipfldr.dll,-10194" -Force
+}
+
+# Make the "Open", "Print", and "Edit" context menu items available, when more than 15 items selected
+# Сделать доступными элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
+function EnableMultipleInvokeContext {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name MultipleInvokePromptMinimum -PropertyType DWord -Value 300 -Force
+}
+
+# Disable the "Open", "Print", and "Edit" context menu items for more than 15 items selected
+# Отключить элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
+function DisableMultipleInvokeContext {
+	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name MultipleInvokePromptMinimum -Force -ErrorAction SilentlyContinue
+}
+
+# Hide the "Look for an app in the Microsoft Store" item in the "Open with" dialog
+# Скрыть пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
+function DisableUseStoreOpenWith {
+	if (-not (Test-Path -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name NoUseStoreOpenWith -PropertyType DWord -Value 1 -Force
+}
+
+# Show the "Look for an app in the Microsoft Store" item in the "Open with" dialog
+# Отображать пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
+function EnableUseStoreOpenWith {
+	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name NoUseStoreOpenWith -Force -ErrorAction SilentlyContinue
+}
+
+# Hide the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
+# Скрыть вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
+function DisablePreviousVersionsPage {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -PropertyType DWord -Value 1 -Force
+}
+
+# Show the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
+# Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
+function EnablePreviousVersionsPage {
+	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
+}
+#endregion Context menu
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
@@ -972,6 +1282,74 @@ function ChocolateyPackageManager {
 	./OOSU10.exe ooshutup.cfg /quiet
 }
 #endregion chocolatey
+#region WSL
+<#
+	Install the Windows Subsystem for Linux (WSL)
+	Установить подсистему Windows для Linux (WSL)
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+function InstallWSL {
+	$WSLFeatures = @(
+		# Windows Subsystem for Linux
+		# Подсистема Windows для Linux
+		"Microsoft-Windows-Subsystem-Linux",
+
+		# Virtual Machine Platform
+		# Поддержка платформы для виртуальных машин
+		"VirtualMachinePlatform"
+	)
+	Enable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
+}
+
+<#
+	Download and install the Linux kernel update package
+	Set WSL 2 as the default version when installing a new Linux distribution
+	Run the function only after WSL installed and PC restart
+
+	Скачать и установить пакет обновления ядра Linux
+	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
+	Выполните функцию только после установки WSL и перезагрузки ПК
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+function OptInWSL {
+	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -ne "Installed") {
+		try {
+			if ((Invoke-WebRequest -Uri https://www.google.com -UseBasicParsing -DisableKeepAlive -Method Head).StatusDescription) {
+				Write-Verbose $Localization.WSLUpdateDownloading -Verbose
+
+				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
+				$Parameters = @{
+					Uri     = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
+					OutFile = "$DownloadsFolder\wsl_update_x64.msi"
+					Verbose = [switch]::Present
+				}
+				Invoke-WebRequest @Parameters
+
+				Write-Verbose $Localization.WSLUpdateInstalling -Verbose
+				Start-Process -FilePath "$DownloadsFolder\wsl_update_x64.msi" -ArgumentList "/passive" -Wait
+				Remove-Item -Path "$DownloadsFolder\wsl_update_x64.msi" -Force
+			}
+		}
+		catch [System.Net.WebException] {
+			Write-Warning -Message $Localization.NoInternetConnection
+		}
+	}
+
+	<#
+		Set WSL 2 as the default architecture when installing a new Linux distribution
+		To receive kernel updates, enable the Windows Update setting: 'Receive updates for other Microsoft products when you update Windows'
+
+		Установить WSL 2 как архитектуру по умолчанию при установке нового дистрибутива Linux
+		Чтобы получать обновления ядра, включите параметр Центра обновления Windows: "Получение обновлений для других продуктов Майкрософт при обновлении Windows"
+	#>
+	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -eq "Installed") {
+		wsl --set-default-version 2
+	}
+}
+#endregion WSL
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -1617,30 +1995,20 @@ function SetActiveHours {
 
 }
 
-# Перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
-# Restart this device as soon as possible when a restart is required to install an update
-function EnableDeviceRestartAfterUpdate {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 1 -Force
-}
-
 # Не перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Do not restart this device as soon as possible when a restart is required to install an update
 function DisableDeviceRestartAfterUpdate {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings -Name IsExpedited -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoRebootWithLoggedOnUsers" -Type DWord -Value 1 -Force
 }
 
 # Set data execution prevention (DEP) policy to optout
 function SetDEPOptOut {
 	bcdedit /set `{current`} nx optout
 	Set-ProcessMitigation -System -Enable DEP
-}
-
-# Stop and disable home groups services
-function DisableHomeGroups {
-	Stop-Service "HomeGroupListener" -Force -WarningAction SilentlyContinue
-	Set-Service "HomeGroupListener" -StartupType Disabled
-	Stop-Service "HomeGroupProvider" -Force -WarningAction SilentlyContinue
-	Set-Service "HomeGroupProvider" -StartupType Disabled
 }
 
 # Disable remote assistance
@@ -1664,18 +2032,21 @@ function DisableAutoUpdateDriver {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Name "PreventDeviceMetadataFromNetwork" -Type DWord -Value 1 -Force
-	
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontPromptForWindowsUpdate" -Type DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontSearchWindowsUpdate" -Type DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DriverUpdateWizardWuSearchEnabled" -Type DWord -Value 0 -Force
-	
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "EnableFeaturedSoftware" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUOptions" -Type DWord -Value 3 -Force
 }
 
 # Turn off action center
@@ -1749,6 +2120,14 @@ function DisableHyperVirtualization {
 # Enable pae
 function EnablePae {
 	bcdedit /set `{current`} pae ForceEnable
+}
+
+# Disable au power management
+function DisableAUPowerManagement {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUPowerManagement" -Type DWord -Value 0 -Force
 }
 #endregion System
 #region Performance
@@ -2143,12 +2522,15 @@ function DisableBootLogging {
 function DisableXboxGameBar {
 	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
 		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 0 -Force
-		New-ItemProperty -Path HKCU:\System\GameConfigStore -Name GameDVR_Enabled -PropertyType DWord -Value 0 -Force
 	}
 	if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR")) {
 		New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force
 	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm" -Force
+	}
 	New-ItemProperty -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Name "AllowGameDVR" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm" -Name "Start" -Type DWord -Value 4 -Force
 }
 
 # Turn off Xbox Game Bar tips
@@ -2156,6 +2538,9 @@ function DisableXboxGameBar {
 function DisableXboxGameTips {
 	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
 		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+	}
+	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
 	}
 }
 
@@ -2165,34 +2550,6 @@ function EnableXboxGameTips {
 	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
 		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
 	}
-}
-
-<#
-	Turn on hardware-accelerated GPU scheduling. Restart needed
-	Only with a dedicated GPU and WDDM verion is 2.7 or higher
-
-	Включить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
-	Только при наличии внешней видеокарты и WDDM версии 2.7 и выше
-#>
-function EnableGPUScheduling {
-	if ((Get-CimInstance -ClassName CIM_VideoController | Where-Object -FilterScript { $_.AdapterDACType -ne "Internal" })) {
-		# Determining whether an OS is not installed on a virtual machine
-		# Проверяем, не установлена ли ОС на виртуальной машине
-		if ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -notmatch "Virtual") {
-			# Checking whether a WDDM verion is 2.7 or higher
-			# Проверка: имеет ли WDDM версию 2.7 или выше
-			$WddmVersion_Min = if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) { Get-ItemPropertyValue -Path HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\FeatureSetUsage -Name WddmVersion_Min }
-			if ($WddmVersion_Min -ge 2700) {
-				New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 2 -Force
-			}
-		}
-	}
-}
-
-# Turn off hardware-accelerated GPU scheduling. Restart needed
-# Выключить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
-function DisableGPUScheduling {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name HwSchMode -PropertyType DWord -Value 1 -Force
 }
 
 # Adjust best performance for all programs and also foreground services
@@ -2263,13 +2620,16 @@ function DisableMouseFeedback {
 
 # Enable full-screen optimization
 function EnableFullScreenOptimization {
-	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Force -ErrorAction SilentlyContinue
 	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
 		New-Item -Path "HKCU:\System\GameConfigStore" -Force
 	}
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
+	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Force -ErrorAction SilentlyContinue
 }
 #endregion Gaming
 #region Scheduled tasks
@@ -3016,384 +3376,6 @@ function DisableDefenderCloud {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
 }
 #endregion Microsoft Defender & Security
-#region Context menu
-# Add the "Extract all" item to Windows Installer (.msi) context menu
-# Добавить пункт "Извлечь все" в контекстное меню Windows Installer (.msi)
-function AddMSIExtractContext {
-	if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\Command)) {
-		New-Item -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\Command -Force
-	}
-	$Value = "{0}" -f 'msiexec.exe /a "%1" /qb TARGETDIR="%1 extracted"'
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\Command -Name "(Default)" -PropertyType String -Value $Value -Force
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract -Name MUIVerb -PropertyType String -Value "@shell32.dll,-37514" -Force
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract -Name Icon -PropertyType String -Value "shell32.dll,-16817" -Force
-}
-
-# Remove the "Extract all" item from Windows Installer (.msi) context menu
-# Удалить пункт "Извлечь все" из контекстного меню Windows Installer (.msi)
-function RemoveMSIExtractContext {
-	Remove-Item -Path Registry::HKEY_CLASSES_ROOT\Msi.Package\shell\Extract -Recurse -Force -ErrorAction SilentlyContinue
-}
-
-# Add the "Install" item to the .cab archives context menu
-# Добавить пункт "Установить" в контекстное меню .cab архивов
-function AddCABInstallContext {
-	if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command)) {
-		New-Item -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command -Force
-	}
-	$Value = "{0}" -f "cmd /c DISM.exe /Online /Add-Package /PackagePath:`"%1`" /NoRestart & pause"
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command -Name "(Default)" -PropertyType String -Value $Value -Force
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs -Name MUIVerb -PropertyType String -Value "@shell32.dll,-10210" -Force
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs -Name HasLUAShield -PropertyType String -Value "" -Force
-}
-
-# Remove the "Install" item from the .cab archives context menu
-# Удалить пункт "Установить" из контекстного меню .cab архивов
-function RemoveCABInstallContext {
-	Remove-Item -Path Registry::HKEY_CLASSES_ROOT\CABFolder\Shell\RunAs\Command -Recurse -Force -ErrorAction SilentlyContinue
-}
-
-# Add the "Run as different user" item to the .exe files types context menu
-# Добавить пункт "Запуск от имени другого пользователя" в контекстное меню .exe файлов
-function AddExeRunAsDifferentUserContext {
-	Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\exefile\shell\runasuser -Name Extended -Force -ErrorAction Ignore
-}
-
-# Remove the "Run as different user" item from the .exe files types context menu
-# Удалить пункт "Запуск от имени другого пользователя" из контекстное меню .exe файлов
-function RemoveExeRunAsDifferentUserContext {
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\exefile\shell\runasuser -Name Extended -PropertyType String -Value "" -Force
-}
-
-# Hide the "Cast to Device" item from the context menu
-# Скрыть пункт "Передать на устройство" из контекстного меню
-function HideCastToDeviceContext {
-	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{7AD84985-87B4-4a16-BE58-8B72A5B390F7}" -PropertyType String -Value "Play to menu" -Force
-}
-
-# Show the "Cast to Device" item in the context menu
-# Показывать пункт "Передать на устройство" в контекстном меню
-function ShowCastToDeviceContext {
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{7AD84985-87B4-4a16-BE58-8B72A5B390F7}" -Force -ErrorAction SilentlyContinue
-}
-
-# Hide the "Share" item from the context menu
-# Скрыть пункт "Отправить" (поделиться) из контекстного меню
-function HideShareContext {
-	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{E2BF9676-5F8F-435C-97EB-11607A5BEDF7}" -PropertyType String -Value "" -Force
-}
-
-# Show the "Share" item in the context menu
-# Показывать пункт "Отправить" (поделиться) в контекстном меню
-function ShowShareContext {
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" -Name "{E2BF9676-5F8F-435C-97EB-11607A5BEDF7}" -Force -ErrorAction SilentlyContinue
-}
-
-# Hide the "Edit with Paint 3D" item from the context menu
-# Скрыть пункт "Изменить с помощью Paint 3D" из контекстного меню
-function HideEditWithPaint3DContext {
-	$Extensions = @(".bmp", ".gif", ".jpe", ".jpeg", ".jpg", ".png", ".tif", ".tiff")
-	foreach ($extension in $extensions) {
-		New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\$Extension\Shell\3D Edit" -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-	}
-}
-
-# Show the "Edit with Paint 3D" item in the context menu
-# Показывать пункт "Изменить с помощью Paint 3D" в контекстном меню
-function ShowEditWithPaint3DContext {
-	$Extensions = @(".bmp", ".gif", ".jpe", ".jpeg", ".jpg", ".png", ".tif", ".tiff")
-	foreach ($Extension in $Extensions) {
-		Remove-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\$Extension\Shell\3D Edit" -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Hide the "Edit with Photos" item from the context menu
-# Скрыть пункт "Изменить с помощью приложения "Фотографии"" из контекстного меню
-function HideEditWithPhotosContext {
-	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellEdit -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-	}
-}
-
-# Show the "Edit with Photos" item in the context menu
-# Показывать пункт "Изменить с помощью приложения "Фотографии"" в контекстном меню
-function ShowEditWithPhotosContext {
-	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellEdit -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Hide the "Create a new video" item from the context menu
-# Скрыть пункт "Создать новое видео" из контекстного меню
-function HideCreateANewVideoContext {
-	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellCreateVideo -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-	}
-}
-
-# Show the "Create a new video" item in the context menu
-# Показывать пункт "Создать новое видео" в контекстном меню
-function ShowCreateANewVideoContext {
-	if (Get-AppxPackage -Name Microsoft.Windows.Photos) {
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellCreateVideo -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Hide the "Edit" item from the images context menu
-# Скрыть пункт "Изменить" из контекстного меню изображений
-function HideImagesEditContext {
-	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\edit -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-	}
-}
-
-# Show the "Edit" item from in images context menu
-# Показывать пункт "Изменить" в контекстном меню изображений
-function ShowImagesEditContext {
-	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\SystemFileAssociations\image\shell\edit -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Hide the "Print" item from the .bat and .cmd context menu
-# Скрыть пункт "Печать" из контекстного меню .bat и .cmd файлов
-function HidePrintCMDContext {
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\batfile\shell\print -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\cmdfile\shell\print -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-}
-
-# Show the "Print" item in the .bat and .cmd context menu
-# Показывать пункт "Печать" в контекстном меню .bat и .cmd файлов
-function ShowPrintCMDContext {
-	Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\batfile\shell\print -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-	Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\cmdfile\shell\print -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-}
-
-# Hide the "Include in Library" item from the context menu
-# Скрыть пункт "Добавить в библиотеку" из контекстного меню
-function HideIncludeInLibraryContext {
-	New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Library Location" -Name "(Default)" -PropertyType String -Value "-{3dad6c5d-2167-4cae-9914-f99e41c12cfa}" -Force
-}
-
-# Show the "Include in Library" item in the context menu
-# Показывать пункт "Добавить в библиотеку" в контекстном меню
-function ShowIncludeInLibraryContext {
-	New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Library Location" -Name "(Default)" -PropertyType String -Value "{3dad6c5d-2167-4cae-9914-f99e41c12cfa}" -Force
-}
-
-# Hide the "Send to" item from the folders context menu
-# Скрыть пункт "Отправить" из контекстного меню папок
-function HideSendToContext {
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\ContextMenuHandlers\SendTo -Name "(Default)" -PropertyType String -Value "-{7BA4C740-9E81-11CF-99D3-00AA004AE837}" -Force
-}
-
-# Show the "Send to" item in the folders context menu
-# Показывать пункт "Отправить" в контекстном меню папок
-function ShowSendToContext {
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\ContextMenuHandlers\SendTo -Name "(Default)" -PropertyType String -Value "{7BA4C740-9E81-11CF-99D3-00AA004AE837}" -Force
-}
-
-# Hide the "Turn on BitLocker" item from the context menu
-# Скрыть пункт "Включить BitLocker" из контекстного меню
-function HideBitLockerContext {
-	if (Get-WindowsEdition -Online | Where-Object -FilterScript { $_.Edition -eq "Professional" -or $_.Edition -like "Enterprise*" }) {
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde-elev -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\manage-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde-elev -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\unlock-bde -Name ProgrammaticAccessOnly -PropertyType String -Value "" -Force
-	}
-}
-
-# Show the "Turn on BitLocker" item in the context menu
-# Показывать пункт "Включить BitLocker" в контекстном меню
-function ShowBitLockerContext {
-	if (Get-WindowsEdition -Online | Where-Object -FilterScript { $_.Edition -eq "Professional" -or $_.Edition -like "Enterprise*" }) {
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\encrypt-bde-elev -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\manage-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\resume-bde-elev -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-		Remove-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\Drive\shell\unlock-bde -Name ProgrammaticAccessOnly -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Remove the "Bitmap image" item from the "New" context menu
-# Удалить пункт "Точечный рисунок" из контекстного меню "Создать"
-function RemoveBitmapImageNewContext {
-	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
-		Remove-Item -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Restore the "Bitmap image" item in the "New" context menu
-# Восстановить пункт "Точечный рисунок" в контекстного меню "Создать"
-function RestoreBitmapImageNewContext {
-	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*").State -eq "Installed") {
-		if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew)) {
-			New-Item -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Force
-		}
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Name ItemName -PropertyType ExpandString -Value "@%systemroot%\system32\mspaint.exe,-59414" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.bmp\ShellNew -Name NullFile -PropertyType String -Value "" -Force
-	}
-	else {
-		Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*" | Add-WindowsCapability -Online
-	}
-}
-
-# Remove the "Rich Text Document" item from the "New" context menu
-# Удалить пункт "Документ в формате RTF" из контекстного меню "Создать"
-function RemoveRichTextDocumentNewContext {
-	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*").State -eq "Installed") {
-		Remove-Item -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Force -ErrorAction Ignore
-	}
-}
-
-# Restore the "Rich Text Document" item in the "New" context menu
-# Восстановить пункт "Документ в формате RTF" в контекстного меню "Создать"
-function RestoreRichTextDocumentNewContext {
-	if ((Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*").State -eq "Installed") {
-		if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew)) {
-			New-Item -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Force
-		}
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Name Data -PropertyType String -Value "{\rtf1}" -Force
-		New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.rtf\ShellNew -Name ItemName -PropertyType ExpandString -Value "@%ProgramFiles%\Windows NT\Accessories\WORDPAD.EXE,-213" -Force
-	}
-	else {
-		Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*" | Add-WindowsCapability -Online
-	}
-}
-
-# Remove the "Compressed (zipped) Folder" item from the "New" context menu
-# Удалить пункт "Сжатая ZIP-папка" из контекстного меню "Создать"
-function RemoveCompressedFolderNewContext {
-	Remove-Item -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Force -ErrorAction Ignore
-}
-
-# Restore the "Compressed (zipped) Folder" item from the "New" context menu
-# Восстановить пункт "Сжатая ZIP-папка" в контекстном меню "Создать"
-function RestoreCompressedFolderNewContext {
-	if (-not (Test-Path -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew)) {
-		New-Item -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Force
-	}
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Name Data -PropertyType Binary -Value ([byte[]](80, 75, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)) -Force
-	New-ItemProperty -Path Registry::HKEY_CLASSES_ROOT\.zip\CompressedFolder\ShellNew -Name ItemName -PropertyType ExpandString -Value "@%SystemRoot%\system32\zipfldr.dll,-10194" -Force
-}
-
-# Make the "Open", "Print", and "Edit" context menu items available, when more than 15 items selected
-# Сделать доступными элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
-function EnableMultipleInvokeContext {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name MultipleInvokePromptMinimum -PropertyType DWord -Value 300 -Force
-}
-
-# Disable the "Open", "Print", and "Edit" context menu items for more than 15 items selected
-# Отключить элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
-function DisableMultipleInvokeContext {
-	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name MultipleInvokePromptMinimum -Force -ErrorAction SilentlyContinue
-}
-
-# Hide the "Look for an app in the Microsoft Store" item in the "Open with" dialog
-# Скрыть пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
-function DisableUseStoreOpenWith {
-	if (-not (Test-Path -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
-		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name NoUseStoreOpenWith -PropertyType DWord -Value 1 -Force
-}
-
-# Show the "Look for an app in the Microsoft Store" item in the "Open with" dialog
-# Отображать пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
-function EnableUseStoreOpenWith {
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name NoUseStoreOpenWith -Force -ErrorAction SilentlyContinue
-}
-
-# Hide the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
-# Скрыть вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
-function DisablePreviousVersionsPage {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -PropertyType DWord -Value 1 -Force
-}
-
-# Show the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
-# Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
-function EnablePreviousVersionsPage {
-	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
-}
-#endregion Context menu
-#region WSL
-<#
-	Install the Windows Subsystem for Linux (WSL)
-	Установить подсистему Windows для Linux (WSL)
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-function InstallWSL {
-	$WSLFeatures = @(
-		# Windows Subsystem for Linux
-		# Подсистема Windows для Linux
-		"Microsoft-Windows-Subsystem-Linux",
-
-		# Virtual Machine Platform
-		# Поддержка платформы для виртуальных машин
-		"VirtualMachinePlatform"
-	)
-	Enable-WindowsOptionalFeature -Online -FeatureName $WSLFeatures -NoRestart
-}
-
-<#
-	Download and install the Linux kernel update package
-	Set WSL 2 as the default version when installing a new Linux distribution
-	Run the function only after WSL installed and PC restart
-
-	Скачать и установить пакет обновления ядра Linux
-	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
-	Выполните функцию только после установки WSL и перезагрузки ПК
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-function OptInWSL {
-	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -ne "Installed") {
-		try {
-			if ((Invoke-WebRequest -Uri https://www.google.com -UseBasicParsing -DisableKeepAlive -Method Head).StatusDescription) {
-				Write-Verbose $Localization.WSLUpdateDownloading -Verbose
-
-				[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-				$DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
-				$Parameters = @{
-					Uri     = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
-					OutFile = "$DownloadsFolder\wsl_update_x64.msi"
-					Verbose = [switch]::Present
-				}
-				Invoke-WebRequest @Parameters
-
-				Write-Verbose $Localization.WSLUpdateInstalling -Verbose
-				Start-Process -FilePath "$DownloadsFolder\wsl_update_x64.msi" -ArgumentList "/passive" -Wait
-				Remove-Item -Path "$DownloadsFolder\wsl_update_x64.msi" -Force
-			}
-		}
-		catch [System.Net.WebException] {
-			Write-Warning -Message $Localization.NoInternetConnection
-		}
-	}
-
-	<#
-		Set WSL 2 as the default architecture when installing a new Linux distribution
-		To receive kernel updates, enable the Windows Update setting: 'Receive updates for other Microsoft products when you update Windows'
-
-		Установить WSL 2 как архитектуру по умолчанию при установке нового дистрибутива Linux
-		Чтобы получать обновления ядра, включите параметр Центра обновления Windows: "Получение обновлений для других продуктов Майкрософт при обновлении Windows"
-	#>
-	if ((Get-Package -Name "Windows Subsystem for Linux Update" -ProviderName msi -Force -ErrorAction Ignore).Status -eq "Installed") {
-		wsl --set-default-version 2
-	}
-}
-#endregion WSL
 function Errors {
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
@@ -3402,6 +3384,7 @@ function Errors {
 					$Localization.ErrorsFile    = Split-Path -Path $PSCommandPath -Leaf
 					$Localization.ErrorsMessage = $_.Exception.Message
 				}
-			} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-String).Trim()
+			} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-File -FilePath .\errorlog.txt
+		)
 	}
 }

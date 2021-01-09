@@ -414,10 +414,185 @@ EnablePrtScnSnippingTool
 # Change desktop background
 ChangeDesktopBackground
 #endregion UI & Personalization
+#region Context menu
+# Add the "Extract all" item to Windows Installer (.msi) context menu
+# Добавить пункт "Извлечь все" в контекстное меню Windows Installer (.msi)
+AddMSIExtractContext
+
+# Remove the "Extract all" item from Windows Installer (.msi) context menu
+# Удалить пункт "Извлечь все" из контекстного меню Windows Installer (.msi)
+# RemoveMSIExtractContext
+
+# Add the "Install" item to the .cab archives context menu
+# Добавить пункт "Установить" в контекстное меню .cab архивов
+AddCABInstallContext
+
+# Remove the "Install" item from the .cab archives context menu
+# Удалить пункт "Установить" из контекстного меню .cab архивов
+# RemoveCABInstallContext
+
+# Add the "Run as different user" item to the .exe files types context menu
+# Добавить пункт "Запуск от имени другого пользователя" в контекстного меню .exe файлов
+AddExeRunAsDifferentUserContext
+
+# Remove the "Run as different user" item from the .exe files types context menu
+# Удалить пункт "Запуск от имени другого пользователя" из контекстное меню .exe файлов
+# RemoveExeRunAsDifferentUserContext
+
+# Hide the "Cast to Device" item from the context menu
+# Скрыть пункт "Передать на устройство" из контекстного меню
+HideCastToDeviceContext
+
+# Show the "Cast to Device" item in the context menu
+# Показывать пункт "Передать на устройство" в контекстном меню
+# ShowCastToDeviceContext
+
+# Hide the "Share" item from the context menu
+# Скрыть пункт "Отправить" (поделиться) из контекстного меню
+HideShareContext
+
+# Show the "Share" item in the context menu
+# Показывать пункт "Отправить" (поделиться) в контекстном меню
+# ShowShareContext
+
+# Hide the "Edit with Paint 3D" item from the context menu
+# Скрыть пункт "Изменить с помощью Paint 3D" из контекстного меню
+HideEditWithPaint3DContext
+
+# Show the "Edit with Paint 3D" item in the context menu
+# Показывать пункт "Изменить с помощью Paint 3D" в контекстном меню
+# ShowEditWithPaint3DContext
+
+# Hide the "Edit with Photos" item from the context menu
+# Скрыть пункт "Изменить с помощью приложения "Фотографии"" из контекстного меню
+HideEditWithPhotosContext
+
+# Show the "Edit with Photos" item in the context menu
+# Показывать пункт "Изменить с помощью приложения "Фотографии"" в контекстном меню
+# ShowEditWithPhotosContext
+
+# Hide the "Create a new video" item from the context menu
+# Скрыть пункт "Создать новое видео" из контекстного меню
+HideCreateANewVideoContext
+
+# Show the "Create a new video" item in the context menu
+# Показывать пункт "Создать новое видео" в контекстном меню
+# ShowCreateANewVideoContext
+
+# Hide the "Edit" item from the images context menu
+# Скрыть пункт "Изменить" из контекстного меню изображений
+HideImagesEditContext
+
+# Show the "Edit" item from in images context menu
+# Показывать пункт "Изменить" в контекстном меню изображений
+# ShowImagesEditContext
+
+# Hide the "Print" item from the .bat and .cmd context menu
+# Скрыть пункт "Печать" из контекстного меню .bat и .cmd файлов
+HidePrintCMDContext
+
+# Show the "Print" item in the .bat and .cmd context menu
+# Показывать пункт "Печать" в контекстном меню .bat и .cmd файлов
+# ShowPrintCMDContext
+
+# Hide the "Include in Library" item from the context menu
+# Скрыть пункт "Добавить в библиотеку" из контекстного меню
+HideIncludeInLibraryContext
+
+# Show the "Include in Library" item in the context menu
+# Показывать пункт "Добавить в библиотеку" в контекстном меню
+# ShowIncludeInLibraryContext
+
+# Hide the "Send to" item from the folders context menu
+# Скрыть пункт "Отправить" из контекстного меню папок
+HideSendToContext
+
+# Show the "Send to" item in the folders context menu
+# Показывать пункт "Отправить" в контекстном меню папок
+# ShowSendToContext
+
+# Hide the "Turn on BitLocker" item from the context menu
+# Скрыть пункт "Включить BitLocker" из контекстного меню
+HideBitLockerContext
+
+# Show the "Turn on BitLocker" item in the context menu
+# Показывать пункт "Включить BitLocker" в контекстном меню
+# ShowBitLockerContext
+
+# Remove the "Bitmap image" item from the "New" context menu
+# Удалить пункт "Точечный рисунок" из контекстного меню "Создать"
+RemoveBitmapImageNewContext
+
+# Restore the "Bitmap image" item in the "New" context menu
+# Восстановить пункт "Точечный рисунок" в контекстного меню "Создать"
+# RestoreBitmapImageNewContext
+
+# Remove the "Rich Text Document" item from the "New" context menu
+# Удалить пункт "Документ в формате RTF" из контекстного меню "Создать"
+RemoveRichTextDocumentNewContext
+
+# Restore the "Rich Text Document" item in the "New" context menu
+# Восстановить пункт "Документ в формате RTF" в контекстного меню "Создать"
+# RestoreRichTextDocumentNewContext
+
+# Remove the "Compressed (zipped) Folder" item from the "New" context menu
+# Удалить пункт "Сжатая ZIP-папка" из контекстного меню "Создать"
+RemoveCompressedFolderNewContext
+
+# Restore the "Compressed (zipped) Folder" item from the "New" context menu
+# Восстановить пункт "Сжатая ZIP-папка" в контекстном меню "Создать"
+# RestoreCompressedFolderNewContext
+
+# Make the "Open", "Print", and "Edit" context menu items available, when more than 15 items selected
+# Сделать доступными элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
+EnableMultipleInvokeContext
+
+# Disable the "Open", "Print", and "Edit" context menu items for more than 15 items selected
+# Отключить элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
+# DisableMultipleInvokeContext
+
+# Hide the "Look for an app in the Microsoft Store" item in the "Open with" dialog
+# Скрыть пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
+DisableUseStoreOpenWith
+
+# Show the "Look for an app in the Microsoft Store" item in the "Open with" dialog
+# Отображать пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
+# EnableUseStoreOpenWith
+
+# Hide the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
+# Скрыть вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
+DisablePreviousVersionsPage
+
+# Show the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
+# Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
+# EnablePreviousVersionsPage
+#endregion Context menu
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
 #endregion chocolatey
+#region WSL
+<#
+	Install the Windows Subsystem for Linux (WSL)
+	Установить подсистему Windows для Linux (WSL)
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+InstallWSL
+
+<#
+	Download and install the Linux kernel update package
+	Set WSL 2 as the default version when installing a new Linux distribution
+	Run the function only after WSL installed and PC restart
+
+	Скачать и установить пакет обновления ядра Linux
+	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
+	Выполните функцию только после установки WSL и перезагрузки ПК
+
+	https://github.com/microsoft/WSL/issues/5437
+#>
+OptInWSL
+#endregion WSL
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -632,19 +807,12 @@ DisableSmartActiveHours
 # Автоматически изменять период активности для этого устройства на основе действий
 SetActiveHours
 
-# Перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
-# Restart this device as soon as possible when a restart is required to install an update
-# EnableDeviceRestartAfterUpdate
-
 # Не перезапускать это устройство как можно быстрее, если для установки обновления требуется перезагрузка
 # Do not restart this device as soon as possible when a restart is required to install an update
 DisableDeviceRestartAfterUpdate
 
 # Set data execution prevention (DEP) policy to optout
 SetDEPOptOut
-
-# Stop and disable home groups services
-DisableHomeGroups
 
 # Disable remote assistance
 DisableRemoteAssistance
@@ -694,6 +862,9 @@ DisableHyperVirtualization
 
 # Enable pae
 EnablePae
+
+# Disable au power management
+DisableAUPowerManagement
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -843,19 +1014,6 @@ DisableXboxGameTips
 # Turn on Xbox Game Bar tips
 # Включить советы Xbox Game Bar
 # EnableXboxGameTips
-
-<#
-	Turn on hardware-accelerated GPU scheduling. Restart needed
-	Only with a dedicated GPU and WDDM verion is 2.7 or higher
-
-	Включить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
-	Только при наличии внешней видеокарты и WDDM версии 2.7 и выше
-#>
-EnableGPUScheduling
-
-# Turn off hardware-accelerated GPU scheduling. Restart needed
-# Выключить планирование графического процессора с аппаратным ускорением. Необходима перезагрузка
-# DisableGPUScheduling
 
 # Adjust best performance for all programs and also foreground services
 BestPriorityForeground
@@ -1092,179 +1250,4 @@ HideTrayIcon
 # Disable defender cloud
 DisableDefenderCloud
 #endregion Microsoft Defender & Security
-#region Context menu
-# Add the "Extract all" item to Windows Installer (.msi) context menu
-# Добавить пункт "Извлечь все" в контекстное меню Windows Installer (.msi)
-AddMSIExtractContext
-
-# Remove the "Extract all" item from Windows Installer (.msi) context menu
-# Удалить пункт "Извлечь все" из контекстного меню Windows Installer (.msi)
-# RemoveMSIExtractContext
-
-# Add the "Install" item to the .cab archives context menu
-# Добавить пункт "Установить" в контекстное меню .cab архивов
-AddCABInstallContext
-
-# Remove the "Install" item from the .cab archives context menu
-# Удалить пункт "Установить" из контекстного меню .cab архивов
-# RemoveCABInstallContext
-
-# Add the "Run as different user" item to the .exe files types context menu
-# Добавить пункт "Запуск от имени другого пользователя" в контекстного меню .exe файлов
-AddExeRunAsDifferentUserContext
-
-# Remove the "Run as different user" item from the .exe files types context menu
-# Удалить пункт "Запуск от имени другого пользователя" из контекстное меню .exe файлов
-# RemoveExeRunAsDifferentUserContext
-
-# Hide the "Cast to Device" item from the context menu
-# Скрыть пункт "Передать на устройство" из контекстного меню
-HideCastToDeviceContext
-
-# Show the "Cast to Device" item in the context menu
-# Показывать пункт "Передать на устройство" в контекстном меню
-# ShowCastToDeviceContext
-
-# Hide the "Share" item from the context menu
-# Скрыть пункт "Отправить" (поделиться) из контекстного меню
-HideShareContext
-
-# Show the "Share" item in the context menu
-# Показывать пункт "Отправить" (поделиться) в контекстном меню
-# ShowShareContext
-
-# Hide the "Edit with Paint 3D" item from the context menu
-# Скрыть пункт "Изменить с помощью Paint 3D" из контекстного меню
-HideEditWithPaint3DContext
-
-# Show the "Edit with Paint 3D" item in the context menu
-# Показывать пункт "Изменить с помощью Paint 3D" в контекстном меню
-# ShowEditWithPaint3DContext
-
-# Hide the "Edit with Photos" item from the context menu
-# Скрыть пункт "Изменить с помощью приложения "Фотографии"" из контекстного меню
-HideEditWithPhotosContext
-
-# Show the "Edit with Photos" item in the context menu
-# Показывать пункт "Изменить с помощью приложения "Фотографии"" в контекстном меню
-# ShowEditWithPhotosContext
-
-# Hide the "Create a new video" item from the context menu
-# Скрыть пункт "Создать новое видео" из контекстного меню
-HideCreateANewVideoContext
-
-# Show the "Create a new video" item in the context menu
-# Показывать пункт "Создать новое видео" в контекстном меню
-# ShowCreateANewVideoContext
-
-# Hide the "Edit" item from the images context menu
-# Скрыть пункт "Изменить" из контекстного меню изображений
-HideImagesEditContext
-
-# Show the "Edit" item from in images context menu
-# Показывать пункт "Изменить" в контекстном меню изображений
-# ShowImagesEditContext
-
-# Hide the "Print" item from the .bat and .cmd context menu
-# Скрыть пункт "Печать" из контекстного меню .bat и .cmd файлов
-HidePrintCMDContext
-
-# Show the "Print" item in the .bat and .cmd context menu
-# Показывать пункт "Печать" в контекстном меню .bat и .cmd файлов
-# ShowPrintCMDContext
-
-# Hide the "Include in Library" item from the context menu
-# Скрыть пункт "Добавить в библиотеку" из контекстного меню
-HideIncludeInLibraryContext
-
-# Show the "Include in Library" item in the context menu
-# Показывать пункт "Добавить в библиотеку" в контекстном меню
-# ShowIncludeInLibraryContext
-
-# Hide the "Send to" item from the folders context menu
-# Скрыть пункт "Отправить" из контекстного меню папок
-HideSendToContext
-
-# Show the "Send to" item in the folders context menu
-# Показывать пункт "Отправить" в контекстном меню папок
-# ShowSendToContext
-
-# Hide the "Turn on BitLocker" item from the context menu
-# Скрыть пункт "Включить BitLocker" из контекстного меню
-HideBitLockerContext
-
-# Show the "Turn on BitLocker" item in the context menu
-# Показывать пункт "Включить BitLocker" в контекстном меню
-# ShowBitLockerContext
-
-# Remove the "Bitmap image" item from the "New" context menu
-# Удалить пункт "Точечный рисунок" из контекстного меню "Создать"
-RemoveBitmapImageNewContext
-
-# Restore the "Bitmap image" item in the "New" context menu
-# Восстановить пункт "Точечный рисунок" в контекстного меню "Создать"
-# RestoreBitmapImageNewContext
-
-# Remove the "Rich Text Document" item from the "New" context menu
-# Удалить пункт "Документ в формате RTF" из контекстного меню "Создать"
-RemoveRichTextDocumentNewContext
-
-# Restore the "Rich Text Document" item in the "New" context menu
-# Восстановить пункт "Документ в формате RTF" в контекстного меню "Создать"
-# RestoreRichTextDocumentNewContext
-
-# Remove the "Compressed (zipped) Folder" item from the "New" context menu
-# Удалить пункт "Сжатая ZIP-папка" из контекстного меню "Создать"
-RemoveCompressedFolderNewContext
-
-# Restore the "Compressed (zipped) Folder" item from the "New" context menu
-# Восстановить пункт "Сжатая ZIP-папка" в контекстном меню "Создать"
-# RestoreCompressedFolderNewContext
-
-# Make the "Open", "Print", and "Edit" context menu items available, when more than 15 items selected
-# Сделать доступными элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
-EnableMultipleInvokeContext
-
-# Disable the "Open", "Print", and "Edit" context menu items for more than 15 items selected
-# Отключить элементы контекстного меню "Открыть", "Изменить" и "Печать" при выделении более 15 элементов
-# DisableMultipleInvokeContext
-
-# Hide the "Look for an app in the Microsoft Store" item in the "Open with" dialog
-# Скрыть пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
-DisableUseStoreOpenWith
-
-# Show the "Look for an app in the Microsoft Store" item in the "Open with" dialog
-# Отображать пункт "Поиск приложения в Microsoft Store" в диалоге "Открыть с помощью"
-# EnableUseStoreOpenWith
-
-# Hide the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
-# Скрыть вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
-DisablePreviousVersionsPage
-
-# Show the "Previous Versions" tab from files and folders context menu and also the "Restore previous versions" context menu item
-# Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
-# EnablePreviousVersionsPage
-#endregion Context menu
-#region WSL
-<#
-	Install the Windows Subsystem for Linux (WSL)
-	Установить подсистему Windows для Linux (WSL)
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-InstallWSL
-
-<#
-	Download and install the Linux kernel update package
-	Set WSL 2 as the default version when installing a new Linux distribution
-	Run the function only after WSL installed and PC restart
-
-	Скачать и установить пакет обновления ядра Linux
-	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
-	Выполните функцию только после установки WSL и перезагрузки ПК
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-OptInWSL
-#endregion WSL
 Errors
