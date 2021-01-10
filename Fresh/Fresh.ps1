@@ -936,6 +936,9 @@ DisablePagingExecutive
 # Large system cache
 LargeSystemCache
 
+# IO page lock limit
+IoPageLockLimit
+
 # Paging files
 PagingFiles
 
@@ -1004,6 +1007,36 @@ DisableBootLogging
 
 # Increase default size buffer
 IncreaseDefaultSizeBuffer
+
+# IRP stack size
+IRPStackSize
+
+# Size
+Size
+
+# Max work items
+MaxWorkItems
+
+# Maxmpxct
+MaxMpxCt
+
+# Max cmds
+MaxCmds
+
+# Disable strict name checking
+DisableStrictNameChecking
+
+# Enable dynamic backlog
+EnableDynamicBacklog
+
+# Minimum dynamic backlog
+MinimumDynamicBacklog
+
+# Maximum dynamic backlog
+MaximumDynamicBacklog
+
+# Dynamic backlog growth delta
+DynamicBacklogGrowthDelta
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar

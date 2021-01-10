@@ -2318,6 +2318,10 @@ function LargeSystemCache {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "LargeSystemCache" -PropertyType DWord -Value 1 -Force
 }
 
+# IO page lock limit
+function IoPageLockLimit {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 983040 -Force
+}
 # Paging files
 function PagingFiles {
 	$Value = "00,00"
@@ -2378,7 +2382,11 @@ function NonBestEffortLimit {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Force
 	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched" -Force
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
 }
 
 # Double click height width
@@ -2522,6 +2530,57 @@ function IncreaseDefaultSizeBuffer {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 17424 -Force
+}
+
+# IRP stack size
+function IRPStackSize {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 32 -Force
+}
+
+# Size
+function Size {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "Size" -Type DWord -Value 3 -Force
+}
+
+# Max work items
+function MaxWorkItems {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxWorkItems" -Type DWord -Value 8192 -Force
+}
+
+# Maxmpxct
+function MaxMpxCt {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxMpxCt" -Type DWord -Value 2048 -Force
+}
+
+# Max cmds
+function MaxCmds {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxCmds" -Type DWord -Value 2048 -Force
+}
+
+# Disable strict name checking
+function DisableStrictNameChecking {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "DisableStrictNameChecking" -Type DWord -Value 1 -Force
+}
+
+# Enable dynamic backlog
+function EnableDynamicBacklog {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "EnableDynamicBacklog" -Type DWord -Value 1 -Force
+}
+
+# Minimum dynamic backlog
+function MinimumDynamicBacklog {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MinimumDynamicBacklog" -Type DWord -Value 200 -Force
+}
+
+# Maximum dynamic backlog
+function MaximumDynamicBacklog {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MaximumDynamicBacklog" -Type DWord -Value 20000 -Force
+}
+
+# Dynamic backlog growth delta
+function DynamicBacklogGrowthDelta {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
 }
 #endregion Performance
 #region Gaming
