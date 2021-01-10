@@ -2515,6 +2515,14 @@ function DisableBootLogging {
 	bcdedit /debug `{current`} off
 	bcdedit /set `{current`} bootlog no
 }
+
+# Increase default size buffer
+function IncreaseDefaultSizeBuffer {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 17424 -Force
+}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -2555,15 +2563,20 @@ function EnableXboxGameTips {
 # Adjust best performance for all programs and also foreground services
 function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
+
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Force
+	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
 	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
 	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
-
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
 	}
@@ -2576,7 +2589,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 40 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 64 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 30 -Force

@@ -1001,6 +1001,9 @@ DisableEncryptPagingFile
 
 # Disable boot logging
 DisableBootLogging
+
+# Increase default size buffer
+IncreaseDefaultSizeBuffer
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
