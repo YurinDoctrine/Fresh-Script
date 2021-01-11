@@ -1063,46 +1063,6 @@ DisableMouseFeedback
 # Enable full-screen optimization
 EnableFullScreenOptimization
 #endregion Gaming
-#region Scheduled tasks
-<#
-	Create a task to clean up unused files and Windows updates in the Task Scheduler
-	A minute before the task starts, a warning in the Windows action center will appear
-	The task runs every 90 days
-
-	Создать задачу в Планировщике задач по очистке неиспользуемых файлов и обновлений Windows
-	За минуту до выполнения задачи в Центре уведомлений Windows появится предупреждение
-	Задача выполняется каждые 90 дней
-#>
-CreateCleanUpTask
-
-# Delete a task to clean up unused files and Windows updates in the Task Scheduler
-# Удалить задачу в Планировщике задач по очистке неиспользуемых файлов и обновлений Windows
-# DeleteCleanUpTask
-
-# Create a task to clear the %SystemRoot%\SoftwareDistribution\Download folder in the Task Scheduler
-# The task runs on Thursdays every 4 weeks
-
-# Создать задачу в Планировщике задач по очистке папки %SystemRoot%\SoftwareDistribution\Download
-# Задача выполняется по четвергам каждую 4 неделю
-CreateSoftwareDistributionTask
-
-# Delete a task to clear the %SystemRoot%\SoftwareDistribution\Download folder in the Task Scheduler
-# Удалить задачу в Планировщике задач по очистке папки %SystemRoot%\SoftwareDistribution\Download
-# DeleteCSoftwareDistributionTask
-
-<#
-	Create a task to clear the %TEMP% folder in the Task Scheduler
-	The task runs every 62 days
-
-	Создать задачу в Планировщике задач по очистке папки %TEMP%
-	Задача выполняется каждые 62 дня
-#>
-CreateTempTask
-
-# Delete a task to clear the %TEMP% folder in the Task Scheduler
-# Удалить задачу в Планировщике задач по очистке папки %TEMP%
-# DeleteTempTask
-#endregion Scheduled tasks
 #region Microsoft Defender & Security
 # Enable Controlled folder access and add protected folders
 # Включить контролируемый доступ к папкам и добавить защищенные папки
