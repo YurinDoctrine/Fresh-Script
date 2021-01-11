@@ -2416,14 +2416,10 @@ function DebloatMicrosoftServices {
 	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "AppVClient" -Force -WarningAction SilentlyContinue
-	Set-Service AppVClient -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "NetTcpPortSharing" -Force -WarningAction SilentlyContinue
 	Set-Service NetTcpPortSharing -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "NcbService" -Force -WarningAction SilentlyContinue
 	Set-Service NcbService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "CscService" -Force -WarningAction SilentlyContinue
-	Set-Service CscService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PhoneSvc" -Force -WarningAction SilentlyContinue
 	Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
@@ -2458,8 +2454,6 @@ function DebloatMicrosoftServices {
 	Set-Service upnphost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
 	Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "UevAgentService" -Force -WarningAction SilentlyContinue
-	Set-Service UevAgentService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
 	Set-Service WalletService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
@@ -2478,6 +2472,22 @@ function DebloatMicrosoftServices {
 	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
 	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
+	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
+	Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PcaSvc" -Force -WarningAction SilentlyContinue
+	Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
+	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
+	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
+	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
+	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
+	Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
 
 # Disable boot splash animations
