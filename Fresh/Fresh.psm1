@@ -2592,6 +2592,19 @@ function DynamicBacklogGrowthDelta {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
 }
+
+# Increase mft zone
+function IncreaseMFTZone {
+	fsutil behavior set mftzone 4
+}
+
+# Set symbolic links
+function SetSymbolicLinks {
+	fsutil behavior set SymlinkEvaluation R2R:1
+	fsutil behavior set SymlinkEvaluation L2L:1
+	fsutil behavior set SymlinkEvaluation L2R:1
+	fsutil behavior set SymlinkEvaluation R2L:1
+}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar

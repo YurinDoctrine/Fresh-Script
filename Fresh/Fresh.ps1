@@ -1037,6 +1037,12 @@ MaximumDynamicBacklog
 
 # Dynamic backlog growth delta
 DynamicBacklogGrowthDelta
+
+# Increase mft zone
+IncreaseMFTZone
+
+# Set symbolic links
+SetSymbolicLinks
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
