@@ -3242,7 +3242,7 @@ function Errors {
 					$Localization.ErrorsFile    = Split-Path -Path $PSCommandPath -Leaf
 					$Localization.ErrorsMessage = $_.Exception.Message
 				}
-			} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-File -FilePath .\errorlog.txt
+			} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-File -FilePath $HOME\Documents\errorlog.txt
 		)
 	}
 }

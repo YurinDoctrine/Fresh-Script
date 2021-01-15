@@ -1120,11 +1120,11 @@ DisabledPUAppsDetection
 
 # Run Microsoft Defender within a sandbox
 # Запускать Microsoft Defender в песочнице
-# EnableDefenderSandbox
+EnableDefenderSandbox
 
 # Do not run Microsoft Defender within a sandbox
 # Не запускать Microsoft Defender в песочнице
-DisableDefenderSandbox
+# DisableDefenderSandbox
 
 # Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
 # Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
