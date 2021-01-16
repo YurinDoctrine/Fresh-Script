@@ -3,7 +3,7 @@
 ## RUNNING
 
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
 ```
 
  Open Powershell prompt as Administrator then paste above code, after that Right-click and Run as
