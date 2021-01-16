@@ -11,11 +11,9 @@ if %errorlevel%==0 (
 ) else (
         echo :: You are NOT running as Administrator!
         echo.
-        echo  Right-click and select ^'Run as Administrator^' and try again.
-        echo.
-        echo  [HIT RETURN]
-        pause > NUL
-        exit 1
+        echo  Right-click and select ^'Run as Administrator^' and try again. [HIT RETURN]
+		pause > NUL
+        exit 0
 )
 
-PowerShell -Command "Remove-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows Script Host\Settings' -Name Enabled -Force -ErrorAction SilentlyContinue | .\Fresh.ps1"
+powershell .\Fresh.ps1
