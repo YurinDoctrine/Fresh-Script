@@ -567,10 +567,6 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion chocolatey
 #region WSL
 <#
 	Install the Windows Subsystem for Linux (WSL)
@@ -593,6 +589,10 @@ InstallWSL
 #>
 OptInWSL
 #endregion WSL
+#region chocolatey
+# Install chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion chocolatey
 #region UWP apps
 <#
 	Uninstall UWP apps
