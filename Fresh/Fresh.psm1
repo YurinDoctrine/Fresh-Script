@@ -1275,7 +1275,7 @@ function EnablePreviousVersionsPage {
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3071; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk chocolatey-visualstudio.extension xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; Get-WuInstall -AcceptAll -IgnoreReboot; Get-WuInstall -AcceptAll -Install -IgnoreReboot; choco install transmission-qt jpegview mpc-hc k-litecodecpackfull adobereader notepadplusplus.install 7zip.install cpu-z.install teracopy; choco upgrade all 
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk chocolatey-visualstudio.extension xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; Get-WuInstall -AcceptAll -IgnoreReboot; Get-WuInstall -AcceptAll -Install -IgnoreReboot; choco install transmission-qt jpegview mpc-hc k-litecodecpackfull adobereader notepadplusplus.install 7zip.install cpu-z.install teracopy; choco upgrade all 
 	Write-Warning -Message $Localization.OOShutup
 	Import-Module BitsTransfer
 	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
@@ -2105,7 +2105,7 @@ function FixTimers {
 	bcdedit /set `{current`} useplatformclock false
 	bcdedit /set `{current`} useplatformtick yes
 	bcdedit /set `{current`} disabledynamictick yes
-    bcdedit /set `{current`} tscsyncpolicy Enhanced
+	bcdedit /set `{current`} tscsyncpolicy Enhanced
 }
 
 # Don't use firmware pci settings
@@ -2133,9 +2133,9 @@ function DisableAUPowerManagement {
 
 # Prioritize csrr.exe service
 function PrioritizeCSRRService {
-    New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions"
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "1" -Force
+	New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions"
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "1" -Force
 }
 #endregion System
 #region Performance
@@ -2512,10 +2512,10 @@ function DisableTrustedPlatformModule {
 # Disable legacy apic mode
 function DisableLegacyApicMode {
 	bcdedit /set `{current`} uselegacyapicmode no
-    bcdedit /set `{current`} x2apicpolicy Enable
-    bcdedit /set `{current`} configaccesspolicy Default
-    bcdedit /set `{current`} MSI Default
-    bcdedit /set `{current`} usephysicaldestination No
+	bcdedit /set `{current`} x2apicpolicy Enable
+	bcdedit /set `{current`} configaccesspolicy Default
+	bcdedit /set `{current`} MSI Default
+	bcdedit /set `{current`} usephysicaldestination No
 }
 
 # Disable integrity checks
@@ -2620,8 +2620,8 @@ function SetSymbolicLinks {
 
 # Enable memory allocation in graphics driver
 function EnableMemoryAllocationInGraphicsDriver {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
-    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
 }
 #endregion Performance
 #region Gaming
@@ -2716,13 +2716,13 @@ function BestPriorityForeground {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	netsh int tcp set global rsc=disabled
 	netsh int tcp set global timestamps=disabled
-    netsh int udp set global uro=enabled
-    netsh winsock set autotuning on
-    netsh int tcp set global autotuning=experimental
-    netsh int tcp set supp internet congestionprovider=newreno
-    New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
+	netsh int udp set global uro=enabled
+	netsh winsock set autotuning on
+	netsh int tcp set global autotuning=experimental
+	netsh int tcp set supp internet congestionprovider=newreno
+	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
 }
 
 # Allow auto game mode
