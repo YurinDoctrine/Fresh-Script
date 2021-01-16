@@ -865,6 +865,9 @@ EnablePae
 
 # Disable au power management
 DisableAUPowerManagement
+
+# Prioritize csrr.exe service
+PrioritizeCSRRService
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -1043,6 +1046,9 @@ IncreaseMFTZone
 
 # Set symbolic links
 SetSymbolicLinks
+
+# Enable memory allocation in graphics driver
+EnableMemoryAllocationInGraphicsDriver
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
