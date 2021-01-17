@@ -53,13 +53,7 @@ function CreateRestorePoint {
 function DisableTelemetryServices {
 	Get-Service -Name DiagTrack | Stop-Service -Force
 	Get-Service -Name DiagTrack | Set-Service -StartupType Disabled
-}
-
-# Enable the "Connected User Experiences and Telemetry" service (DiagTrack)
-# Включить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
-function EnableTelemetryServices {
-	Get-Service -Name DiagTrack | Set-Service -StartupType Automatic
-	Get-Service -Name DiagTrack | Start-Service
+	Get-NetFirewallRule -Group DiagTrack | Set-NetFirewallRule -Enabled False -Action Block
 }
 
 # Set the OS level of diagnostic data gathering to "Minimum"
@@ -884,35 +878,14 @@ function TaskManagerWindowExpanded {
 
 	do {
 		Start-Sleep -Milliseconds 100
-		$Preferences = Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager -Name Preferences -ErrorAction Ignore
+		$Preferences = Get-ItemPropertyValue -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager -Name Preferences -ErrorAction Ignore
 	}
 	until ($Preferences)
 
 	Stop-Process -Name Taskmgr
 
-	$Preferences.Preferences[28] = 0
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager -Name Preferences -PropertyType Binary -Value $Preferences.Preferences -Force
-}
-
-# Start Task Manager in compact mode (current user only)
-# Запускать Диспетчера задач в свернутом виде (только для текущего пользователя)
-function TaskManagerWindowCompact {
-	$Taskmgr = Get-Process -Name Taskmgr -ErrorAction Ignore
-	if ($Taskmgr) {
-		$Taskmgr.CloseMainWindow()
-	}
-	Start-Process -FilePath Taskmgr.exe -WindowStyle Hidden -PassThru
-
-	do {
-		Start-Sleep -Milliseconds 100
-		$Preferences = Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager -Name Preferences -ErrorAction Ignore
-	}
-	until ($Preferences)
-
-	Stop-Process -Name Taskmgr
-
-	$Preferences.Preferences[28] = 1
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager -Name Preferences -PropertyType Binary -Value $Preferences.Preferences -Force
+	$Preferences[28] = 0
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager -Name Preferences -PropertyType Binary -Value $Preferences -Force
 }
 
 # Show a notification when your PC requires a restart to finish updating

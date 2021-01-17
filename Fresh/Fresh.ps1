@@ -21,10 +21,6 @@ CreateRestorePoint
 # Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
 DisableTelemetryServices
 
-# Enable the "Connected User Experiences and Telemetry" service (DiagTrack)
-# Включить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
-# EnableTelemetryServices
-
 # Set the OS level of diagnostic data gathering to minimum
 # Установить уровень сбора диагностических сведений ОС на минимальный
 SetMinimalDiagnosticDataLevel
@@ -382,10 +378,6 @@ JPEGWallpapersQualityMax
 # Start Task Manager in expanded mode (current user only)
 # Запускать Диспетчера задач в развернутом виде (только для текущего пользователя)
 TaskManagerWindowExpanded
-
-# Start Task Manager in compact mode (current user only)
-# Запускать Диспетчера задач в свернутом виде (только для текущего пользователя)
-# TaskManagerWindowCompact
 
 # Show a notification when your PC requires a restart to finish updating
 # Показывать уведомление, когда компьютеру требуется перезагрузка для завершения обновления
