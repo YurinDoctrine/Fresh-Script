@@ -1432,14 +1432,6 @@ function DisableWindowsFeatures {
 		# Компоненты работы с мультимедиа
 		"MediaPlayback",
 
-		# PowerShell 2.0
-		"MicrosoftWindowsPowerShellV2",
-		"MicrosoftWindowsPowershellV2Root",
-
-		# Microsoft XPS Document Writer
-		# Средство записи XPS-документов (Microsoft)
-		"Printing-XPSServices-Features",
-
 		# Work Folders Client
 		# Клиент рабочих папок
 		"WorkFolders-Client"
