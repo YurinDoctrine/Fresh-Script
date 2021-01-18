@@ -834,9 +834,6 @@ DisableMSEdgeServices
 # Turn off lock screen background
 TurnOffLockScreenBackground
 
-# Import policy definitions
-ImportPolicyDefinitions
-
 # Disable license manager
 DisableLicenseManager
 
@@ -882,9 +879,6 @@ DisableIndexing
 
 # Set current boot timeout value to 0
 SetBootTimeoutValue
-
-# Disable tablet input service(non-tablet only)
-DisableTabletInputService
 
 # Ntfs allow extended character 8dot3 rename
 NtfsAllowExtendedCharacter8dot3Rename
@@ -1250,4 +1244,7 @@ HideTrayIcon
 # Disable defender cloud
 DisableDefenderCloud
 #endregion Microsoft Defender & Security
+#region O&OShutup
+OOShutup
+#endregion O&OShutup
 Errors

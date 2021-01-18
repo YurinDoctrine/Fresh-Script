@@ -1316,11 +1316,7 @@ function OptInWSL {
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all microsoft-visual-cpp-build-tools chocolatey-visualstudio.extension jre8 openjdk xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; Get-WuInstall -AcceptAll -IgnoreReboot; choco install transmission-qt jpegview mpc-hc k-litecodecpackfull adobereader notepadplusplus.install 7zip.install cpu-z.install teracopy; choco upgrade all 
-	Write-Warning -Message $Localization.OOShutup
-	Import-Module BitsTransfer
-	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
-	./OOSU10.exe ooshutup.cfg /quiet
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate chocolatey-windowsupdate.extension chocolatey-core.extension dotnetfx chocolatey-dotnetfx.extension directx vcredist-all microsoft-visual-cpp-build-tools chocolatey-visualstudio.extension jre8 openjdk xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll; choco install transmission-qt jpegview mpc-hc k-litecodecpackfull adobereader notepadplusplus.install 7zip.install cpu-z.install teracopy; choco upgrade all 
 }
 #endregion chocolatey
 #region UWP apps
@@ -2042,12 +2038,6 @@ function TurnOffLockScreenBackground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name DisableLogonBackgroundImage -PropertyType DWord -Value 1 -Force
 }
 
-# Import policy definitions
-function ImportPolicyDefinitions {
-	Start-Job -ScriptBlock { takeown /f C:\WINDOWS\Policydefinitions /r /a; icacls C:\WINDOWS\PolicyDefinitions /grant "Administrators:(OI)(CI)F" /t }
-	Copy-Item -Path .\Files\PolicyDefinitions\* -Destination C:\Windows\PolicyDefinitions -Force -Recurse -ErrorAction SilentlyContinue	
-}
-
 # Disable license manager
 function DisableLicenseManager {
 	if (-not (Test-Path HKLM:\System\CurrentControlSet\Services\LicenseManager)) {
@@ -2205,11 +2195,6 @@ function DisableIndexing {
 # Set current boot timeout value to 0
 function SetBootTimeoutValue {
 	bcdedit /timeout 0
-}
-
-# Disable tablet input service(non-tablet only)
-function DisableTabletInputService {
-	Stop-Service -Name "TabletInputService" -Force -WarningAction SilentlyContinue; Set-Service -Name "TabletInputService" -StartupType Disabled -ErrorAction SilentlyContinue
 }
 
 # Ntfs allow extended character 8dot3 rename
@@ -2401,8 +2386,6 @@ function DebloatMicrosoftServices {
 	Set-Service PrintNotify -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "QWAVE" -Force -WarningAction SilentlyContinue
 	Set-Service QWAVE -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "RmSvc" -Force -WarningAction SilentlyContinue
-	Set-Service RmSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RemoteAccess" -Force -WarningAction SilentlyContinue
 	Set-Service RemoteAccess -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SensorDataService" -Force -WarningAction SilentlyContinue
@@ -2692,9 +2675,10 @@ function BestPriorityForeground {
 
 # Allow auto game mode
 function AllowAutoGameMode {
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -Force -ErrorAction SilentlyContinue
+	New-Item -Force "HKCU:\SOFTWARE\Microsoft\GameBar"
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AutoGameModeEnabled -PropertyType DWord -Value 1 -Force
-	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -Force -ErrorAction SilentlyContinue
 }
 
 # Disable mouse feedback
@@ -2706,6 +2690,7 @@ function DisableMouseFeedback {
 # Enable full-screen optimization
 function EnableFullScreenOptimization {
 	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Force -ErrorAction SilentlyContinue
+	New-Item -Force "HKCU:\System\GameConfigStore"
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
@@ -3224,6 +3209,14 @@ function DisableDefenderCloud {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
 }
 #endregion Microsoft Defender & Security
+#region O&OShutup
+function OOShutup {
+	Write-Warning -Message $Localization.OOShutup
+	Import-Module BitsTransfer
+	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
+	./OOSU10.exe ooshutup.cfg /quiet
+}
+#endregion O&OShutup
 function Errors {
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
