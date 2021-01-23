@@ -17,10 +17,6 @@ LOCALAPPDATANotEmptyFolder = "The $env:LOCALAPPDATA\\Temp folder is not empty `n
 # DisableReservedStorage
 ReservedStorageIsInUse = This operation is not supported when reserved storage is in use `nPlease wait for any servicing operations to complete and then try again later
 
-# WSL
-WSLUpdateDownloading = Downloading the Linux kernel update package... ~14 MB
-WSLUpdateInstalling = Installing the Linux kernel update package...
-
 # ChocolateyPackageManager
 OOShutup = Running O&O Shutup with Recommended Settings
 
