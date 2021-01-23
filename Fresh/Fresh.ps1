@@ -559,28 +559,6 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
-#region WSL
-<#
-	Install the Windows Subsystem for Linux (WSL)
-	Установить подсистему Windows для Linux (WSL)
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-InstallWSL
-
-<#
-	Download and install the Linux kernel update package
-	Set WSL 2 as the default version when installing a new Linux distribution
-	Run the function only after WSL installed and PC restart
-
-	Скачать и установить пакет обновления ядра Linux
-	Установить WSL 2 как версию по умолчанию при установке нового дистрибутива Linux
-	Выполните функцию только после установки WSL и перезагрузки ПК
-
-	https://github.com/microsoft/WSL/issues/5437
-#>
-OptInWSL
-#endregion WSL
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
@@ -766,11 +744,11 @@ DisableAutoplay
 
 # Disable thumbnail cache removal
 # Отключить удаление кэша миниатюр
-# DisableThumbnailCacheRemoval
+DisableThumbnailCacheRemoval
 
 # Enable thumbnail cache removal
 # Включить удаление кэша миниатюр
-EnableThumbnailCacheRemoval
+# EnableThumbnailCacheRemoval
 
 # Automatically save my restartable apps when signing out and restart them after signing in (current user only)
 # Автоматически сохранять мои перезапускаемые приложения при выходе из системы и перезапускать их после выхода (только для текущего пользователя)
