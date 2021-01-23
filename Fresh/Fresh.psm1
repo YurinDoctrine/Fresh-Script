@@ -1520,7 +1520,6 @@ function SetTempPath {
 	# Перезапустить службу "Диспетчер печати" (Spooler)
 	Restart-Service -Name Spooler -Force
 
-	Stop-Process -Name OneDrive -Force -ErrorAction Ignore
 	Stop-Process -Name FileCoAuth -Force -ErrorAction Ignore
 
 	Remove-Item -Path $env:SystemRoot\Temp -Recurse -Force -ErrorAction Ignore
