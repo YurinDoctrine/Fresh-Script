@@ -21,10 +21,6 @@ function Check {
 		$true {
 			Write-Warning -Message $Localization.ControlledFolderAccessDisabled
 			Set-MpPreference -EnableControlledFolderAccess Disabled
-
-			# Open "Ransomware protection" page
-			# Открыть раздел "Защита от программ-шатажистов"
-			Start-Process -FilePath windowsdefender://RansomwareProtection
 		}
 	}
 }
@@ -2571,6 +2567,11 @@ function EnableMemoryAllocationInGraphicsDriver {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
 }
+
+# Disable realtime monitoring
+function DisableRealtimeMonitoring {
+	Set-MpPreference -DisableRealtimeMonitoring $true
+}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -2699,199 +2700,6 @@ function EnableFullScreenOptimization {
 }
 #endregion Gaming
 #region Microsoft Defender & Security
-# Enable Controlled folder access and add protected folders
-# Включить контролируемый доступ к папкам и добавить защищенные папки
-function AddProtectedFolders {
-	$Title = $Localization.AddProtectedFoldersTitle
-	$Message = $Localization.AddProtectedFoldersRequest
-	$Add = $Localization.AddProtectedFoldersAdd
-	$Skip = $Localization.AddProtectedFoldersSkip
-	$Options = "&$Add", "&$Skip"
-	$DefaultChoice = 1
-
-	do {
-		$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-		switch ($Result) {
-			"0" {
-				Add-Type -AssemblyName System.Windows.Forms
-				$FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-				$FolderBrowserDialog.Description = $Localization.AddProtectedFoldersDescription
-				$FolderBrowserDialog.RootFolder = "MyComputer"
-
-				# Focus on open file dialog
-				# Перевести фокус на диалог открытия файла
-				$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
-
-				$FolderBrowserDialog.ShowDialog($tmp)
-				if ($FolderBrowserDialog.SelectedPath) {
-					Set-MpPreference -EnableControlledFolderAccess Enabled
-					Add-MpPreference -ControlledFolderAccessProtectedFolders $FolderBrowserDialog.SelectedPath -Force
-					Write-Verbose -Message ("{0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
-				}
-			}
-			"1" {
-				Write-Verbose -Message $Localization.AddProtectedFoldersSkipped -Verbose
-			}
-		}
-	}
-	until ($Result -eq 1)
-}
-
-# Remove all added protected folders
-# Удалить все добавленные защищенные папки
-function RemoveProtectedFolders {
-	if ($null -ne (Get-MpPreference).ControlledFolderAccessProtectedFolders) {
-		Write-Verbose -Message $Localization.RemoveProtectedFoldersList -Verbose
-		(Get-MpPreference).ControlledFolderAccessProtectedFolders | Format-Table -AutoSize -Wrap
-		Remove-MpPreference -ControlledFolderAccessProtectedFolders (Get-MpPreference).ControlledFolderAccessProtectedFolders -Force
-	}
-}
-
-# Allow an app through Controlled folder access
-# Разрешить работу приложения через контролируемый доступ к папкам
-function AddAppControlledFolder {
-	$Title = $Localization.AddAppControlledFolderTitle
-	$Message = $Localization.AddAppControlledFolderRequest
-	$Add = $Localization.AddAppControlledFolderAdd
-	$Skip = $Localization.AddAppControlledFolderSkip
-	$Options = "&$Add", "&$Skip"
-	$DefaultChoice = 1
-
-	do {
-		$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-		switch ($Result) {
-			"0" {
-				Add-Type -AssemblyName System.Windows.Forms
-				$OpenFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
-				$OpenFileDialog.Filter = $Localization.AddAppControlledFolderFilter
-				$OpenFileDialog.InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
-				$OpenFileDialog.Multiselect = $false
-
-				# Focus on open file dialog
-				# Перевести фокус на диалог открытия файла
-				$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
-
-				$OpenFileDialog.ShowDialog($tmp)
-				if ($OpenFileDialog.FileName) {
-					Add-MpPreference -ControlledFolderAccessAllowedApplications $OpenFileDialog.FileName -Force
-					Write-Verbose -Message ("{0}" -f $OpenFileDialog.FileName) -Verbose
-				}
-			}
-			"1" {
-				Write-Verbose -Message $Localization.AddAppControlledFolderSkipped -Verbose
-			}
-		}
-	}
-	until ($Result -eq 1)
-}
-
-# Remove all allowed apps through Controlled folder access
-# Удалить все добавленные разрешенные приложение через контролируемый доступ к папкам
-function RemoveAllowedAppsControlledFolder {
-	if ($null -ne (Get-MpPreference).ControlledFolderAccessAllowedApplications) {
-		Write-Verbose -Message $Localization.RemoveAllowedAppsControlledFolderList -Verbose
-		(Get-MpPreference).ControlledFolderAccessAllowedApplications | Format-Table -AutoSize -Wrap
-		Remove-MpPreference -ControlledFolderAccessAllowedApplications (Get-MpPreference).ControlledFolderAccessAllowedApplications -Force
-	}
-}
-
-# Add a folder to the exclusion from Microsoft Defender scanning
-# Добавить папку в список исключений сканирования Microsoft Defender
-function AddDefenderExclusionFolder {
-	$Title = $Localization.AddDefenderExclusionFolderTitle
-	$Message = $Localization.AddDefenderExclusionFolderRequest
-	$Add = $Localization.AddDefenderExclusionFolderAdd
-	$Skip = $Localization.AddDefenderExclusionFolderSkip
-	$Options = "&$Add", "&$Skip"
-	$DefaultChoice = 1
-
-	do {
-		$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-		switch ($Result) {
-			"0" {
-				Add-Type -AssemblyName System.Windows.Forms
-				$FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-				$FolderBrowserDialog.Description = $Localization.AddDefenderExclusionFolderDescription
-				$FolderBrowserDialog.RootFolder = "MyComputer"
-
-				# Focus on open file dialog
-				# Перевести фокус на диалог открытия файла
-				$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
-
-				$FolderBrowserDialog.ShowDialog($tmp)
-				if ($FolderBrowserDialog.SelectedPath) {
-					Add-MpPreference -ExclusionPath $FolderBrowserDialog.SelectedPath -Force
-					Write-Verbose -Message ("{0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
-				}
-			}
-			"1" {
-				Write-Verbose -Message $Localization.AddDefenderExclusionFolderSkipped -Verbose
-			}
-		}
-	}
-	until ($Result -eq 1)
-}
-
-# Remove all excluded folders from Microsoft Defender scanning
-# Удалить все папки из списка исключений сканирования Microsoft Defender
-function RemoveDefenderExclusionFolders {
-	if ($null -ne (Get-MpPreference).ExclusionPath) {
-		Write-Verbose -Message $Localization.RemoveDefenderExclusionFoldersList -Verbose
-		$ExcludedFolders = (Get-Item -Path (Get-MpPreference).ExclusionPath -Force -ErrorAction Ignore | Where-Object -FilterScript { $_.Attributes -match "Directory" }).FullName
-		$ExcludedFolders | Format-Table -AutoSize -Wrap
-		Remove-MpPreference -ExclusionPath $ExcludedFolders -Force
-	}
-}
-
-# Add a file to the exclusion from Microsoft Defender scanning
-# Добавить файл в список исключений сканирования Microsoft Defender
-function AddDefenderExclusionFile {
-	$Title = $Localization.AddDefenderExclusionFileTitle
-	$Message = $Localization.AddDefenderExclusionFileRequest
-	$Add = $Localization.AddDefenderExclusionFileAdd
-	$Skip = $Localization.AddDefenderExclusionFileSkip
-	$Options = "&$Add", "&$Skip"
-	$DefaultChoice = 1
-
-	do {
-		$Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
-		switch ($Result) {
-			"0" {
-				Add-Type -AssemblyName System.Windows.Forms
-				$OpenFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
-				$OpenFileDialog.Filter = $Localization.AddDefenderExclusionFileFilter
-				$OpenFileDialog.InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
-				$OpenFileDialog.Multiselect = $false
-
-				# Focus on open file dialog
-				# Перевести фокус на диалог открытия файла
-				$tmp = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
-
-				$OpenFileDialog.ShowDialog($tmp)
-				if ($OpenFileDialog.FileName) {
-					Add-MpPreference -ExclusionPath $OpenFileDialog.FileName -Force
-					Write-Verbose -Message ("{0}" -f $OpenFileDialog.FileName) -Verbose
-				}
-			}
-			"1" {
-				Write-Verbose -Message $Localization.AddDefenderExclusionFileSkipped -Verbose
-			}
-		}
-	}
-	until ($Result -eq 1)
-}
-
-# Remove all excluded files from Microsoft Defender scanning
-# Удалить все файлы из списка исключений сканирования Microsoft Defender
-function RemoveDefenderExclusionFiles {
-	if ($null -ne (Get-MpPreference).ExclusionPath) {
-		Write-Verbose -Message $Localization.RemoveDefenderExclusionFilesList -Verbose
-		$ExcludedFiles = (Get-Item -Path (Get-MpPreference).ExclusionPath -Force -ErrorAction Ignore | Where-Object -FilterScript { $_.Attributes -notmatch "Directory" }).FullName
-		$ExcludedFiles | Format-Table -AutoSize -Wrap
-		Remove-MpPreference -ExclusionPath $ExcludedFiles -Force
-	}
-}
-
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
 function EnableNetworkProtection {
@@ -2979,84 +2787,6 @@ function DisableAuditCommandLineProcess {
 	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
 		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
 	} 
-}
-
-<#
-	Create "Process Creation" Event Viewer Custom View
-	In order this feature to work events auditing and command line in process creation events must be enabled ("EnableAuditProcess" function)
-
-	Создать настаиваемое представление "Создание процесса" в Просмотре событий
-	Необходимо включить аудит событий и командной строки в событиях создания процесса, чтобы работал данный функционал (функция "EnableAuditProcess")
-#>
-function CreateEventViewerCustomView {
-	$XML = @"
-	<ViewerConfig>
-		<QueryConfig>
-			<QueryParams>
-				<UserQuery />
-			</QueryParams>
-			<QueryNode>
-				<Name>$($Localization.EventViewerCustomViewName)</Name>
-				<Description>$($Localization.EventViewerCustomViewDescription)</Description>
-				<QueryList>
-					<Query Id="0" Path="Security">
-						<Select Path="Security">*[System[(EventID=4688)]]</Select>
-					</Query>
-				</QueryList>
-			</QueryNode>
-		</QueryConfig>
-	</ViewerConfig>
-"@
-	if (-not (Test-Path -Path "$env:ProgramData\Microsoft\Event Viewer\Views")) {
-		New-Item -Path "$env:ProgramData\Microsoft\Event Viewer\Views" -ItemType Directory -Force
-	}
-	# Saving ProcessCreation.xml in UTF-8 encoding
-	# Сохраняем ProcessCreation.xml в кодировке UTF-8
-	Set-Content -Path "$env:ProgramData\Microsoft\Event Viewer\Views\ProcessCreation.xml" -Value (New-Object -TypeName System.Text.UTF8Encoding).GetBytes($XML) -Encoding Byte -Force
-}
-
-# Remove "Process Creation" Event Viewer Custom View
-# Удалить настаиваемое представление "Создание процесса" в Просмотре событий
-function RemoveEventViewerCustomView {
-	if ((Test-Path -Path "$env:ProgramData\Microsoft\Event Viewer\Views\")) {
-		Remove-Item -Path "$env:ProgramData\Microsoft\Event Viewer\Views\ProcessCreation.xml" -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Log for all Windows PowerShell modules
-# Вести журнал для всех модулей Windows PowerShell
-function EnablePowerShellModulesLogging {
-	if (-not (Test-Path -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames)) {
-		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging -Name EnableModuleLogging -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames -Name * -PropertyType String -Value * -Force
-}
-
-# Do not log for all Windows PowerShell modules
-# Не вести журнал для всех модулей Windows PowerShell
-function DisablePowerShellModulesLogging {
-	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging")) {
-		Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging -Name EnableModuleLogging -Force -ErrorAction SilentlyContinue
-		Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging\ModuleNames -Name * -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Log all PowerShell scripts input to the Windows PowerShell event log
-# Вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
-function EnablePowerShellScriptsLogging {
-	if (-not (Test-Path -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging)) {
-		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -PropertyType DWord -Value 1 -Force
-}
-
-# Do not log all PowerShell scripts input to the Windows PowerShell event log
-# Не вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
-function DisablePowerShellScriptsLogging {
-	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging")) {
-		Remove-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging -Name EnableScriptBlockLogging -Force -ErrorAction SilentlyContinue
-	}
 }
 
 # Do not check apps and files within Microsoft Defender SmartScreen
@@ -3184,11 +2914,6 @@ function DisableNetDevicesAutoInst {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
-}
-
-# Disable realtime monitoring
-function DisableRealtimeMonitoring {
-	Set-MpPreference -DisableRealtimeMonitoring $true
 }
 
 # Hide tray icon

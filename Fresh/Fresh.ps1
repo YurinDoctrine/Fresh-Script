@@ -1035,6 +1035,9 @@ SetSymbolicLinks
 
 # Enable memory allocation in graphics driver
 EnableMemoryAllocationInGraphicsDriver
+
+# Disable realtime monitoring
+DisableRealtimeMonitoring
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -1062,38 +1065,6 @@ DisableMouseFeedback
 EnableFullScreenOptimization
 #endregion Gaming
 #region Microsoft Defender & Security
-# Enable Controlled folder access and add protected folders
-# Включить контролируемый доступ к папкам и добавить защищенные папки
-# AddProtectedFolders
-
-# Remove all added protected folders
-# Удалить все добавленные защищенные папки
-RemoveProtectedFolders
-
-# Allow an app through Controlled folder access
-# Разрешить работу приложения через контролируемый доступ к папкам
-# AddAppControlledFolder
-
-# Remove all allowed apps through Controlled folder access
-# Удалить все добавленные разрешенные приложение через контролируемый доступ к папкам
-RemoveAllowedAppsControlledFolder
-
-# Add a folder to the exclusion from Microsoft Defender scanning
-# Добавить папку в список исключений сканирования Microsoft Defender
-# AddDefenderExclusionFolder
-
-# Remove all excluded folders from Microsoft Defender scanning
-# Удалить все папки из списка исключений сканирования Microsoft Defender
-RemoveDefenderExclusionFolders
-
-# Add a file to the exclusion from Microsoft Defender scanning
-# Добавить файл в список исключений сканирования Microsoft Defender
-# AddDefenderExclusionFile
-
-# Remove all excluded files from Microsoft Defender scanning
-# Удалить все файлы из списка исключений сканирования Microsoft Defender
-RemoveDefenderExclusionFiles
-
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
 EnableNetworkProtection
@@ -1146,35 +1117,6 @@ DisableAuditProcess
 # Do not include command line in process creation events
 # Не включать командную строку в событиях создания процесса
 DisableAuditCommandLineProcess
-
-<#
-	Create "Process Creation" Event Viewer Custom View
-	In order this feature to work events auditing and command line in process creation events must be enabled ("EnableAuditProcess" function)
-
-	Создать настаиваемое представление "Создание процесса" в Просмотре событий
-	Необходимо включить аудит событий и командной строки в событиях создания процесса, чтобы работал данный функционал (функция "EnableAuditProcess")
-#>
-# CreateEventViewerCustomView
-
-# Remove "Process Creation" Event Viewer Custom View
-# Удалить настаиваемое представление "Создание процесса" в Просмотре событий
-RemoveEventViewerCustomView
-
-# Log for all Windows PowerShell modules
-# Вести журнал для всех модулей Windows PowerShell
-# EnablePowerShellModulesLogging
-
-# Do not log for all Windows PowerShell modules
-# Не вести журнал для всех модулей Windows PowerShell
-DisablePowerShellModulesLogging
-
-# Log all PowerShell scripts input to the Windows PowerShell event log
-# Вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
-# EnablePowerShellScriptsLogging
-
-# Do not log all PowerShell scripts input to the Windows PowerShell event log
-# Не вести регистрацию всех вводимых сценариев PowerShell в журнале событий Windows PowerShell
-DisablePowerShellScriptsLogging
 
 # Do not check apps and files within Microsofot Defender SmartScreen
 # Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
@@ -1234,9 +1176,6 @@ SetUnknownNetworksPublic
 
 # Disable automatic installation of network devices
 DisableNetDevicesAutoInst
-
-# Disable realtime monitoring
-DisableRealtimeMonitoring
 
 # Hide tray icon
 HideTrayIcon
