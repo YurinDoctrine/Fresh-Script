@@ -4,7 +4,7 @@ function Check {
 
 	# Сlear the $Error variable
 	# Очистка переменной $Error
-	$Global:Error.Clear()
+	$Script:Error.Clear()
 
 	# Detect the OS bitness
 	# Определить разрядность ОС
@@ -1416,14 +1416,14 @@ function DisableWindowsCapabilities {
 	$ExcludedCapabilities = @(
 		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
 		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
-		"DirectX\.Configuration\.Database",
+		"DirectX.Configuration.Database*",
 
 		# Features critical to Windows functionality
 		# Компоненты, критичные для работоспособности Windows
-		"Windows\.Client\.ShellComponents",
+		"Windows.Client.ShellComponents",
                 
 		# Language components
-		"Language\."
+		"Language.*"
 	)
 	
 	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) } | Remove-WindowsCapability -Online ) {
@@ -3217,8 +3217,8 @@ function OOShutup {
 }
 #endregion O&OShutup
 function Errors {
-	if ($Global:Error) {
-		($Global:Error | ForEach-Object -Process {
+	if ($Script:Error) {
+		($Script:Error | ForEach-Object -Process {
 				[PSCustomObject] @{
 					$Localization.ErrorsLine    = $_.InvocationInfo.ScriptLineNumber
 					$Localization.ErrorsFile    = Split-Path -Path $PSCommandPath -Leaf
