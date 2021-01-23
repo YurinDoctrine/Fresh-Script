@@ -2675,10 +2675,10 @@ function BestPriorityForeground {
 
 # Allow auto game mode
 function AllowAutoGameMode {
-	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -Force -ErrorAction SilentlyContinue
 	New-Item -Force "HKCU:\SOFTWARE\Microsoft\GameBar"
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AutoGameModeEnabled -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
 }
 
 # Disable mouse feedback
@@ -2689,7 +2689,6 @@ function DisableMouseFeedback {
 
 # Enable full-screen optimization
 function EnableFullScreenOptimization {
-	Remove-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Force -ErrorAction SilentlyContinue
 	New-Item -Force "HKCU:\System\GameConfigStore"
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
