@@ -606,11 +606,7 @@ HideOneDriveFileExplorerAd
 
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
-# EnableStorageSense
-
-# Turn off Storage Sense (current user only)
-# Выключить Контроль памяти (только для текущего пользователя)
-DisableStorageSense
+EnableStorageSense
 
 # Disable hibernation if the device is not a laptop
 # Отключить режим гибернации, если устройство не является ноутбуком
@@ -835,6 +831,9 @@ DisableAUPowerManagement
 
 # Prioritize csrr.exe service
 PrioritizeCSRRService
+
+# Disable lock screen
+DisableLockScreen
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -1016,6 +1015,12 @@ EnableMemoryAllocationInGraphicsDriver
 
 # Disable realtime monitoring
 DisableRealtimeMonitoring
+
+# Enable hardware accelerated GPU scheduling
+EnableHardwareAcceleratedGPUScheduling
+
+# Indexer respect power modes
+IndexerRespectPowerModes
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -1033,8 +1038,8 @@ DisableXboxGameTips
 # Adjust best performance for all programs and also foreground services
 BestPriorityForeground
 
-# Allow auto game mode
-AllowAutoGameMode
+# Disallow auto game mode
+DisallowAutoGameMode
 
 # Disable mouse feedback
 DisableMouseFeedback

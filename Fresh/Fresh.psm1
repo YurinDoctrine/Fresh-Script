@@ -1474,16 +1474,13 @@ function EnableStorageSense {
 	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy)) {
 		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -ItemType Directory -Force
 	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01 -PropertyType DWord -Value 1 -Force
-}
-
-# Turn off Storage Sense (current user only)
-# Выключить Контроль памяти (только для текущего пользователя)
-function DisableStorageSense {
-	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -ItemType Directory -Force
+	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense" -ItemType Directory -Force
 	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01 -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 04 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense" -Name AllowStorageSenseGlobal -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense" -Name AllowStorageSenseTemporaryFilesCleanup -PropertyType DWord -Value 1 -Force
 }
 
 # Disable hibernation if the device is not a laptop
@@ -2019,6 +2016,14 @@ function PrioritizeCSRRService {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "1" -Force
 }
+
+# Disable lock screen
+function DisableLockScreen {
+	New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData"
+	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData" -Name AllowLockScreen -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Name NoLockScreen -Type "DWORD" -Value "1" -Force
+}
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
@@ -2503,6 +2508,22 @@ function EnableMemoryAllocationInGraphicsDriver {
 function DisableRealtimeMonitoring {
 	Set-MpPreference -DisableRealtimeMonitoring $true
 }
+
+# Enable hardware accelerated GPU scheduling
+function EnableHardwareAcceleratedGPUScheduling {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
+}
+
+# Indexer respect power modes
+function IndexerRespectPowerModes {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
+}
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar
@@ -2605,12 +2626,12 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
 }
 
-# Allow auto game mode
-function AllowAutoGameMode {
+# Disallow auto game mode
+function DisallowAutoGameMode {
 	New-Item -Force "HKCU:\SOFTWARE\Microsoft\GameBar"
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AutoGameModeEnabled -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AutoGameModeEnabled -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 0 -Force
 }
 
 # Disable mouse feedback
