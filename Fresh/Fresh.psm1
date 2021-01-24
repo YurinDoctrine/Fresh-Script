@@ -2021,7 +2021,7 @@ function PrioritizeCSRRService {
 function DisableLockScreen {
 	New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData"
 	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData" -Name AllowLockScreen -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData" -Name AllowLockScreen -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Name NoLockScreen -Type "DWORD" -Value "1" -Force
 }
 #endregion System
