@@ -2490,6 +2490,11 @@ function EnableMemoryAllocationInGraphicsDriver {
 
 # Disable realtime monitoring
 function DisableRealtimeMonitoring {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring" -Type DWord -Value 1 -Force
+	Set-MpPreference -DisableRealtimeMonitoring 1
 	Set-MpPreference -DisableRealtimeMonitoring $true
 }
 
