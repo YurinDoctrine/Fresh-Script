@@ -590,10 +590,6 @@ DisableWindowsCapabilities
 # Turn off Cortana autostarting
 # Удалить Кортана из автозагрузки
 DisableCortanaAutostart
-
-# Turn on Cortana autostarting
-# Добавить Кортана в автозагрузку
-# EnableCortanaAutostart
 #endregion UWP apps
 #region System
 # Uninstall OneDrive

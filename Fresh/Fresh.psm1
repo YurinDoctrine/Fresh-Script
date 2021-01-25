@@ -1306,10 +1306,6 @@ function DisableBackgroundUWPApps {
 		# Безопасность Windows
 		"Microsoft.Windows.SecHealthUI",
 
-		# The Start menu
-		# Меню "Пуск"
-		"Microsoft.Windows.StartMenuExperienceHost",
-
 		# Microsoft Store
 		"Microsoft.WindowsStore"
 	)
@@ -1346,10 +1342,6 @@ function DisableWindowsCapabilities {
 		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
 		"DirectX.Configuration.Database*",
 
-		# Features critical to Windows functionality
-		# Компоненты, критичные для работоспособности Windows
-		"Windows.Client.ShellComponents",
-                
 		# Language components
 		"Language.*"
 	)
@@ -1370,14 +1362,6 @@ function DisableCortanaAutostart {
 			New-Item -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Force
 		}
 		New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Turn on Cortana autostarting
-# Добавить Кортана в автозагрузку
-function EnableCortanaAutostart {
-	if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
-		Remove-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -Force -ErrorAction SilentlyContinue
 	}
 }
 #endregion UWP apps
@@ -1942,7 +1926,7 @@ function TurnOffActionCenter {
 
 # SvcHost split threshold in KB
 function SvcHostSplitThresholdInKB {
-	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 9375964 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 04194304 -Force
 }
 
 # Function discovery resource publication
