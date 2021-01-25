@@ -1686,7 +1686,7 @@ function DisableTroubleshooting {
 	if (-not (Test-Path -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation)) {
 		New-Item -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Force
 	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Name UserPreference -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Name UserPreference -PropertyType DWord -Value 4 -Force
 
 	# Set the OS level of diagnostic data gathering to "Full"
 	# Установить уровень сбора диагностических сведений ОС на "Максимальный"
