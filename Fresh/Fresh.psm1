@@ -1677,12 +1677,9 @@ function WinPrtScrDesktopFolder {
 	}
 }
 
-<#
-	Disable annoying Troubleshooting
-	Автоматически запускать средства устранения неполадок, а затем уведомлять
-	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
-#>
-function DisableTroubleshooting {
+
+# Hide annoying Troubleshooting
+function HideTroubleshooting {
 	if (-not (Test-Path -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation)) {
 		New-Item -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Force
 	}
@@ -1691,24 +1688,6 @@ function DisableTroubleshooting {
 	# Set the OS level of diagnostic data gathering to "Full"
 	# Установить уровень сбора диагностических сведений ОС на "Максимальный"
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
-}
-
-<#
-	Ask me before running troubleshooters (default value)
-	In order this feature to work the OS level of diagnostic data gathering must be set to "Full"
-
-	Спрашивать перед запуском средств устранения неполадок (значение по умолчанию)
-	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
-#>
-function DefaultRecommendedTroubleshooting {
-	if (-not (Test-Path -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation)) {
-		New-Item -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WindowsMitigation -Name UserPreference -PropertyType DWord -Value 2 -Force
-
-	# Set the OS level of diagnostic data gathering to "Full"
-	# Установить уровень сбора диагностических сведений ОС на "Максимальный"
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 3 -Force
 }
 
 # Launch folder windows in a separate process (current user only)

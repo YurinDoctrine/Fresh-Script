@@ -680,19 +680,8 @@ EnableLatestInstalled.NET
 # Сохранять скриншоты по нажатию Win+PrtScr в папку "рабочий стол" (только для текущего пользователя)
 # WinPrtScrDesktopFolder
 
-<#
-	Disable annoying Troubleshooting
-	Автоматически запускать средства устранения неполадок, а затем уведомлять
-	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
-#>
-DisableTroubleshooting
-
-<#
-    Ask before running troubleshooters(Default Value)
-	Спрашивать перед запуском средств устранения неполадок (значение по умолчанию)
-	Необходимо установить уровень сбора диагностических сведений ОС на "Максимальный", чтобы работала данная функция
-#>
-# DefaultRecommendedTroubleshooting
+# Hide annoying Troubleshooting
+HideTroubleshooting
 
 # Launch folder windows in a separate process (current user only)
 # Запускать окна с папками в отдельном процессе (только для текущего пользователя)
