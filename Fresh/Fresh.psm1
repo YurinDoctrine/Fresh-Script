@@ -25,24 +25,6 @@ function Check {
 	}
 }
 #endregion Check
-# Create a restore point
-# Создать точку восстановления
-function CreateRestorePoint {
-	if (-not (Get-ComputerRestorePoint)) {
-		Enable-ComputerRestore -Drive $env:SystemDrive
-	}
-
-	# Set system restore point creation frequency to 5 minutes
-	# Установить частоту создания точек восстановления на 5 минут
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name SystemRestorePointCreationFrequency -PropertyType DWord -Value 5 -Force
-
-	Checkpoint-Computer -Description "Windows 10 Fresh Setup.ps1" -RestorePointType MODIFY_SETTINGS
-
-	# Revert the System Restore checkpoint creation frequency to 1440 minutes
-	# Вернуть частоту создания точек восстановления на 1440 минут
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" -Name SystemRestorePointCreationFrequency -PropertyType DWord -Value 1440 -Force
-}
-
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
 # Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
