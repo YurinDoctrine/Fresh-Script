@@ -1,3 +1,5 @@
+# Checking
+# Проверка
 function Check {
 	Set-StrictMode -Version Latest
 
