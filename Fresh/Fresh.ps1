@@ -11,11 +11,6 @@ Import-LocalizedData -BindingVariable Global:Localization  -FileName Fresh
 # Checking
 # Проверка
 Check
-
-# Create a restore point
-# Создать точку восстановления
-CreateRestorePoint
-
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
 # Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
