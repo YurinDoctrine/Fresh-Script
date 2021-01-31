@@ -938,8 +938,8 @@ DisableBootSplashAnimations
 # Disable trusted platform module
 DisableTrustedPlatformModule
 
-# Disable legacy apic mode
-DisableLegacyApicMode
+# Enable legacy apic mode
+EnableLegacyApicMode
 
 # Disable integrity checks
 DisableIntegrityChecks
@@ -1006,6 +1006,9 @@ EnableHardwareAcceleratedGPUScheduling
 
 # Indexer respect power modes
 IndexerRespectPowerModes
+
+# Disable delete notify
+DisableDeleteNotify
 #endregion Performance
 #region Gaming
 # Turn off Xbox Game Bar

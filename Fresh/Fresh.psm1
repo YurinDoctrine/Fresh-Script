@@ -169,7 +169,6 @@ function DisableScheduledTasks {
 		
 		# Microsoft Edge update task
 		"MicrosoftEdgeUpdateTaskMachineUA"
-
 	)
 
 	# If device is not a laptop disable FODCleanupTask too
@@ -180,6 +179,29 @@ function DisableScheduledTasks {
 	}
 
 	Get-ScheduledTask -TaskName $ScheduledTaskList | Disable-ScheduledTask
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\AitAgent"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
+	schtasks /Change /DISABLE /TN "Microsoft\Office\Office ClickToRun Service Monitor"
+	schtasks /Change /DISABLE /TN "Microsoft\Office\OfficeTelemetryAgentLogOn2016"
+	schtasks /Change /DISABLE /TN "Microsoft\Office\OfficeTelemetryAgentFallBack2016"
+	schtasks /Delete /F /TN "Microsoft\Windows\SetupSQMTask"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
+	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\AitAgent"
+	schtasks /Delete /F /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
 }
 
 # Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
@@ -1244,7 +1266,7 @@ function EnablePreviousVersionsPage {
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull adobereader; choco upgrade all 
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose
 }
 #endregion chocolatey
 #region UWP apps
@@ -1856,7 +1878,7 @@ function DisableDeviceRestartAfterUpdate {
 # Set data execution prevention (DEP) policy to optout
 function SetDEPOptOut {
 	bcdedit /set `{current`} nx optout
-	Set-ProcessMitigation -System -Enable DEP
+	bcdedit /set `{current`} nx AlwaysOff
 }
 
 # Disable remote assistance
@@ -1905,7 +1927,8 @@ function TurnOffActionCenter {
 
 # SvcHost split threshold in KB
 function SvcHostSplitThresholdInKB {
-	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 04194304 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 08388608 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 08388608 -Force
 }
 
 # Function discovery resource publication
@@ -2352,10 +2375,10 @@ function DisableTrustedPlatformModule {
 	bcdedit /set `{current`} tpmbootentropy ForceDisable
 }
 
-# Disable legacy apic mode
-function DisableLegacyApicMode {
-	bcdedit /set `{current`} uselegacyapicmode no
-	bcdedit /set `{current`} x2apicpolicy Enable
+# Enable legacy apic mode
+function EnableLegacyApicMode {
+	bcdedit /set `{current`} uselegacyapicmode yes
+	bcdedit /set `{current`} x2apicpolicy disable
 	bcdedit /set `{current`} configaccesspolicy Default
 	bcdedit /set `{current`} MSI Default
 	bcdedit /set `{current`} usephysicaldestination No
@@ -2491,6 +2514,11 @@ function IndexerRespectPowerModes {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
 	}	
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
+}
+
+# Disable delete notify
+function DisableDeleteNotify {
+	fsutil behavior set DisableDeleteNotify 1
 }
 #endregion Performance
 #region Gaming
