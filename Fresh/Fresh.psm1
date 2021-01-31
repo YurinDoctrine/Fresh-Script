@@ -1,4 +1,3 @@
-#region Check
 function Check {
 	Set-StrictMode -Version Latest
 
@@ -24,7 +23,6 @@ function Check {
 		}
 	}
 }
-#endregion Check
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
 # Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
