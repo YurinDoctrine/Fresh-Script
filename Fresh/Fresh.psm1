@@ -24,6 +24,9 @@ function Check {
 			Set-MpPreference -EnableControlledFolderAccess Disabled
 		}
 	}
+
+	# Compress disk os wide
+	Compact.exe /CompactOS:always
 }
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
