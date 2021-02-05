@@ -937,6 +937,11 @@ function ChangeDesktopBackground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
+
+# Small taskbar icons
+function SmallTaskbarIcons {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarSmallIcons -PropertyType DWord -Value 1 -Force
+}
 #endregion UI & Personalization
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu

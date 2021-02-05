@@ -400,6 +400,9 @@ EnablePrtScnSnippingTool
 
 # Change desktop background
 ChangeDesktopBackground
+
+# Small taskbar icons
+SmallTaskbarIcons
 #endregion UI & Personalization
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
