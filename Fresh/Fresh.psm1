@@ -25,6 +25,10 @@ function Check {
 		}
 	}
 
+	# Run DISM before hop in
+	DISM /Online /Cleanup-Image /ScanHealth
+	DISM /Online /Cleanup-Image /RestoreHealth
+
 	# Compress disk os wide
 	Compact.exe /CompactOS:always
 }
@@ -1999,6 +2003,13 @@ function DisableLockScreen {
 	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData" -Name AllowLockScreen -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Name NoLockScreen -Type "DWORD" -Value "1" -Force
+}
+
+# Auto enhance during playback
+function AutoEnhanceDuringPlayback {
+	New-Item -Force "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings"
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name EnableAutoEnhanceDuringPlayback -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name AllowLowResolution -Type "DWORD" -Value "1" -Force
 }
 #endregion System
 #region Performance

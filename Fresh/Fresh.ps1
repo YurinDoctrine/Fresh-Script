@@ -817,6 +817,9 @@ PrioritizeCSRRService
 
 # Disable lock screen
 DisableLockScreen
+
+# Auto enhance during playback
+AutoEnhanceDuringPlayback
 #endregion System
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
