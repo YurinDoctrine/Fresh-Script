@@ -25,9 +25,22 @@ function Check {
 		}
 	}
 
-	# Run DISM before hop in
+	# Run Disk cleanup utility
+	cleanmgr.exe /sageset:65535
+	cleanmgr.exe /sagerun:65535
+
+	# Flush DNS resolver cache
+	ipconfig /flushdns
+
+	# Reset Windows store cache
+	WSreset.exe
+
+	# Run DISM Tool system file repair
 	DISM /Online /Cleanup-Image /ScanHealth
 	DISM /Online /Cleanup-Image /RestoreHealth
+
+	# Run SFC system file repair
+	sfc.exe /scannow
 
 	# Compress disk os wide
 	Compact.exe /CompactOS:always
