@@ -2312,6 +2312,8 @@ function DebloatMicrosoftServices {
 	Set-Service NcbService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PhoneSvc" -Force -WarningAction SilentlyContinue
 	Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "FontCache" -Force -WarningAction SilentlyContinue
+	Set-Service FontCache -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
 	Set-Service Spooler -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PrintNotify" -Force -WarningAction SilentlyContinue
