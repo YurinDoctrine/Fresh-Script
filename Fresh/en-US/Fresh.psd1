@@ -14,9 +14,6 @@ NoInternetConnection = No Internet connection
 # SetTempPath
 LOCALAPPDATANotEmptyFolder = "The $env:LOCALAPPDATA\\Temp folder is not empty `nDeleteClear it manually and try again"
 
-# DisableReservedStorage
-ReservedStorageIsInUse = This operation is not supported when reserved storage is in use `nPlease wait for any servicing operations to complete and then try again later
-
 # ChocolateyPackageManager
 OOShutup = Running O&O Shutup with Recommended Settings
 
