@@ -685,13 +685,9 @@ HideTroubleshooting
 # Не запускать окна с папками в отдельном процессе (только для текущего пользователя)
 DisableFoldersLaunchSeparateProcess
 
-# Disable and delete reserved storage after the next update installation
-# Отключить и удалить зарезервированное хранилище после следующей установки обновлений
-DisableReservedStorage
-
 # Turn on reserved storage
 # Включить зарезервированное хранилище
-# EnableReservedStorage
+EnableReservedStorage
 
 # Turn on Num Lock at startup
 # Включить Num Lock при загрузке

@@ -1725,17 +1725,6 @@ function DisableFoldersLaunchSeparateProcess {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name SeparateProcess -PropertyType DWord -Value 0 -Force
 }
 
-# Disable and delete reserved storage after the next update installation
-# Отключить и удалить зарезервированное хранилище после следующей установки обновлений
-function DisableReservedStorage {
-	try {
-		Set-WindowsReservedStorageState -State Disabled
-	}
-	catch [System.Runtime.InteropServices.COMException] {
-		Write-Error -Message $Localization.ReservedStorageIsInUse -ErrorAction SilentlyContinue
-	}
-}
-
 # Turn on reserved storage
 # Включить зарезервированное хранилище
 function EnableReservedStorage {
