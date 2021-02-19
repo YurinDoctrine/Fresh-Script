@@ -1270,12 +1270,6 @@ function EnablePreviousVersionsPage {
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
 }
 #endregion Context menu
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install pswindowsupdate dotnetfx directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
-}
-#endregion chocolatey
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -2025,6 +2019,12 @@ function AutoEnhanceDuringPlayback {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name AllowLowResolution -Type "DWORD" -Value "1" -Force
 }
 #endregion System
+#region chocolatey
+# Install chocolatey package manager and pre-installs as well
+function ChocolateyPackageManager {
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install pswindowsupdate dotnetfx directx vcredist-all microsoft-visual-cpp-build-tools jre8 openjdk openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
+}
+#endregion chocolatey
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {

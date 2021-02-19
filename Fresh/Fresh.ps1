@@ -557,10 +557,6 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion chocolatey
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -821,6 +817,10 @@ DisableLockScreen
 # Auto enhance during playback
 AutoEnhanceDuringPlayback
 #endregion System
+#region chocolatey
+# Install chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion chocolatey
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
