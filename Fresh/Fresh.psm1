@@ -41,9 +41,6 @@ function Check {
 
 	# Run SFC system file repair
 	sfc.exe /scannow
-
-	# Compress disk os wide
-	Compact.exe /CompactOS:always
 }
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
