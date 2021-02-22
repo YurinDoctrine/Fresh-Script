@@ -1722,12 +1722,6 @@ function DisableFoldersLaunchSeparateProcess {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name SeparateProcess -PropertyType DWord -Value 0 -Force
 }
 
-# Turn on reserved storage
-# Включить зарезервированное хранилище
-function EnableReservedStorage {
-	Set-WindowsReservedStorageState -State Enabled
-}
-
 # Turn on Num Lock at startup
 # Включить Num Lock при загрузке
 function EnableNumLock {

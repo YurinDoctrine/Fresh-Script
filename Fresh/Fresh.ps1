@@ -685,10 +685,6 @@ HideTroubleshooting
 # Не запускать окна с папками в отдельном процессе (только для текущего пользователя)
 DisableFoldersLaunchSeparateProcess
 
-# Turn on reserved storage
-# Включить зарезервированное хранилище
-EnableReservedStorage
-
 # Turn on Num Lock at startup
 # Включить Num Lock при загрузке
 # EnableNumLock
