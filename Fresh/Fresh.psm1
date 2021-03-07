@@ -25,6 +25,9 @@ function Check {
 		}
 	}
 
+	# Run SFC system file repair
+	sfc.exe /scannow
+
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535
 	cleanmgr.exe /sagerun:65535
@@ -34,13 +37,6 @@ function Check {
 
 	# Reset Windows store cache
 	WSreset.exe
-
-	# Run DISM Tool system file repair
-	DISM /Online /Cleanup-Image /ScanHealth
-	DISM /Online /Cleanup-Image /RestoreHealth
-
-	# Run SFC system file repair
-	sfc.exe /scannow
 }
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
