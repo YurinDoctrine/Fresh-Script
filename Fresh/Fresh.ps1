@@ -142,6 +142,34 @@ DisableBingSearch
 # Disable find my device
 DisableFindMyDevice
 #endregion Privacy & Telemetry
+#region UWP apps
+<#
+	Uninstall UWP apps
+	A dialog box that enables the user to select packages to remove
+	App packages will not be installed for new users if "Uninstall for All Users" is checked
+
+	Удалить UWP-приложения
+	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
+	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
+#>
+UninstallUWPApps
+
+# Do not let UWP apps run in the background, except the followings... (current user only)
+# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
+DisableBackgroundUWPApps
+
+# Disable the following Windows features
+# Отключить следующие компоненты Windows
+DisableWindowsFeatures
+
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+DisableWindowsCapabilities
+
+# Turn off Cortana autostarting
+# Удалить Кортана из автозагрузки
+DisableCortanaAutostart
+#endregion UWP apps
 #region Start menu
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
@@ -557,34 +585,6 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
-#region UWP apps
-<#
-	Uninstall UWP apps
-	A dialog box that enables the user to select packages to remove
-	App packages will not be installed for new users if "Uninstall for All Users" is checked
-
-	Удалить UWP-приложения
-	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
-	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
-#>
-UninstallUWPApps
-
-# Do not let UWP apps run in the background, except the followings... (current user only)
-# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
-DisableBackgroundUWPApps
-
-# Disable the following Windows features
-# Отключить следующие компоненты Windows
-DisableWindowsFeatures
-
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-DisableWindowsCapabilities
-
-# Turn off Cortana autostarting
-# Удалить Кортана из автозагрузки
-DisableCortanaAutostart
-#endregion UWP apps
 #region System
 # Uninstall OneDrive
 # Удалить OneDrive
@@ -809,10 +809,157 @@ DisableLockScreen
 # Auto enhance during playback
 AutoEnhanceDuringPlayback
 #endregion System
+#region Microsoft Defender & Security
+# Turn on Microsoft Defender Exploit Guard network protection
+# Включить защиту сети в Microsoft Defender Exploit Guard
+EnableNetworkProtection
+
+# Turn off Microsoft Defender Exploit Guard network protection
+# Выключить защиту сети в Microsoft Defender Exploit Guard
+# DisableNetworkProtection
+
+# Turn on detection for potentially unwanted applications and block them
+# Включить обнаружение потенциально нежелательных приложений и блокировать их
+# EnablePUAppsDetection
+
+# Turn off detection for potentially unwanted applications and block them
+# Выключить обнаружение потенциально нежелательных приложений и блокировать их
+DisabledPUAppsDetection
+
+# Run Microsoft Defender within a sandbox
+# Запускать Microsoft Defender в песочнице
+EnableDefenderSandbox
+
+# Do not run Microsoft Defender within a sandbox
+# Не запускать Microsoft Defender в песочнице
+# DisableDefenderSandbox
+
+# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
+DismissMSAccount
+
+# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
+DismissSmartScreenFilter
+
+<#
+	Include command line in process creation events
+	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
+
+	Включать командную строку в событиях создания процесса
+	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
+#>
+# EnableAuditProcess
+
+# Turn off events auditing generated when a process is created or starts
+# Выключить аудит событий, возникающих при создании или запуске процесса
+DisableAuditProcess
+
+# Turn on events auditing generated when a process is created or starts
+# Включить аудит событий, возникающих при создании или запуске процесса
+# EnableAuditCommandLineProcess
+
+# Do not include command line in process creation events
+# Не включать командную строку в событиях создания процесса
+DisableAuditCommandLineProcess
+
+# Do not check apps and files within Microsofot Defender SmartScreen
+# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+DisableAppsSmartScreen
+
+# Check apps and files within Microsofot Defender SmartScreen
+# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+# EnableAppsSmartScreen
+
+# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
+# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
+DisableSaveZoneInformation
+
+# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
+# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
+# EnableSaveZoneInformation
+
+# Disable activity history
+DisableActivityHistory
+
+# Disable automatic map updates
+DisableMapUpdates
+
+# Disable wap push service
+DisableWAPPush
+
+# Enable strong cryptography for .NET Framework(version 4 and above)
+EnableDotNetStrongCrypto
+
+<#
+Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
+This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
+Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
+#>
+EnableMeltdownCompatFlag
+
+# Disable password complexity and maximum age requirements
+DisablePasswordPolicy
+
+# Schedule automatic maintenance hours
+AutomaticMaintenanceHours
+
+# Turn on memory integry(virtualization based security)
+TurnOnMemoryIntegry
+
+# Disable implicit administrative shares
+DisableAdminShares
+
+# Disable obsolete SMB protocol(disabled by default since 1709)
+DisableSMB
+
+# Disable link-local multicast name resolution(LLMNR) protocol
+DisableLLMNR
+
+# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
+SetUnknownNetworksPublic
+
+# Disable automatic installation of network devices
+DisableNetDevicesAutoInst
+
+# Hide tray icon
+HideTrayIcon
+
+# Disable defender cloud
+DisableDefenderCloud
+#endregion Microsoft Defender & Security
+#region O&OShutup
+OOShutup
+#endregion O&OShutup
 #region chocolatey
 # Install chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
 #endregion chocolatey
+#region Gaming
+# Turn off Xbox Game Bar
+# Отключить Xbox Game Bar
+DisableXboxGameBar
+
+# Turn off Xbox Game Bar tips
+# Отключить советы Xbox Game Bar
+DisableXboxGameTips
+
+# Turn on Xbox Game Bar tips
+# Включить советы Xbox Game Bar
+# EnableXboxGameTips
+
+# Adjust best performance for all programs and also foreground services
+BestPriorityForeground
+
+# Disallow auto game mode
+DisallowAutoGameMode
+
+# Disable mouse feedback
+DisableMouseFeedback
+
+# Enable full-screen optimization
+EnableFullScreenOptimization
+#endregion Gaming
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
@@ -1002,152 +1149,8 @@ IndexerRespectPowerModes
 
 # Disable delete notify
 DisableDeleteNotify
+
+# Compress disk os wide
+CompressDiskOSWide
 #endregion Performance
-#region Gaming
-# Turn off Xbox Game Bar
-# Отключить Xbox Game Bar
-DisableXboxGameBar
-
-# Turn off Xbox Game Bar tips
-# Отключить советы Xbox Game Bar
-DisableXboxGameTips
-
-# Turn on Xbox Game Bar tips
-# Включить советы Xbox Game Bar
-# EnableXboxGameTips
-
-# Adjust best performance for all programs and also foreground services
-BestPriorityForeground
-
-# Disallow auto game mode
-DisallowAutoGameMode
-
-# Disable mouse feedback
-DisableMouseFeedback
-
-# Enable full-screen optimization
-EnableFullScreenOptimization
-#endregion Gaming
-#region Microsoft Defender & Security
-# Turn on Microsoft Defender Exploit Guard network protection
-# Включить защиту сети в Microsoft Defender Exploit Guard
-EnableNetworkProtection
-
-# Turn off Microsoft Defender Exploit Guard network protection
-# Выключить защиту сети в Microsoft Defender Exploit Guard
-# DisableNetworkProtection
-
-# Turn on detection for potentially unwanted applications and block them
-# Включить обнаружение потенциально нежелательных приложений и блокировать их
-# EnablePUAppsDetection
-
-# Turn off detection for potentially unwanted applications and block them
-# Выключить обнаружение потенциально нежелательных приложений и блокировать их
-DisabledPUAppsDetection
-
-# Run Microsoft Defender within a sandbox
-# Запускать Microsoft Defender в песочнице
-EnableDefenderSandbox
-
-# Do not run Microsoft Defender within a sandbox
-# Не запускать Microsoft Defender в песочнице
-# DisableDefenderSandbox
-
-# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
-DismissMSAccount
-
-# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
-DismissSmartScreenFilter
-
-<#
-	Include command line in process creation events
-	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
-
-	Включать командную строку в событиях создания процесса
-	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
-#>
-# EnableAuditProcess
-
-# Turn off events auditing generated when a process is created or starts
-# Выключить аудит событий, возникающих при создании или запуске процесса
-DisableAuditProcess
-
-# Turn on events auditing generated when a process is created or starts
-# Включить аудит событий, возникающих при создании или запуске процесса
-# EnableAuditCommandLineProcess
-
-# Do not include command line in process creation events
-# Не включать командную строку в событиях создания процесса
-DisableAuditCommandLineProcess
-
-# Do not check apps and files within Microsofot Defender SmartScreen
-# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-DisableAppsSmartScreen
-
-# Check apps and files within Microsofot Defender SmartScreen
-# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-# EnableAppsSmartScreen
-
-# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
-# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
-DisableSaveZoneInformation
-
-# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
-# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
-# EnableSaveZoneInformation
-
-# Disable activity history
-DisableActivityHistory
-
-# Disable automatic map updates
-DisableMapUpdates
-
-# Disable wap push service
-DisableWAPPush
-
-# Enable strong cryptography for .NET Framework(version 4 and above)
-EnableDotNetStrongCrypto
-
-<#
-Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
-This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
-Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
-#>
-EnableMeltdownCompatFlag
-
-# Disable password complexity and maximum age requirements
-DisablePasswordPolicy
-
-# Schedule automatic maintenance hours
-AutomaticMaintenanceHours
-
-# Turn on memory integry(virtualization based security)
-TurnOnMemoryIntegry
-
-# Disable implicit administrative shares
-DisableAdminShares
-
-# Disable obsolete SMB protocol(disabled by default since 1709)
-DisableSMB
-
-# Disable link-local multicast name resolution(LLMNR) protocol
-DisableLLMNR
-
-# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
-SetUnknownNetworksPublic
-
-# Disable automatic installation of network devices
-DisableNetDevicesAutoInst
-
-# Hide tray icon
-HideTrayIcon
-
-# Disable defender cloud
-DisableDefenderCloud
-#endregion Microsoft Defender & Security
-#region O&OShutup
-OOShutup
-#endregion O&OShutup
 Errors
