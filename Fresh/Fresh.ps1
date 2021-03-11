@@ -931,10 +931,6 @@ DisableDefenderCloud
 #region O&OShutup
 OOShutup
 #endregion O&OShutup
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion chocolatey
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -1153,4 +1149,8 @@ DisableDeleteNotify
 # Compress disk os wide
 CompressDiskOSWide
 #endregion Performance
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion Chocolatey
 Errors
