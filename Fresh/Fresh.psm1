@@ -2237,12 +2237,6 @@ function OOShutup {
 	./OOSU10.exe ooshutup.cfg /quiet
 }
 #endregion O&OShutup
-#region chocolatey
-# Install chocolatey package manager and pre-installs as well
-function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install --ignore-checksums notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
-}
-#endregion chocolatey
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
@@ -2886,6 +2880,12 @@ function CompressDiskOSWide {
 	Compact.exe /CompactOS:query
 }
 #endregion Performance
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+function ChocolateyPackageManager {
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install --ignore-checksums notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
+}
+#endregion Chocolatey
 function Errors {
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
