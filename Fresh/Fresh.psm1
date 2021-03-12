@@ -1995,6 +1995,103 @@ function AutoEnhanceDuringPlayback {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name AllowLowResolution -Type "DWORD" -Value "1" -Force
 }
 #endregion System
+#region Gaming
+# Turn off Xbox Game Bar tips
+# Отключить советы Xbox Game Bar
+function DisableXboxGameTips {
+	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+	}
+	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
+	}
+}
+
+# Turn on Xbox Game Bar tips
+# Включить советы Xbox Game Bar
+function EnableXboxGameTips {
+	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
+		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
+	}
+}
+
+# Adjust best performance for all programs and also foreground services
+function BestPriorityForeground {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
+
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
+	}
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name 'GPU Priority' -PropertyType DWord -Value 8 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name Priority -PropertyType DWord -Value 6 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 64 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 30 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name SynAttackProtect -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableDca -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPMaxDataRetransmissions -PropertyType DWord -Value 7 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUDiscovery -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUBHDetect -PropertyType DWord -Value 0 -Force
+
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Background Only" -PropertyType String -Value "False" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Latency Sensitive" -PropertyType String -Value "True" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name Priority -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "GPU Priority" -PropertyType DWord -Value 2 -Force
+
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+
+	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
+}
+
+# Disable mouse feedback
+function DisableMouseFeedback {
+	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name ContactVisualization -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name GestureVisualization -PropertyType DWord -Value 0 -Force
+}
+
+# Enable full-screen optimization
+function EnableFullScreenOptimization {
+	New-Item -Force "HKCU:\System\GameConfigStore"
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
+}
+#endregion Gaming
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -2237,131 +2334,6 @@ function OOShutup {
 	./OOSU10.exe ooshutup.cfg /quiet
 }
 #endregion O&OShutup
-#region Gaming
-# Turn off Xbox Game Bar
-# Отключить Xbox Game Bar
-function DisableXboxGameBar {
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 0 -Force
-	}
-	if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR")) {
-		New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\GameDVR" -Force
-	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\xbgm" -Name "Start" -Type DWord -Value 4 -Force
-}
-
-# Turn off Xbox Game Bar tips
-# Отключить советы Xbox Game Bar
-function DisableXboxGameTips {
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
-	}
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
-	}
-}
-
-# Turn on Xbox Game Bar tips
-# Включить советы Xbox Game Bar
-function EnableXboxGameTips {
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Adjust best performance for all programs and also foreground services
-function BestPriorityForeground {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
-
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
-	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
-	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name 'GPU Priority' -PropertyType DWord -Value 8 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name Priority -PropertyType DWord -Value 6 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 64 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 30 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name SynAttackProtect -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableDca -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPMaxDataRetransmissions -PropertyType DWord -Value 7 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUDiscovery -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUBHDetect -PropertyType DWord -Value 0 -Force
-
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Background Only" -PropertyType String -Value "False" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Latency Sensitive" -PropertyType String -Value "True" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name Priority -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "GPU Priority" -PropertyType DWord -Value 2 -Force
-
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-	netsh int tcp set global rsc=disabled
-	netsh int tcp set global timestamps=disabled
-	netsh int udp set global uro=enabled
-	netsh winsock set autotuning on
-	netsh int tcp set global autotuning=experimental
-	netsh int tcp set supp internet congestionprovider=newreno
-	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
-}
-
-# Disallow auto game mode
-function DisallowAutoGameMode {
-	New-Item -Force "HKCU:\SOFTWARE\Microsoft\GameBar"
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AutoGameModeEnabled -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name AllowAutoGameMode -PropertyType DWord -Value 0 -Force
-}
-
-# Disable mouse feedback
-function DisableMouseFeedback {
-	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name ContactVisualization -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name GestureVisualization -PropertyType DWord -Value 0 -Force
-}
-
-# Enable full-screen optimization
-function EnableFullScreenOptimization {
-	New-Item -Force "HKCU:\System\GameConfigStore"
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
-}
-#endregion Gaming
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {

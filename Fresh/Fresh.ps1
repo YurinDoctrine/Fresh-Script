@@ -809,6 +809,24 @@ DisableLockScreen
 # Auto enhance during playback
 AutoEnhanceDuringPlayback
 #endregion System
+#region Gaming
+# Turn off Xbox Game Bar tips
+# Отключить советы Xbox Game Bar
+DisableXboxGameTips
+
+# Turn on Xbox Game Bar tips
+# Включить советы Xbox Game Bar
+# EnableXboxGameTips
+
+# Adjust best performance for all programs and also foreground services
+BestPriorityForeground
+
+# Disable mouse feedback
+DisableMouseFeedback
+
+# Enable full-screen optimization
+EnableFullScreenOptimization
+#endregion Gaming
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -931,31 +949,6 @@ DisableDefenderCloud
 #region O&OShutup
 OOShutup
 #endregion O&OShutup
-#region Gaming
-# Turn off Xbox Game Bar
-# Отключить Xbox Game Bar
-DisableXboxGameBar
-
-# Turn off Xbox Game Bar tips
-# Отключить советы Xbox Game Bar
-DisableXboxGameTips
-
-# Turn on Xbox Game Bar tips
-# Включить советы Xbox Game Bar
-# EnableXboxGameTips
-
-# Adjust best performance for all programs and also foreground services
-BestPriorityForeground
-
-# Disallow auto game mode
-DisallowAutoGameMode
-
-# Disable mouse feedback
-DisableMouseFeedback
-
-# Enable full-screen optimization
-EnableFullScreenOptimization
-#endregion Gaming
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
