@@ -11,6 +11,7 @@ Import-LocalizedData -BindingVariable Global:Localization  -FileName Fresh
 # Checking
 # Проверка
 Check
+
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
 # Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
@@ -1149,4 +1150,5 @@ CompressDiskOSWide
 # Install Chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
 #endregion Chocolatey
+
 Errors

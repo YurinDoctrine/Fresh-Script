@@ -25,9 +25,6 @@ function Check {
 		}
 	}
 
-	# Run SFC system file repair
-	sfc.exe /scannow
-
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535
 	cleanmgr.exe /sagerun:65535
@@ -37,6 +34,9 @@ function Check {
 
 	# Reset Windows store cache
 	WSreset.exe
+
+	# Run SFC system file repair
+	sfc.exe /scannow
 }
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
@@ -1975,44 +1975,58 @@ function DisableAUPowerManagement {
 
 # Prioritize csrr.exe service
 function PrioritizeCSRRService {
-	New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions"
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions")) {
+		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions"
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "1" -Force
 }
 
 # Disable lock screen
 function DisableLockScreen {
-	New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData"
-	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData")) {
+		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData"
+	}
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization")) {
+		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\SessionData" -Name AllowLockScreen -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Name NoLockScreen -Type "DWORD" -Value "1" -Force
 }
 
 # Auto enhance during playback
 function AutoEnhanceDuringPlayback {
-	New-Item -Force "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings"
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings")) {
+		New-Item -Force "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings"
+	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name EnableAutoEnhanceDuringPlayback -Type "DWORD" -Value "1" -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name AllowLowResolution -Type "DWORD" -Value "1" -Force
 }
 #endregion System
 #region Gaming
+# Turn off Xbox Game Bar
+# Отключить Xbox Game Bar
+function DisableXboxGameBar {
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Force
+	}
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -PropertyType DWord -Value 0 -Force
+}
+
 # Turn off Xbox Game Bar tips
 # Отключить советы Xbox Game Bar
 function DisableXboxGameTips {
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\GameBar")) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\GameBar -Force
 	}
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
-	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
 }
 
 # Turn on Xbox Game Bar tips
 # Включить советы Xbox Game Bar
 function EnableXboxGameTips {
-	if ((Get-AppxPackage -Name Microsoft.XboxGamingOverlay) -or (Get-AppxPackage -Name Microsoft.GamingApp)) {
-		New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
-	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
 }
 
 # Adjust best performance for all programs and also foreground services
@@ -2069,8 +2083,9 @@ function BestPriorityForeground {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
 	}
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-
-	New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS")) {
+		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
 }
@@ -2083,7 +2098,9 @@ function DisableMouseFeedback {
 
 # Enable full-screen optimization
 function EnableFullScreenOptimization {
-	New-Item -Force "HKCU:\System\GameConfigStore"
+	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
+		New-Item -Force "HKCU:\System\GameConfigStore"
+	}
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
@@ -2867,6 +2884,7 @@ function ChocolateyPackageManager {
 	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install --ignore-checksums notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
 }
 #endregion Chocolatey
+
 function Errors {
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
