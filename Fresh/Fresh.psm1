@@ -2382,7 +2382,7 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force
 }
 
-# Force disable Battery Saver
+# Prevent battery saver
 function PreventBatterySaver {
 	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBATTTHRESHOLD 0
 	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBRIGHTNESS 100 
@@ -2429,6 +2429,7 @@ function LetPersonalizePowerPlan {
 function PreventRequireSignInWhenAfterSleep {
 	powercfg -setacvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
 	powercfg -setdcvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
+	powercfg /setactive SCHEME_CURRENT
 }
 # Disable indexing
 function DisableIndexing {
@@ -2872,6 +2873,14 @@ function IndexerRespectPowerModes {
 # Disable delete notify
 function DisableDeleteNotify {
 	fsutil behavior set DisableDeleteNotify 1
+}
+
+# Enable power throttling
+function EnablePowerThrottling {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Type DWord -Value 0 -Force
 }
 
 # Compress disk os wide

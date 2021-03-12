@@ -960,7 +960,7 @@ EnableFullScreenOptimization
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
 
-# Force disable battery saver
+# Prevent battery saver
 PreventBatterySaver
 
 # Disable default disk defragmenter
@@ -1145,6 +1145,9 @@ IndexerRespectPowerModes
 
 # Disable delete notify
 DisableDeleteNotify
+
+# Enable power throttling
+EnablePowerThrottling
 
 # Compress disk os wide
 CompressDiskOSWide
