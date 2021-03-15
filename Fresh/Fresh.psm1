@@ -2633,6 +2633,16 @@ function DebloatMicrosoftServices {
 	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
+	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
+	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
+	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
+	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
+	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
@@ -2887,7 +2897,7 @@ function CompressDiskOSWide {
 #region Chocolatey
 # Install Chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install --ignore-checksums notepadplusplus.install 7zip.install cpu-z.install teracopy transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install notepadplusplus.install 7zip.install cpu-z.install teracopy bleachbit.install transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco install --ignore-checksums notepadplusplus.install 7zip.install cpu-z.install teracopy bleachbit.install transmission-qt jpegview mpc-hc k-litecodecpackfull spotify adobereader; choco upgrade all
 }
 #endregion Chocolatey
 
