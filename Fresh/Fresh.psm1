@@ -2641,8 +2641,6 @@ function DebloatMicrosoftServices {
 	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
 	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
-	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
