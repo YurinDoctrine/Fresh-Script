@@ -2301,6 +2301,9 @@ function TurnOnMemoryIntegry {
 
 # Disable implicit administrative shares
 function DisableAdminShares {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
+	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "AutoShareWks" -PropertyType DWord -Value 0 -Force
 }
 
@@ -2773,9 +2776,6 @@ function DisableBootLogging {
 
 # Increase default size buffer
 function IncreaseDefaultSizeBuffer {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
-	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 17424 -Force
 }
 
