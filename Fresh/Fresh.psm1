@@ -2545,6 +2545,7 @@ function LargeSystemCache {
 function IoPageLockLimit {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 983040 -Force
 }
+
 # Paging files
 function PagingFiles {
 	$Value = "00,00"
@@ -2565,6 +2566,7 @@ function ExistingPageFiles {
 	
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ExistingPageFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
 }
+
 # Enable prefetcher
 function EnablePrefetcher {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -Name "EnablePrefetcher" -PropertyType DWord -Value 1 -Force
