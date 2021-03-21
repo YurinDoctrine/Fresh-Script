@@ -142,6 +142,9 @@ DisableBingSearch
 
 # Disable find my device
 DisableFindMyDevice
+
+# Disable apps suggestions, tips, welcome experience
+DisableAppsSuggestionsTipsWelcomeExperience
 #endregion Privacy & Telemetry
 #region UWP apps
 <#
@@ -432,6 +435,9 @@ ChangeDesktopBackground
 
 # Small taskbar icons
 SmallTaskbarIcons
+
+# Smaller min max close window button
+MinMaxCloseWindowButton
 #endregion UI & Personalization
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
@@ -809,6 +815,9 @@ DisableLockScreen
 
 # Auto enhance during playback
 AutoEnhanceDuringPlayback
+
+# Disable windows auto upgrade
+DisableWindowsAutoUpgrade
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips

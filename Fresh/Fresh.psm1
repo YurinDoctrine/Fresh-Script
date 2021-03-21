@@ -367,6 +367,15 @@ function DisableFindMyDevice {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Name AllowFindMyDevice -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Name LocationSyncEnabled -PropertyType DWord -Value 0 -Force
 }
+
+# Disable apps suggestions, tips, welcome experience
+function DisableAppsSuggestionsTipsWelcomeExperience {
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableSoftLanding -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableWindowsConsumerFeatures -PropertyType DWord -Value 0 -Force
+}
 #endregion Privacy & Telemetry
 #region UWP apps
 <#
@@ -1069,6 +1078,12 @@ function ChangeDesktopBackground {
 # Small taskbar icons
 function SmallTaskbarIcons {
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarSmallIcons -PropertyType DWord -Value 1 -Force
+}
+
+# Smaller min max close window button
+function MinMaxCloseWindowButton {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name CaptionWidth -PropertyType String -Value -290 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name CaptionHeight -PropertyType String -Value -290 -Force
 }
 #endregion UI & Personalization
 #region Context menu
@@ -1905,6 +1920,8 @@ function DisableAutoUpdateDriver {
 
 # Turn off action center
 function TurnOffActionCenter {
+	Stop-Service "WpnUserService" -Force -WarningAction SilentlyContinue
+	Set-Service "WpnUserService" -StartupType Disabled
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableNotificationCenter" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "ToastEnabled" -PropertyType DWord -Value 1 -Force
 }
@@ -1986,7 +2003,7 @@ function PrioritizeCSRRService {
 		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions"
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "3" -Force
 }
 
 # Disable lock screen
@@ -2008,6 +2025,14 @@ function AutoEnhanceDuringPlayback {
 	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name EnableAutoEnhanceDuringPlayback -Type "DWORD" -Value "1" -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\VideoSettings" -Name AllowLowResolution -Type "DWORD" -Value "1" -Force
+}
+
+# Disable windows auto upgrade
+function DisableWindowsAutoUpgrade {
+	if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx")) {
+		New-Item -Force "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx"
+	}
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx" -Name DisableGwx -Type "DWORD" -Value "1" -Force
 }
 #endregion System
 #region Gaming
@@ -2053,6 +2078,10 @@ function BestPriorityForeground {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
 	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
+	}
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 0 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
 	}
@@ -2108,12 +2137,12 @@ function EnableFullScreenOptimization {
 	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
 		New-Item -Force "HKCU:\System\GameConfigStore"
 	}
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DSEBehavior" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
 }
 #endregion Gaming
 #region Microsoft Defender & Security
@@ -2377,6 +2406,10 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTimes -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name ColorPrevalence -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name Composition -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name CompositionPolicy -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name DisallowComposition -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name DWMWA_TRANSITIONS_FORCEDISABLED -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force
 }
 
@@ -2555,6 +2588,7 @@ function PagingFiles {
 	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
 	
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "PagingFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingCombining" -PropertyType DWord -Value 1 -Force
 }
 
 # Second-level data cache
@@ -2632,6 +2666,12 @@ function ValueMax {
 function DebloatMicrosoftServices {
 	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "AppXSvc" -Force -WarningAction SilentlyContinue
+	Set-Service AppXSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "ClipSVC" -Force -WarningAction SilentlyContinue
+	Set-Service ClipSVC -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
+	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
 	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
@@ -2652,6 +2692,12 @@ function DebloatMicrosoftServices {
 	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "swprv" -Force -WarningAction SilentlyContinue
+	Set-Service swprv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "VSS" -Force -WarningAction SilentlyContinue
+	Set-Service VSS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "vds" -Force -WarningAction SilentlyContinue
+	Set-Service vds -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "NetTcpPortSharing" -Force -WarningAction SilentlyContinue
 	Set-Service NetTcpPortSharing -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "NcbService" -Force -WarningAction SilentlyContinue
@@ -2718,6 +2764,8 @@ function DebloatMicrosoftServices {
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
 	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WaaSMedicSvc" -Force -WarningAction SilentlyContinue
+	Set-Service WaaSMedicSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
@@ -2729,7 +2777,9 @@ function DebloatMicrosoftServices {
 # Disable boot splash animations
 function DisableBootSplashAnimations {
 	bcdedit /set `{current`} bootux disabled
+	bcdedit /set `{current`} bootuxdisabled On
 	bcdedit /set `{current`} quietboot yes
+	bcdedit /set `{current`} quietboot On
 }
 
 # Disable trusted platform module
@@ -2845,6 +2895,9 @@ function SetSymbolicLinks {
 
 # Enable memory allocation in graphics driver
 function EnableMemoryAllocationInGraphicsDriver {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
+	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
 }
@@ -2861,9 +2914,6 @@ function DisableRealtimeMonitoring {
 
 # Enable hardware accelerated GPU scheduling
 function EnableHardwareAcceleratedGPUScheduling {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
-	}	
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
 }
 
