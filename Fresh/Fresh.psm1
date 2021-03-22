@@ -2802,7 +2802,7 @@ function EnableLegacyApicMode {
 # Disable integrity checks
 function DisableIntegrityChecks {
 	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
-	bcdedit /set `{current`} nointegritychecks off
+	bcdedit /set `{current`} nointegritychecks on
 }
 
 # Disable last access
