@@ -2032,7 +2032,11 @@ function DisableWindowsAutoUpgrade {
 	if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx")) {
 		New-Item -Force "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx"
 	}
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade")) {
+		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade"
+	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx" -Name DisableGwx -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" -Name ReservationsAllowed -Type "DWORD" -Value "0" -Force
 }
 #endregion System
 #region Gaming
@@ -2063,8 +2067,8 @@ function EnableXboxGameTips {
 
 # Adjust best performance for all programs and also foreground services
 function BestPriorityForeground {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 38 -Force
-
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")) {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Force
 	}
@@ -2074,14 +2078,18 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
-	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" -Name CursorUpdateInterval -PropertyType DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
 	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
-	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\AppEvents\Schemes")) {
+		New-Item -Path "HKCU:\AppEvents\Schemes" -Force
+	}	
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
 	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 3 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
 	}
@@ -2393,6 +2401,8 @@ function OOShutup {
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MouseWheelRouting -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name FontSmoothing -PropertyType String -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 10 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -PropertyType Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name AutoColorization -PropertyType String -Value 1 -Force
@@ -2666,10 +2676,6 @@ function ValueMax {
 function DebloatMicrosoftServices {
 	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "AppXSvc" -Force -WarningAction SilentlyContinue
-	Set-Service AppXSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "ClipSVC" -Force -WarningAction SilentlyContinue
-	Set-Service ClipSVC -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
 	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
@@ -2764,8 +2770,6 @@ function DebloatMicrosoftServices {
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
 	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WaaSMedicSvc" -Force -WarningAction SilentlyContinue
-	Set-Service WaaSMedicSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
@@ -2777,7 +2781,6 @@ function DebloatMicrosoftServices {
 # Disable boot splash animations
 function DisableBootSplashAnimations {
 	bcdedit /set `{current`} bootux disabled
-	bcdedit /set `{current`} bootuxdisabled On
 	bcdedit /set `{current`} quietboot yes
 	bcdedit /set `{current`} quietboot On
 }
