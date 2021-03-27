@@ -2038,6 +2038,14 @@ function DisableWindowsAutoUpgrade {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx" -Name DisableGwx -Type "DWORD" -Value "1" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" -Name ReservationsAllowed -Type "DWORD" -Value "0" -Force
 }
+
+# Fix windows DPI
+function FixWindowsDPI {
+	if (!("HKCU:\Control Panel\Desktop")) {
+		New-Item -Force "HKCU:\Control Panel\Desktop"
+	}
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name Win8DpiScaling -Type "DWORD" -Value "1" -Force
+}
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar

@@ -818,6 +818,9 @@ AutoEnhanceDuringPlayback
 
 # Disable windows auto upgrade
 DisableWindowsAutoUpgrade
+
+# Fix windows DPI
+FixWindowsDPI
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips
