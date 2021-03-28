@@ -2046,6 +2046,30 @@ function FixWindowsDPI {
 	}
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name Win8DpiScaling -Type "DWORD" -Value "1" -Force
 }
+
+# Disable automatic maintenance
+function DisableAutomaticMaintenance {
+	if (!("HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance")) {
+		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance"
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name MaintenanceDisabled -Type "DWORD" -Value "1" -Force
+}
+
+# Disable fast startup
+function DisableFastStartUp {
+	if (!("HKLM:\System\CurrentControlSet\Control\Session Manager\Power")) {
+		New-Item -Force "HKLM:\System\CurrentControlSet\Control\Session Manager\Power"
+	}
+	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Type "DWORD" -Value "0" -Force
+}
+
+# Disable sleep study
+function DisableSleepStudy {
+	if (!("HKLM:\System\CurrentControlSet\Control\Session Manager\Power")) {
+		New-Item -Force "HKLM:\System\CurrentControlSet\Control\Session Manager\Power"
+	}
+	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name SleepStudyDisabled -Type "DWORD" -Value "1" -Force
+}
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar
@@ -2421,6 +2445,7 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarAnimations -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name EnableBalloonTips -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name StartButtonBalloonTip -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisallowShaking -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTimes -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AlwaysHibernateThumbnails -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableWindowColorization -PropertyType DWord -Value 0 -Force
@@ -2947,6 +2972,14 @@ function EnablePowerThrottling {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Force
 	}	
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Type DWord -Value 0 -Force
+}
+
+# Disable wpp software tracing logs
+function DisableWPPSoftwareTracingLogs {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Name "LogLevel" -Type DWord -Value 0 -Force
 }
 
 # Compress disk os wide

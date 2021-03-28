@@ -821,6 +821,15 @@ DisableWindowsAutoUpgrade
 
 # Fix windows DPI
 FixWindowsDPI
+
+# Disable automatic maintenance
+DisableAutomaticMaintenance
+
+# Disable fast startup
+DisableFastStartUp
+
+# Disable sleep study
+DisableSleepStudy
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips
@@ -1154,6 +1163,9 @@ DisableDeleteNotify
 
 # Enable power throttling
 EnablePowerThrottling
+
+# Disable wpp software tracing logs
+DisableWPPSoftwareTracingLogs
 
 # Compress disk os wide
 CompressDiskOSWide
