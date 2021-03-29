@@ -830,6 +830,9 @@ DisableFastStartUp
 
 # Disable sleep study
 DisableSleepStudy
+
+# Disable system energy saving
+DisableSystemEnergySaving
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips
@@ -967,6 +970,9 @@ HideTrayIcon
 
 # Disable defender cloud
 DisableDefenderCloud
+
+# Disable ntfs refs mitigations
+DisableNTFSREFSMitigations
 #endregion Microsoft Defender & Security
 #region O&OShutup
 OOShutup
