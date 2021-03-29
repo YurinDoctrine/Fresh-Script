@@ -2088,6 +2088,7 @@ function DisableXboxGameTips {
 		New-Item -Path HKCU:\SOFTWARE\Microsoft\GameBar -Force
 	}
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
 }
 
