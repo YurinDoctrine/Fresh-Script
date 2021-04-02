@@ -2877,7 +2877,7 @@ function IncreaseDefaultSizeBuffer {
 
 # IRP stack size
 function IRPStackSize {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 32 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 20 -Force
 }
 
 # Size
