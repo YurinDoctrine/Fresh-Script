@@ -2057,14 +2057,6 @@ function DisableAutomaticMaintenance {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name MaintenanceDisabled -Type "DWORD" -Value "1" -Force
 }
 
-# Disable fast startup
-function DisableFastStartUp {
-	if (!("HKLM:\System\CurrentControlSet\Control\Session Manager\Power")) {
-		New-Item -Force "HKLM:\System\CurrentControlSet\Control\Session Manager\Power"
-	}
-	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Type "DWORD" -Value "0" -Force
-}
-
 # Disable sleep study
 function DisableSleepStudy {
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name SleepStudyDisabled -Type "DWORD" -Value "1" -Force

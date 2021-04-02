@@ -825,9 +825,6 @@ FixWindowsDPI
 # Disable automatic maintenance
 DisableAutomaticMaintenance
 
-# Disable fast startup
-DisableFastStartUp
-
 # Disable sleep study
 DisableSleepStudy
 
