@@ -830,6 +830,9 @@ DisableSleepStudy
 
 # Disable system energy saving
 DisableSystemEnergySaving
+
+# Disable hiberboot
+DisableHiberboot
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips

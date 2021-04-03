@@ -2070,6 +2070,11 @@ function DisableSleepStudy {
 function DisableSystemEnergySaving {
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
 }
+
+# Disable hiberboot
+function DisableHiberboot {
+	Remove-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Force
+}
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar
