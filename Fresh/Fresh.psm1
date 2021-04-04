@@ -2737,6 +2737,10 @@ function DebloatMicrosoftServices {
 	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
+	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
+	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
@@ -2793,6 +2797,8 @@ function DebloatMicrosoftServices {
 	Set-Service WiaRpc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "upnphost" -Force -WarningAction SilentlyContinue
 	Set-Service upnphost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "hidserv" -Force -WarningAction SilentlyContinue
+	Set-Service hidserv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
 	Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
@@ -2825,6 +2831,8 @@ function DebloatMicrosoftServices {
 	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
+	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
@@ -2986,12 +2994,9 @@ function DisableDeleteNotify {
 	fsutil behavior set DisableDeleteNotify 1
 }
 
-# Enable power throttling
-function EnablePowerThrottling {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Force
-	}	
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Type DWord -Value 0 -Force
+# Disable power throttling
+function DisablePowerThrottling {
+	Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
 }
 
 # Disable wpp software tracing logs
