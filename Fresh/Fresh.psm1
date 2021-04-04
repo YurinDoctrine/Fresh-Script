@@ -2116,6 +2116,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseHoverTime -PropertyType String -Value 10 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" -Name CursorUpdateInterval -PropertyType DWord -Value 1 -Force
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
@@ -2133,7 +2134,6 @@ function BestPriorityForeground {
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 10 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "GPU Priority" -PropertyType DWord -Value 8 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name Priority -PropertyType DWord -Value 6 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
@@ -2448,9 +2448,10 @@ function OOShutup {
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name ActiveWndTrackTimeout -PropertyType String -Value 10 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MouseWheelRouting -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name FontSmoothing -PropertyType String -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 10 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -PropertyType Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name AutoColorization -PropertyType String -Value 1 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name MinAnimate -PropertyType String -Value 0 -Force
@@ -2462,6 +2463,8 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name StartButtonBalloonTip -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisallowShaking -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTimes -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTime -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name "Start_ShowRun" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AlwaysHibernateThumbnails -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableWindowColorization -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -PropertyType DWord -Value 0 -Force
@@ -2574,17 +2577,17 @@ function AutoEndTasks {
 
 # Hung app timeout
 function HungAppTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -PropertyType String -Value "1000" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -PropertyType String -Value "2000" -Force
 }
 
 # Wait to kill app timeout
 function WaitToKillAppTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -PropertyType String -Value "2000" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -PropertyType String -Value "3000" -Force
 }
 
 # Low-level hooks timeout
 function LowLevelHooksTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "LowLevelHooksTimeout" -PropertyType String -Value "1000" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "LowLevelHooksTimeout" -PropertyType String -Value "2000" -Force
 }
 
 # Foreground lock timeout
@@ -2670,6 +2673,8 @@ function EnablePrefetcher {
 # Wait to kill service timeout
 function WaitToKillServiceTimeout1 {
 	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
+	New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
 }
 
 # Disable paging executive
