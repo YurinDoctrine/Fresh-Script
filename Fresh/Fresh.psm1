@@ -425,6 +425,7 @@ function UninstallUWPApps {
 # Do not let UWP apps run in the background, except the followings... (current user only)
 # Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
 function DisableBackgroundUWPApps {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications -Name GlobalUserDisabled -PropertyType DWord -Value 1 -Force
 	Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
 		Remove-ItemProperty -Path $_.PsPath -Name * -Force
 	}
