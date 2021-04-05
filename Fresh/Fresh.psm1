@@ -2179,7 +2179,6 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Type "STRING" -Value "0" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
-
 }
 
 # Disable mouse feedback
