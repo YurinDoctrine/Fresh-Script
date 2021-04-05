@@ -2162,7 +2162,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name Priority -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "GPU Priority" -PropertyType DWord -Value 2 -Force
-	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name WaitToKillServiceTimeout -PropertyType DWord -Value 2000 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name WaitToKillServiceTimeout -PropertyType DWord -Value 1000 -Force
 
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
@@ -2174,6 +2174,12 @@ function BestPriorityForeground {
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
+
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\MouseKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Type "STRING" -Value "0" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
+
 }
 
 # Disable mouse feedback
@@ -2672,9 +2678,11 @@ function EnablePrefetcher {
 
 # Wait to kill service timeout
 function WaitToKillServiceTimeout1 {
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
+	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control")) {
 	New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
+	}
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
 }
 
 # Disable paging executive
@@ -2733,6 +2741,8 @@ function DebloatMicrosoftServices {
 	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
 	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BITS" -Force -WarningAction SilentlyContinue
+	Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
 	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
@@ -2743,6 +2753,8 @@ function DebloatMicrosoftServices {
 	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
+	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
 	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
@@ -2775,6 +2787,8 @@ function DebloatMicrosoftServices {
 	Set-Service PrintNotify -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "QWAVE" -Force -WarningAction SilentlyContinue
 	Set-Service QWAVE -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TapiSrv" -Force -WarningAction SilentlyContinue
+	Set-Service TapiSrv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RemoteAccess" -Force -WarningAction SilentlyContinue
 	Set-Service RemoteAccess -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SensorDataService" -Force -WarningAction SilentlyContinue
@@ -2791,6 +2805,8 @@ function DebloatMicrosoftServices {
 	Set-Service SCardSvr -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "ScDeviceEnum" -Force -WarningAction SilentlyContinue
 	Set-Service ScDeviceEnum -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SstpSvc" -Force -WarningAction SilentlyContinue
+	Set-Service SstpSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SSDPSRV" -Force -WarningAction SilentlyContinue
 	Set-Service SSDPSRV -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WiaRpc" -Force -WarningAction SilentlyContinue
@@ -2825,6 +2841,8 @@ function DebloatMicrosoftServices {
 	Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PcaSvc" -Force -WarningAction SilentlyContinue
 	Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "perceptionsimulation" -Force -WarningAction SilentlyContinue
+	Set-Service perceptionsimulation -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
