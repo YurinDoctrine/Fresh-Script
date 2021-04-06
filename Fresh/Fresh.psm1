@@ -2872,6 +2872,8 @@ function DebloatMicrosoftServices {
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
 	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WinRM" -Force -WarningAction SilentlyContinue
+	Set-Service WinRM -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
