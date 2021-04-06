@@ -1173,6 +1173,9 @@ DisablePowerThrottling
 # Disable wpp software tracing logs
 DisableWPPSoftwareTracingLogs
 
+# Cpu rate limit
+CpuRateLimit
+
 # Compress disk os wide
 CompressDiskOSWide
 #endregion Performance
