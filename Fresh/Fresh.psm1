@@ -2076,6 +2076,14 @@ function DisableSystemEnergySaving {
 function DisableHiberboot {
 	Remove-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Force
 }
+
+# Disable search history 
+function DisableSearchHistory {
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
+	}
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Name "IsDeviceSearchHistoryEnabled" -PropertyType DWord -Value 0 -Force
+}
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar

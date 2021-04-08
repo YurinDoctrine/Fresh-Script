@@ -833,6 +833,9 @@ DisableSystemEnergySaving
 
 # Disable hiberboot
 DisableHiberboot
+
+# Disable search history 
+DisableSearchHistory
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips
