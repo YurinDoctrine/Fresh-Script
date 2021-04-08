@@ -3068,6 +3068,13 @@ function CpuRateLimit {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Name "CpuRateLimit" -Type DWord -Value 100 -Force
 }
 
+# Disable notify on weak charger
+function DisableNotifyOnWeakCharger {
+	New-Item -Path "HKCU:\Software\Microsoft\Shell\USB" -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Shell\USB" -Name "NotifyOnUsbErrors" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Shell\USB" -Name "NotifyOnWeakCharger" -Type DWord -Value 0 -Force
+}
+
 # Compress disk os wide
 function CompressDiskOSWide {
 	Compact.exe /CompactOS:always
