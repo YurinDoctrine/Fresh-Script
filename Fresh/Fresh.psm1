@@ -1088,6 +1088,14 @@ function MinMaxCloseWindowButton {
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name CaptionWidth -PropertyType String -Value -290 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name CaptionHeight -PropertyType String -Value -290 -Force
 }
+
+# Turn off action center
+function TurnOffActionCenter {
+	Stop-Service "WpnUserService" -Force -WarningAction SilentlyContinue
+	Set-Service "WpnUserService" -StartupType Disabled
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableNotificationCenter" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "ToastEnabled" -PropertyType DWord -Value 1 -Force
+}
 #endregion UI & Personalization
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
@@ -1495,8 +1503,12 @@ function EnableStorageSense {
 	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense" -ItemType Directory -Force
 	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01 -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 04 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 04 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 01 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 2048 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 08 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 256 -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy -Name 32 -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense" -Name AllowStorageSenseGlobal -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\StorageSense" -Name AllowStorageSenseTemporaryFilesCleanup -PropertyType DWord -Value 1 -Force
 }
@@ -1504,6 +1516,7 @@ function EnableStorageSense {
 # Disable hibernation if the device is not a laptop
 # Отключить режим гибернации, если устройство не является ноутбуком
 function DisableHibernate {
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Power -Name HibernateEnabled -PropertyType DWord -Value 0 -Force
 	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2) {
 		POWERCFG /HIBERNATE OFF
 	}
@@ -1923,14 +1936,6 @@ function DisableAutoUpdateDriver {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUOptions" -Type DWord -Value 3 -Force
 }
 
-# Turn off action center
-function TurnOffActionCenter {
-	Stop-Service "WpnUserService" -Force -WarningAction SilentlyContinue
-	Set-Service "WpnUserService" -StartupType Disabled
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableNotificationCenter" -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "ToastEnabled" -PropertyType DWord -Value 1 -Force
-}
-
 # SvcHost split threshold in KB
 function SvcHostSplitThresholdInKB {
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 34537040 -Force
@@ -2075,6 +2080,12 @@ function DisableSystemEnergySaving {
 # Disable hiberboot
 function DisableHiberboot {
 	Remove-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Force
+}
+
+# Disable warning sounds 
+function DisableWarningSounds {
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Sound on Activation" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Warning Sounds" -PropertyType DWord -Value 0 -Force
 }
 #endregion System
 #region Gaming
@@ -2872,6 +2883,8 @@ function DebloatMicrosoftServices {
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
 	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "winmgmt" -Force -WarningAction SilentlyContinue
+	Set-Service winmgmt -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WinRM" -Force -WarningAction SilentlyContinue
 	Set-Service WinRM -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
@@ -3066,6 +3079,7 @@ function DisableSearchHistory {
 		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
 	}
 	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Name "IsDeviceSearchHistoryEnabled" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
 }
 
 # Compress disk os wide

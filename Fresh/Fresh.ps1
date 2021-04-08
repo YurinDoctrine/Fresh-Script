@@ -438,6 +438,9 @@ SmallTaskbarIcons
 
 # Smaller min max close window button
 MinMaxCloseWindowButton
+
+# Turn off action center
+TurnOffActionCenter
 #endregion UI & Personalization
 #region Context menu
 # Add the "Extract all" item to Windows Installer (.msi) context menu
@@ -771,9 +774,6 @@ Therefore Windows update will repeatedly try and fail to install I219-V driver i
 #>
 DisableAutoUpdateDriver
 
-# Turn off action center
-TurnOffActionCenter
-
 # SvcHost split threshold in KB
 SvcHostSplitThresholdInKB
 
@@ -833,6 +833,9 @@ DisableSystemEnergySaving
 
 # Disable hiberboot
 DisableHiberboot
+
+# Disable warning sounds 
+DisableWarningSounds
 #endregion System
 #region Gaming
 # Turn off Xbox Game Bar tips
