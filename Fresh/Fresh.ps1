@@ -1179,9 +1179,6 @@ DisableWPPSoftwareTracingLogs
 # Cpu rate limit
 CpuRateLimit
 
-# Disable notify on weak charger
-DisableNotifyOnWeakCharger
-
 # Compress disk os wide
 CompressDiskOSWide
 #endregion Performance
