@@ -2783,10 +2783,16 @@ function DebloatMicrosoftServices {
 	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
 	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CDPSvc" -Force -WarningAction SilentlyContinue
+	Set-Service CDPSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CDPUserSvc" -Force -WarningAction SilentlyContinue
+	Set-Service CDPUserSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TermService" -Force -WarningAction SilentlyContinue
+	Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
 	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
@@ -2867,6 +2873,8 @@ function DebloatMicrosoftServices {
 	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
 	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
+	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
 	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
