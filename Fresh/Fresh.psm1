@@ -3090,6 +3090,7 @@ function DisableSearchHistory {
 
 # Compress disk os wide
 function CompressDiskOSWide {
+	fsutil behavior set disablecompression 0
 	Compact.exe /CompactOS:always
 	Compact.exe /CompactOS:query
 }
