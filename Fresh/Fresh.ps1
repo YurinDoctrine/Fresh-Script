@@ -595,6 +595,10 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion Chocolatey
 #region Gaming
 # Turn off Xbox Game Bar tips
 # Отключить советы Xbox Game Bar
@@ -1176,15 +1180,8 @@ CpuRateLimit
 # Disable search history 
 DisableSearchHistory
 
-# Compress disk os wide
-CompressDiskOSWide
-
 # Run dism
 RunDISM
 #endregion Performance
-#region Chocolatey
-# Install Chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion Chocolatey
 
 Errors
