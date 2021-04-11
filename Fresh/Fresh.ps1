@@ -1180,6 +1180,9 @@ CpuRateLimit
 # Disable search history 
 DisableSearchHistory
 
+# Thread priority 
+ThreadPriority
+
 # Disable compression
 DisableCompression
 
