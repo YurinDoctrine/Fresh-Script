@@ -1479,10 +1479,10 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 40 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 64 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 30 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 48 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 48 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name SynAttackProtect -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableDca -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPMaxDataRetransmissions -PropertyType DWord -Value 7 -Force
