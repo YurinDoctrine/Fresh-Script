@@ -1184,6 +1184,9 @@ DisableSearchHistory
 
 # Compress disk os wide
 CompressDiskOSWide
+
+# Run dism
+RunDISM
 #endregion Performance
 #region Chocolatey
 # Install Chocolatey package manager and pre-installs as well
