@@ -1110,9 +1110,6 @@ DisableLastAccess
 # Set memory usage
 SetMemoryUsage
 
-# Disable encrypt paging file
-DisableEncryptPagingFile
-
 # Disable boot logging
 DisableBootLogging
 
@@ -1151,9 +1148,6 @@ DynamicBacklogGrowthDelta
 
 # Increase mft zone
 IncreaseMFTZone
-
-# Set symbolic links
-SetSymbolicLinks
 
 # Enable memory allocation in graphics driver
 EnableMemoryAllocationInGraphicsDriver

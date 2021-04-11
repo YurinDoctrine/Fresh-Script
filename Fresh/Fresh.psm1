@@ -2929,12 +2929,7 @@ function DisableLastAccess {
 
 # Set memory usage
 function SetMemoryUsage {
-	fsutil behavior set memoryusage 2
-}
-
-# Disable encrypt paging file
-function DisableEncryptPagingFile {
-	fsutil behavior set encryptpagingfile 0
+	fsutil behavior set memoryusage 1
 }
 
 # Disable boot logging
@@ -3007,14 +3002,6 @@ function DynamicBacklogGrowthDelta {
 # Increase mft zone
 function IncreaseMFTZone {
 	fsutil behavior set mftzone 2
-}
-
-# Set symbolic links
-function SetSymbolicLinks {
-	fsutil behavior set SymlinkEvaluation R2R:1
-	fsutil behavior set SymlinkEvaluation L2L:1
-	fsutil behavior set SymlinkEvaluation L2R:1
-	fsutil behavior set SymlinkEvaluation R2L:1
 }
 
 # Enable memory allocation in graphics driver
