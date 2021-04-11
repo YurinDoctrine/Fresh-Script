@@ -3077,7 +3077,7 @@ function DisableSearchHistory {
 	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
 }
 
-# DisableCompression
+# Disable compression
 function DisableCompression {
 	fsutil behavior set disablecompression 1
 }

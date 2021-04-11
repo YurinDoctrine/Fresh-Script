@@ -1180,7 +1180,7 @@ CpuRateLimit
 # Disable search history 
 DisableSearchHistory
 
-# DisableCompression
+# Disable compression
 DisableCompression
 
 # Run dism
