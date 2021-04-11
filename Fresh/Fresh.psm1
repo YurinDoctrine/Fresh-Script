@@ -3077,6 +3077,11 @@ function DisableSearchHistory {
 	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
 }
 
+# DisableCompression
+function DisableCompression {
+	fsutil behavior set disablecompression 1
+}
+
 # Run dism
 function RunDISM {
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth

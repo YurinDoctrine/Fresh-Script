@@ -1180,6 +1180,9 @@ CpuRateLimit
 # Disable search history 
 DisableSearchHistory
 
+# DisableCompression
+DisableCompression
+
 # Run dism
 RunDISM
 #endregion Performance
