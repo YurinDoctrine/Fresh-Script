@@ -2789,6 +2789,8 @@ function DebloatMicrosoftServices {
 	Set-Service CDPUserSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
+	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TermService" -Force -WarningAction SilentlyContinue
