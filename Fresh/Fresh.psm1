@@ -1407,6 +1407,372 @@ function EnablePreviousVersionsPage {
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
 }
 #endregion Context menu
+#region Gaming
+# Turn off Xbox Game Bar
+# Отключить Xbox Game Bar
+function DisableXboxGameBar {
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR")) {
+		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Force
+	}
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -PropertyType DWord -Value 0 -Force
+}
+
+# Turn off Xbox Game Bar tips
+# Отключить советы Xbox Game Bar
+function DisableXboxGameTips {
+	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\GameBar")) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\GameBar -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
+}
+
+# Turn on Xbox Game Bar tips
+# Включить советы Xbox Game Bar
+function EnableXboxGameTips {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
+}
+
+# Adjust best performance for all programs and also foreground services
+function BestPriorityForeground {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 26 -Force
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseHoverTime -PropertyType String -Value 8 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" -Name CursorUpdateInterval -PropertyType DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\AppEvents\Schemes")) {
+		New-Item -Path "HKCU:\AppEvents\Schemes" -Force
+	}	
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 3 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 10 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "GPU Priority" -PropertyType DWord -Value 8 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name Priority -PropertyType DWord -Value 6 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 40 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 30 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name SynAttackProtect -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableDca -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPMaxDataRetransmissions -PropertyType DWord -Value 7 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUDiscovery -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUBHDetect -PropertyType DWord -Value 0 -Force
+
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Background Only" -PropertyType String -Value "False" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Latency Sensitive" -PropertyType String -Value "True" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Affinity" -PropertyType DWord -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name Priority -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "GPU Priority" -PropertyType DWord -Value 2 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name WaitToKillServiceTimeout -PropertyType DWord -Value 1000 -Force
+
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
+
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS")) {
+		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
+
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\MouseKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Type "STRING" -Value "0" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
+}
+
+# Disable mouse feedback
+function DisableMouseFeedback {
+	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name ContactVisualization -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name GestureVisualization -PropertyType DWord -Value 0 -Force
+}
+
+# Enable full-screen optimization
+function EnableFullScreenOptimization {
+	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
+		New-Item -Force "HKCU:\System\GameConfigStore"
+	}
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DSEBehavior" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 1 -Force
+}
+#endregion Gaming
+#region Microsoft Defender & Security
+# Turn on Microsoft Defender Exploit Guard network protection
+# Включить защиту сети в Microsoft Defender Exploit Guard
+function EnableNetworkProtection {
+	Set-MpPreference -EnableNetworkProtection Enabled
+}
+
+# Turn off Microsoft Defender Exploit Guard network protection
+# Выключить защиту сети в Microsoft Defender Exploit Guard
+function DisableNetworkProtection {
+	Set-MpPreference -EnableNetworkProtection Disabled
+}
+
+# Turn on detection for potentially unwanted applications and block them
+# Включить обнаружение потенциально нежелательных приложений и блокировать их
+function EnablePUAppsDetection {
+	Set-MpPreference -PUAProtection Enabled
+}
+
+# Turn off detection for potentially unwanted applications and block them
+# Выключить обнаружение потенциально нежелательных приложений и блокировать их
+function DisabledPUAppsDetection {
+	Set-MpPreference -PUAProtection Disabled
+}
+
+# Run Microsoft Defender within a sandbox
+# Запускать Microsoft Defender в песочнице
+function EnableDefenderSandbox {
+	setx /M MP_FORCE_USE_SANDBOX 1
+}
+
+# Do not run Microsoft Defender within a sandbox
+# Не запускать Microsoft Defender в песочнице
+function DisableDefenderSandbox {
+	setx /M MP_FORCE_USE_SANDBOX 0
+}
+
+# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
+function DismissMSAccount {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AccountProtection_MicrosoftAccount_Disconnected -PropertyType DWord -Value 1 -Force
+}
+
+# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
+function DismissSmartScreenFilter {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Type DWord -Value 0 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force
+	}
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name EnableWebContentEvaluation -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name PreventOverride -Type DWord -Value 0 -Force
+}
+
+<#
+	Include command line in process creation events
+	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
+
+	Включать командную строку в событиях создания процесса
+	Необходимо включить аудит событий, чтобы работал данный функционал (функция "EnableAuditProcess")
+#>
+function EnableAuditProcess {
+	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
+}
+
+# Turn off events auditing generated when a process is created or starts
+# Выключить аудит событий, возникающих при создании или запуске процесса
+function DisableAuditProcess {
+	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:disable /failure:disable
+}
+
+# Turn on events auditing generated when a process is created or starts
+# Включить аудит событий, возникающих при создании или запуске процесса
+function EnableAuditCommandLineProcess {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Do not include command line in process creation events
+# Не включать командную строку в событиях создания процесса
+function DisableAuditCommandLineProcess {
+	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
+		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
+	} 
+}
+
+# Do not check apps and files within Microsoft Defender SmartScreen
+# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+function DisableAppsSmartScreen {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Off -Force
+}
+
+# Check apps and files within Microsoft Defender SmartScreen
+# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+function EnableAppsSmartScreen {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Warn -Force
+}
+
+# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
+# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
+function DisableSaveZoneInformation {
+	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -PropertyType DWord -Value 1 -Force
+}
+
+# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
+# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
+function EnableSaveZoneInformation {
+	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -Force -ErrorAction SilentlyContinue
+}
+
+# Disable activity history
+function DisableActivityHistory {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableActivityFeed -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name PublishUserActivities -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name UploadUserActivities -Type DWord -Value 0 -Force
+}
+
+# Disable automatic map updates
+function DisableMapUpdates {
+	New-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0 -Force
+}
+
+# Disable wap push service
+function DisableWAPPush {
+	Stop-Service "dmwappushservice" -Force -WarningAction SilentlyContinue
+	Set-Service "dmwappushservice" -StartupType Disabled
+}
+
+# Enable strong cryptography for .NET Framework(version 4 and above)
+function EnableDotNetStrongCrypto {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1")) {
+		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000")) {
+		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+}
+
+<#
+Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
+This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
+Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
+#>
+function EnableMeltdownCompatFlag {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -Type DWord -Value 0 -Force
+}
+
+# Disable password complexity and maximum age requirements
+function DisablePasswordPolicy {
+	$tmpfile = New-TemporaryFile
+	secedit /export /cfg $tmpfile /quiet
+	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
+	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
+	Remove-Item -Path $tmpfile
+}
+
+# Schedule automatic maintenance hours
+function AutomaticMaintenanceHours {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name "Activation Boundary" -Type String -Value "2001-01-01T11:00:00" -Force
+}
+
+# Turn on memory integry(virtualization based security)
+function TurnOnMemoryIntegry {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Disable implicit administrative shares
+function DisableAdminShares {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "AutoShareWks" -PropertyType DWord -Value 0 -Force
+}
+
+# Disable obsolete SMB protocol(disabled by default since 1709)
+function DisableSMB {
+	Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+	Set-SmbServerConfiguration -EnableSMB2Protocol $false -Force
+}
+
+# Disable link-local multicast name resolution(LLMNR) protocol
+function DisableLLMNR {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -PropertyType DWord -Value 0 -Force
+}
+
+# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
+function SetUnknownNetworksPublic {
+	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24")) {
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" -Name "Category" -ErrorAction SilentlyContinue
+	}
+}
+
+# Disable automatic installation of network devices
+function DisableNetDevicesAutoInst {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
+}
+
+# Hide tray icon
+function HideTrayIcon {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1 -Force
+}
+
+# Disable defender cloud
+function DisableDefenderCloud {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SpynetReporting" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
+}
+
+# Disable ntfs refs mitigations
+function DisableNTFSREFSMitigations {
+	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name "ProtectionMode" -Type DWord -Value 0 -Force
+}
+#endregion Microsoft Defender & Security
 #region System
 # Uninstall OneDrive
 # Удалить OneDrive
@@ -2088,372 +2454,6 @@ function DisableWarningSounds {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Warning Sounds" -PropertyType DWord -Value 0 -Force
 }
 #endregion System
-#region Gaming
-# Turn off Xbox Game Bar
-# Отключить Xbox Game Bar
-function DisableXboxGameBar {
-	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Force
-	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -PropertyType DWord -Value 0 -Force
-}
-
-# Turn off Xbox Game Bar tips
-# Отключить советы Xbox Game Bar
-function DisableXboxGameTips {
-	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\GameBar")) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\GameBar -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
-}
-
-# Turn on Xbox Game Bar tips
-# Включить советы Xbox Game Bar
-function EnableXboxGameTips {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 1 -Force
-}
-
-# Adjust best performance for all programs and also foreground services
-function BestPriorityForeground {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 26 -Force
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseHoverTime -PropertyType String -Value 8 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" -Name CursorUpdateInterval -PropertyType DWord -Value 1 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
-	if (!(Test-Path "HKCU:\AppEvents\Schemes")) {
-		New-Item -Path "HKCU:\AppEvents\Schemes" -Force
-	}	
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 3 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 10 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "GPU Priority" -PropertyType DWord -Value 8 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name Priority -PropertyType DWord -Value 6 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpAckFrequency -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpDelAckTicks -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name DefaultTTL -PropertyType DWord -Value 40 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name Tcp1323Opts -PropertyType DWord -Value 30 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name SynAttackProtect -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnableDca -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name TCPMaxDataRetransmissions -PropertyType DWord -Value 7 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUDiscovery -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Services\Tcpip\Parameters\Interfaces" -Name EnablePMTUBHDetect -PropertyType DWord -Value 0 -Force
-
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Background Only" -PropertyType String -Value "False" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Latency Sensitive" -PropertyType String -Value "True" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Affinity" -PropertyType DWord -Value "0" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name Priority -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Low Latency" -Name "GPU Priority" -PropertyType DWord -Value 2 -Force
-	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name WaitToKillServiceTimeout -PropertyType DWord -Value 1000 -Force
-
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters" -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSMQ\Parameters -Name TCPNoDelay -PropertyType DWord -Value 1 -Force
-
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS")) {
-		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS"
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Tcp Autotuning Level" -Type "STRING" -Value "Experimental" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\QoS" -Name "Application DSCP Marking Request" -Type "STRING" -Value "Allowed" -Force
-
-	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\MouseKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Type "STRING" -Value "0" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
-}
-
-# Disable mouse feedback
-function DisableMouseFeedback {
-	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name ContactVisualization -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Cursors" -Name GestureVisualization -PropertyType DWord -Value 0 -Force
-}
-
-# Enable full-screen optimization
-function EnableFullScreenOptimization {
-	if (!(Test-Path "HKCU:\System\GameConfigStore")) {
-		New-Item -Force "HKCU:\System\GameConfigStore"
-	}
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DSEBehavior" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 1 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 1 -Force
-}
-#endregion Gaming
-#region Microsoft Defender & Security
-# Turn on Microsoft Defender Exploit Guard network protection
-# Включить защиту сети в Microsoft Defender Exploit Guard
-function EnableNetworkProtection {
-	Set-MpPreference -EnableNetworkProtection Enabled
-}
-
-# Turn off Microsoft Defender Exploit Guard network protection
-# Выключить защиту сети в Microsoft Defender Exploit Guard
-function DisableNetworkProtection {
-	Set-MpPreference -EnableNetworkProtection Disabled
-}
-
-# Turn on detection for potentially unwanted applications and block them
-# Включить обнаружение потенциально нежелательных приложений и блокировать их
-function EnablePUAppsDetection {
-	Set-MpPreference -PUAProtection Enabled
-}
-
-# Turn off detection for potentially unwanted applications and block them
-# Выключить обнаружение потенциально нежелательных приложений и блокировать их
-function DisabledPUAppsDetection {
-	Set-MpPreference -PUAProtection Disabled
-}
-
-# Run Microsoft Defender within a sandbox
-# Запускать Microsoft Defender в песочнице
-function EnableDefenderSandbox {
-	setx /M MP_FORCE_USE_SANDBOX 1
-}
-
-# Do not run Microsoft Defender within a sandbox
-# Не запускать Microsoft Defender в песочнице
-function DisableDefenderSandbox {
-	setx /M MP_FORCE_USE_SANDBOX 0
-}
-
-# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
-function DismissMSAccount {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AccountProtection_MicrosoftAccount_Disconnected -PropertyType DWord -Value 1 -Force
-}
-
-# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
-function DismissSmartScreenFilter {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Type DWord -Value 0 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")) {
-		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force
-	}
-	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name EnableWebContentEvaluation -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name PreventOverride -Type DWord -Value 0 -Force
-}
-
-<#
-	Include command line in process creation events
-	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
-
-	Включать командную строку в событиях создания процесса
-	Необходимо включить аудит событий, чтобы работал данный функционал (функция "EnableAuditProcess")
-#>
-function EnableAuditProcess {
-	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
-}
-
-# Turn off events auditing generated when a process is created or starts
-# Выключить аудит событий, возникающих при создании или запуске процесса
-function DisableAuditProcess {
-	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:disable /failure:disable
-}
-
-# Turn on events auditing generated when a process is created or starts
-# Включить аудит событий, возникающих при создании или запуске процесса
-function EnableAuditCommandLineProcess {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Do not include command line in process creation events
-# Не включать командную строку в событиях создания процесса
-function DisableAuditCommandLineProcess {
-	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
-		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
-	} 
-}
-
-# Do not check apps and files within Microsoft Defender SmartScreen
-# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-function DisableAppsSmartScreen {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Off -Force
-}
-
-# Check apps and files within Microsoft Defender SmartScreen
-# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-function EnableAppsSmartScreen {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Warn -Force
-}
-
-# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
-# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
-function DisableSaveZoneInformation {
-	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -PropertyType DWord -Value 1 -Force
-}
-
-# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
-# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
-function EnableSaveZoneInformation {
-	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -Force -ErrorAction SilentlyContinue
-}
-
-# Disable activity history
-function DisableActivityHistory {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableActivityFeed -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name PublishUserActivities -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name UploadUserActivities -Type DWord -Value 0 -Force
-}
-
-# Disable automatic map updates
-function DisableMapUpdates {
-	New-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0 -Force
-}
-
-# Disable wap push service
-function DisableWAPPush {
-	Stop-Service "dmwappushservice" -Force -WarningAction SilentlyContinue
-	Set-Service "dmwappushservice" -StartupType Disabled
-}
-
-# Enable strong cryptography for .NET Framework(version 4 and above)
-function EnableDotNetStrongCrypto {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1")) {
-		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000")) {
-		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-}
-
-<#
-Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
-This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
-Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
-#>
-function EnableMeltdownCompatFlag {
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -Type DWord -Value 0 -Force
-}
-
-# Disable password complexity and maximum age requirements
-function DisablePasswordPolicy {
-	$tmpfile = New-TemporaryFile
-	secedit /export /cfg $tmpfile /quiet
-	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
-	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
-	Remove-Item -Path $tmpfile
-}
-
-# Schedule automatic maintenance hours
-function AutomaticMaintenanceHours {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name "Activation Boundary" -Type String -Value "2001-01-01T11:00:00" -Force
-}
-
-# Turn on memory integry(virtualization based security)
-function TurnOnMemoryIntegry {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Disable implicit administrative shares
-function DisableAdminShares {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "AutoShareWks" -PropertyType DWord -Value 0 -Force
-}
-
-# Disable obsolete SMB protocol(disabled by default since 1709)
-function DisableSMB {
-	Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
-	Set-SmbServerConfiguration -EnableSMB2Protocol $false -Force
-}
-
-# Disable link-local multicast name resolution(LLMNR) protocol
-function DisableLLMNR {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -PropertyType DWord -Value 0 -Force
-}
-
-# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
-function SetUnknownNetworksPublic {
-	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24")) {
-		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" -Name "Category" -ErrorAction SilentlyContinue
-	}
-}
-
-# Disable automatic installation of network devices
-function DisableNetDevicesAutoInst {
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
-}
-
-# Hide tray icon
-function HideTrayIcon {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1 -Force
-}
-
-# Disable defender cloud
-function DisableDefenderCloud {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SpynetReporting" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
-}
-
-# Disable ntfs refs mitigations
-function DisableNTFSREFSMitigations {
-	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name "ProtectionMode" -Type DWord -Value 0 -Force
-}
-#endregion Microsoft Defender & Security
 #region O&OShutup
 function OOShutup {
 	Write-Warning -Message $Localization.OOShutup
@@ -2817,8 +2817,6 @@ function DebloatMicrosoftServices {
 	Set-Service NcbService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PhoneSvc" -Force -WarningAction SilentlyContinue
 	Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "FontCache" -Force -WarningAction SilentlyContinue
-	Set-Service FontCache -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
 	Set-Service Spooler -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PrintNotify" -Force -WarningAction SilentlyContinue
@@ -2873,8 +2871,6 @@ function DebloatMicrosoftServices {
 	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
 	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
-	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
 	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
@@ -3093,6 +3089,11 @@ function CompressDiskOSWide {
 	fsutil behavior set disablecompression 0
 	Compact.exe /CompactOS:always
 	Compact.exe /CompactOS:query
+}
+
+# Run dism
+function RunDISM {
+	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 }
 #endregion Performance
 #region Chocolatey
