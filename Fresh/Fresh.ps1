@@ -1178,12 +1178,6 @@ DisableSearchHistory
 
 # Thread priority 
 ThreadPriority
-
-# Disable compression
-DisableCompression
-
-# Run dism
-RunDISM
 #endregion Performance
 #region Chocolatey
 # Install Chocolatey package manager and pre-installs as well

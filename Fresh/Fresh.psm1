@@ -24,6 +24,11 @@ function Check {
 			Set-MpPreference -EnableControlledFolderAccess Disabled
 		}
 	}
+	
+	# Disable compression
+	fsutil behavior set disablecompression 1
+	Compact.exe /CompactOS:never
+	Compact.exe /CompactOS:query
 
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535
@@ -34,7 +39,10 @@ function Check {
 
 	# Reset Windows store cache
 	WSreset.exe
-
+	
+	# Run DISM
+	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
+	
 	# Run SFC system file repair
 	sfc.exe /scannow
 }
@@ -3099,18 +3107,6 @@ function ThreadPriority {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
-}
-
-# Disable compression
-function DisableCompression {
-	fsutil behavior set disablecompression 1
-	Compact.exe /CompactOS:never
-	Compact.exe /CompactOS:query
-}
-
-# Run dism
-function RunDISM {
-	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 }
 #endregion Performance
 #region Chocolatey
