@@ -1469,7 +1469,7 @@ function BestPriorityForeground {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
 	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 100 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name LazyModeTimeout -PropertyType DWord -Value 10000 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "GPU Priority" -PropertyType DWord -Value 8 -Force
@@ -2786,6 +2786,7 @@ function DebloatMicrosoftServices {
 	Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
 	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
@@ -2798,7 +2799,6 @@ function DebloatMicrosoftServices {
 	Set-Service CDPUserSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
