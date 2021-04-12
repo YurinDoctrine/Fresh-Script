@@ -595,10 +595,6 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
-#region Chocolatey
-# Install Chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion Chocolatey
 #region Gaming
 # Turn off Xbox Game Bar tips
 # Отключить советы Xbox Game Bar
@@ -617,6 +613,9 @@ DisableMouseFeedback
 # Enable full-screen optimization
 EnableFullScreenOptimization
 #endregion Gaming
+#region O&OShutup
+OOShutup
+#endregion O&OShutup
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -981,9 +980,6 @@ DisableHiberboot
 # Disable warning sounds 
 DisableWarningSounds
 #endregion System
-#region O&OShutup
-OOShutup
-#endregion O&OShutup
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
@@ -1189,5 +1185,8 @@ DisableCompression
 # Run dism
 RunDISM
 #endregion Performance
-
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion Chocolatey
 Errors
