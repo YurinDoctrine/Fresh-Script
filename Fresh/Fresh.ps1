@@ -146,34 +146,6 @@ DisableFindMyDevice
 # Disable apps suggestions, tips, welcome experience
 DisableAppsSuggestionsTipsWelcomeExperience
 #endregion Privacy & Telemetry
-#region UWP apps
-<#
-	Uninstall UWP apps
-	A dialog box that enables the user to select packages to remove
-	App packages will not be installed for new users if "Uninstall for All Users" is checked
-
-	Удалить UWP-приложения
-	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
-	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
-#>
-UninstallUWPApps
-
-# Do not let UWP apps run in the background, except the followings... (current user only)
-# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
-DisableBackgroundUWPApps
-
-# Disable the following Windows features
-# Отключить следующие компоненты Windows
-DisableWindowsFeatures
-
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-DisableWindowsCapabilities
-
-# Turn off Cortana autostarting
-# Удалить Кортана из автозагрузки
-DisableCortanaAutostart
-#endregion UWP apps
 #region Start menu
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
@@ -738,6 +710,34 @@ DisableDefenderCloud
 # Disable ntfs refs mitigations
 DisableNTFSREFSMitigations
 #endregion Microsoft Defender & Security
+#region UWP apps
+<#
+	Uninstall UWP apps
+	A dialog box that enables the user to select packages to remove
+	App packages will not be installed for new users if "Uninstall for All Users" is checked
+
+	Удалить UWP-приложения
+	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
+	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
+#>
+UninstallUWPApps
+
+# Do not let UWP apps run in the background, except the followings... (current user only)
+# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
+DisableBackgroundUWPApps
+
+# Disable the following Windows features
+# Отключить следующие компоненты Windows
+DisableWindowsFeatures
+
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+DisableWindowsCapabilities
+
+# Turn off Cortana autostarting
+# Удалить Кортана из автозагрузки
+DisableCortanaAutostart
+#endregion UWP apps
 #region System
 # Uninstall OneDrive
 # Удалить OneDrive
