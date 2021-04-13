@@ -2788,6 +2788,7 @@ function DebloatMicrosoftServices {
 	Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
 	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "Ndu" -Force -WarningAction SilentlyContinue
 	Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
@@ -2801,6 +2802,7 @@ function DebloatMicrosoftServices {
 	Set-Service CDPUserSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
