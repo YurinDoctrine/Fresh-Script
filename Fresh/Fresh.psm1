@@ -2718,7 +2718,7 @@ function EnablePrefetcher {
 # Wait to kill service timeout
 function WaitToKillServiceTimeout1 {
 	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control")) {
-	New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
+		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
 	}
 	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
 	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
@@ -2727,7 +2727,7 @@ function WaitToKillServiceTimeout1 {
 # Disable paging executive
 function DisablePagingExecutive1 {
 	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management")) {
-	New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Force
+		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Force
 	}
 	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
