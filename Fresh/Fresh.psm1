@@ -2767,8 +2767,8 @@ function NonBestEffortLimit {
 
 # Double click height width
 function DoubleClickHeightWidth {
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickHeight -PropertyType String -Value "30" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "30" -Force	
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickHeight -PropertyType String -Value "6" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "6" -Force	
 }
 
 # ValueMax
