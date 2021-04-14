@@ -2788,7 +2788,6 @@ function DebloatMicrosoftServices {
 	Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
 	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "Ndu" -Force -WarningAction SilentlyContinue
 	Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
