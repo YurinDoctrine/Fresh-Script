@@ -25,20 +25,20 @@ function Check {
 		}
 	}
 
+	# Run DISM
+	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
+
 	# Reset Windows store cache
 	WSreset.exe
 
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
 
-	# Disable compression
-	fsutil behavior set disablecompression 1; Compact.exe /CompactOS:never; Compact.exe /CompactOS:query
-
 	# Flush DNS resolver cache
 	ipconfig /flushdns
 
-	# Run SFC system file repair
-	sfc.exe /scannow
+	# Disable compression
+	fsutil behavior set disablecompression 1; Compact.exe /CompactOS:never; Compact.exe /CompactOS:query
 }
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
@@ -3124,8 +3124,8 @@ function ChocolateyPackageManager {
 #endregion Chocolatey
 function Errors {
 
-	# Run DISM
-	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
+	# Run SFC system file repair
+	sfc.exe /scannow
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
