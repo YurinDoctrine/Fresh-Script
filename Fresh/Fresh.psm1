@@ -24,22 +24,19 @@ function Check {
 			Set-MpPreference -EnableControlledFolderAccess Disabled
 		}
 	}
-	
-	# Disable compression
-	fsutil behavior set disablecompression 1
-	Compact.exe /CompactOS:never
-	Compact.exe /CompactOS:query
+
+	# Reset Windows store cache
+	WSreset.exe
 
 	# Run Disk cleanup utility
-	cleanmgr.exe /sageset:65535
-	cleanmgr.exe /sagerun:65535
+	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
+
+	# Disable compression
+	fsutil behavior set disablecompression 1; Compact.exe /CompactOS:never; Compact.exe /CompactOS:query
 
 	# Flush DNS resolver cache
 	ipconfig /flushdns
 
-	# Reset Windows store cache
-	WSreset.exe
-	
 	# Run SFC system file repair
 	sfc.exe /scannow
 }
@@ -1795,6 +1792,649 @@ function DisableCortanaAutostart {
 	}
 }
 #endregion UWP apps
+#region Performance
+# Adjust best performance(that would able to increase the overall performance)
+function AdjustBestPerformance {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name ActiveWndTrackTimeout -PropertyType String -Value 10 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MouseWheelRouting -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name FontSmoothing -PropertyType String -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 8 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -PropertyType Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name AutoColorization -PropertyType String -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name KeyboardDelay -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name "Browse For Folder Width" -PropertyType DWord -Value 258 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name "Browse For Folder Height" -PropertyType DWord -Value 320 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name FirstRunTelemetryComplete -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name DesktopReadyTimeout -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name ExplorerStartupTraceRecorded -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name TelemetrySalt -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewAlphaSelect -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisableThumbnailCache -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisallowShaking -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTimes -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTime -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisableThumbsDBOnNetworkFolders -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name EnableBalloonTips -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name SharingWizardOn -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name StartButtonBalloonTip -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowInfoTip -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowTaskViewButton -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name "Start_ShowRun" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AlwaysHibernateThumbnails -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableWindowColorization -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name ColorPrevalence -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name DWMWA_TRANSITIONS_FORCEDISABLED -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name DisallowAnimations -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Privacy")) {
+		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Privacy -Force
+	}
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Privacy -Name Favorites -PropertyType DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\Shell\NoRoam")) {
+		New-Item -Path HKCU:\Software\Microsoft\Windows\Shell\NoRoam -Force
+	}
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\Shell\BagMRU -Name "BagMRU Size" -PropertyType DWord -Value 250 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\Shell\NoRoam -Name "BagMRU Size" -PropertyType DWord -Value 250 -Force
+}
+
+# Prevent battery saver
+function PreventBatterySaver {
+	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBATTTHRESHOLD 0
+	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBRIGHTNESS 100 
+}
+
+# Disable default disk defragmenter
+function DisableDefaultDiskDefragmenter {
+	Stop-Service "defragsvc" -Force -WarningAction SilentlyContinue
+	Set-Service "defragsvc" -StartupType Disabled -ErrorAction SilentlyContinue
+	Disable-ScheduledTask -TaskName 'ScheduledDefrag' -TaskPath '\Microsoft\Windows\Defrag'
+}
+
+# Let personalize power plan
+function LetPersonalizePowerPlan {
+	powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
+	powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 3
+	powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 3
+	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 637ea02f-bbcb-4015-8e2c-a1c7b9c0b546 0
+	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 637ea02f-bbcb-4015-8e2c-a1c7b9c0b546 1
+	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469 8
+	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469 8
+	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f d8742dcb-3e6a-4b3c-b3fe-374623cdcf06 0
+	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f d8742dcb-3e6a-4b3c-b3fe-374623cdcf06 0
+	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
+	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
+	powercfg -setacvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
+	powercfg -setacvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 0
+	powercfg -setacvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0
+	powercfg -setacvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
+	powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
+	powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
+	powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
+	powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+	powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
+}
+
+# Prevent require sign-in when after sleep
+function PreventRequireSignInWhenAfterSleep {
+	powercfg -setacvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
+	powercfg -setdcvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
+	powercfg /setactive SCHEME_CURRENT
+}
+# Disable indexing
+function DisableIndexing {
+	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
+	$Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
+	Stop-Service "WSearch" -Force -WarningAction SilentlyContinue
+	Set-Service "WSearch" -StartupType Disabled -ErrorAction SilentlyContinue
+	if ($DriveLetters.Count -notmatch 2) {
+		if (($Object.IndexingEnabled -match $True)) {
+			Write-Output "Disabling indexing of drive C:"
+			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
+		}
+		else {
+			Write-Output "Indexing already disabled. SKIPPING..."
+		}
+	}
+    
+	if ($DriveLetters.Count -notmatch 3) {
+		if (($Object.IndexingEnabled -match $True)) {
+			Write-Output "Disabling indexing of drive C:"
+			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
+		}
+		else {
+			Write-Output "Indexing already disabled. SKIPPING..."
+		}
+	}
+
+	else {
+		Write-Output "Unable to find the right option. SKIPPING..."
+	}
+}
+
+# Set current boot timeout value to 0
+function SetBootTimeoutValue {
+	bcdedit /timeout 0
+}
+
+# Ntfs allow extended character 8dot3 rename
+function NtfsAllowExtendedCharacter8dot3Rename {
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 1 -Force
+}
+
+# Ntfs disable 8dot3 name creation
+function NtfsDisable8dot3NameCreation {
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
+	fsutil behavior set disable8dot3 1
+}
+
+# Auto end tasks
+function AutoEndTasks {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "AutoEndTasks" -PropertyType String -Value "1" -Force
+}
+
+# Hung app timeout
+function HungAppTimeout {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -PropertyType String -Value "2000" -Force
+}
+
+# Wait to kill app timeout
+function WaitToKillAppTimeout {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -PropertyType String -Value "2000" -Force
+}
+
+# Low-level hooks timeout
+function LowLevelHooksTimeout {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "LowLevelHooksTimeout" -PropertyType String -Value "1000" -Force
+}
+
+# Foreground lock timeout
+function ForegroundLockTimeout {
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "ForegroundLockTimeout" -PropertyType String -Value "0" -Force
+}
+
+# No low disk space checks
+function NoLowDiskSpaceChecks {
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
+		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Force
+	}
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 1 -Force
+}
+
+# Link resolve ignore link info
+function LinkResolveIgnoreLinkInfo {
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "LinkResolveIgnoreLinkInfo" -PropertyType DWord -Value 1 -Force
+}
+
+# No resolve search
+function NoResolveSearch {
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveSearch" -PropertyType DWord -Value 1 -Force
+}
+
+# No resolve track
+function NoResolveTrack {
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveTrack" -PropertyType DWord -Value 1 -Force
+}
+
+# No internet open with
+function NoInternetOpenWith {
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoInternetOpenWith" -PropertyType DWord -Value 1 -Force
+}
+
+# Wait to kill service timeout
+function WaitToKillServiceTimeout {
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
+}
+
+# Disable paging executive
+function DisablePagingExecutive {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
+}
+
+# Large system cache
+function LargeSystemCache {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "LargeSystemCache" -PropertyType DWord -Value 1 -Force
+}
+
+# IO page lock limit
+function IoPageLockLimit {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 983040 -Force
+}
+
+# Paging files
+function PagingFiles {
+	$Value = "00,00"
+	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
+	
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "PagingFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingCombining" -PropertyType DWord -Value 1 -Force
+}
+
+# Second-level data cache
+function SecondLevelDataCache {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SecondLevelDataCache" -PropertyType DWord -Value 1 -Force
+}
+
+# Existing page files
+function ExistingPageFiles {
+	$Value = "00,00"
+	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
+	
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ExistingPageFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
+}
+
+# Enable prefetcher
+function EnablePrefetcher {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -Name "EnablePrefetcher" -PropertyType DWord -Value 1 -Force
+}
+
+# Wait to kill service timeout
+function WaitToKillServiceTimeout1 {
+	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control")) {
+		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
+	}
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
+}
+
+# Disable paging executive
+function DisablePagingExecutive1 {
+	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management")) {
+		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Force
+	}
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
+}
+
+# Enable boot optimization function
+function EnableBootOptimizationFunction {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Dfrg\BootOptimizeFunction" -Name "Enable" -PropertyType String -Value "y" -Force
+}
+
+# Ntfs disable last access update
+function NtfsDisableLastAccessUpdate {
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\FileSystem" -Name "NtfsDisableLastAccessUpdate" -PropertyType DWord -Value 1 -Force
+}
+
+# Max connections per 1_0 server
+function MaxConnectionsPer1_0Server {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "MaxConnectionsPer1_0Server" -PropertyType DWord -Value 10 -Force
+}
+
+# Max connections per server
+function MaxConnectionsPerServer {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "MaxConnectionsPerServer" -PropertyType DWord -Value 10 -Force
+}
+
+# Non best effort limit
+function NonBestEffortLimit {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Force
+	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
+}
+
+# Double click height width
+function DoubleClickHeightWidth {
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickHeight -PropertyType String -Value "6" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "6" -Force	
+}
+
+# ValueMax
+function ValueMax {
+	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name ValueMax -PropertyType DWord -Value 0 -Force
+}
+
+# Debloat microsoft services
+function DebloatMicrosoftServices {
+	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
+	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
+	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
+	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BITS" -Force -WarningAction SilentlyContinue
+	Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
+	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
+	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
+	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
+	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CDPSvc" -Force -WarningAction SilentlyContinue
+	Set-Service CDPSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CDPUserSvc" -Force -WarningAction SilentlyContinue
+	Set-Service CDPUserSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
+	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
+	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
+	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TermService" -Force -WarningAction SilentlyContinue
+	Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
+	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
+	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
+	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
+	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
+	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
+	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "swprv" -Force -WarningAction SilentlyContinue
+	Set-Service swprv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "VSS" -Force -WarningAction SilentlyContinue
+	Set-Service VSS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "vds" -Force -WarningAction SilentlyContinue
+	Set-Service vds -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "NetTcpPortSharing" -Force -WarningAction SilentlyContinue
+	Set-Service NetTcpPortSharing -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "NcbService" -Force -WarningAction SilentlyContinue
+	Set-Service NcbService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PhoneSvc" -Force -WarningAction SilentlyContinue
+	Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
+	Set-Service Spooler -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PrintNotify" -Force -WarningAction SilentlyContinue
+	Set-Service PrintNotify -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "QWAVE" -Force -WarningAction SilentlyContinue
+	Set-Service QWAVE -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TapiSrv" -Force -WarningAction SilentlyContinue
+	Set-Service TapiSrv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RemoteAccess" -Force -WarningAction SilentlyContinue
+	Set-Service RemoteAccess -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SensorDataService" -Force -WarningAction SilentlyContinue
+	Set-Service SensorDataService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SensrSvc" -Force -WarningAction SilentlyContinue
+	Set-Service SensrSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SensorService" -Force -WarningAction SilentlyContinue
+	Set-Service SensorService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "ShellHWDetection" -Force -WarningAction SilentlyContinue
+	Set-Service ShellHWDetection -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SEMgrSvc" -Force -WarningAction SilentlyContinue
+	Set-Service SEMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SCardSvr" -Force -WarningAction SilentlyContinue
+	Set-Service SCardSvr -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "ScDeviceEnum" -Force -WarningAction SilentlyContinue
+	Set-Service ScDeviceEnum -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SstpSvc" -Force -WarningAction SilentlyContinue
+	Set-Service SstpSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "SSDPSRV" -Force -WarningAction SilentlyContinue
+	Set-Service SSDPSRV -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WiaRpc" -Force -WarningAction SilentlyContinue
+	Set-Service WiaRpc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "upnphost" -Force -WarningAction SilentlyContinue
+	Set-Service upnphost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "hidserv" -Force -WarningAction SilentlyContinue
+	Set-Service hidserv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
+	Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
+	Set-Service WalletService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
+	Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "stisvc" -Force -WarningAction SilentlyContinue
+	Set-Service stisvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "wisvc" -Force -WarningAction SilentlyContinue
+	Set-Service wisvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "icssvc" -Force -WarningAction SilentlyContinue
+	Set-Service icssvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XblAuthManager" -Force -WarningAction SilentlyContinue
+	Set-Service XblAuthManager -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XblGameSave" -Force -WarningAction SilentlyContinue
+	Set-Service XblGameSave -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XboxNetApiSvc" -Force -WarningAction SilentlyContinue
+	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
+	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
+	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
+	Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PcaSvc" -Force -WarningAction SilentlyContinue
+	Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "perceptionsimulation" -Force -WarningAction SilentlyContinue
+	Set-Service perceptionsimulation -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
+	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
+	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
+	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
+	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WinRM" -Force -WarningAction SilentlyContinue
+	Set-Service WinRM -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
+	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
+	Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
+}
+
+# Disable boot splash animations
+function DisableBootSplashAnimations {
+	bcdedit /set `{current`} bootux disabled
+	bcdedit /set `{current`} quietboot yes
+	bcdedit /set `{current`} quietboot On
+}
+
+# Disable trusted platform module
+function DisableTrustedPlatformModule {
+	bcdedit /set `{current`} tpmbootentropy ForceDisable
+}
+
+# Enable legacy apic mode
+function EnableLegacyApicMode {
+	bcdedit /set `{current`} uselegacyapicmode yes
+	bcdedit /set `{current`} x2apicpolicy disable
+	bcdedit /set `{current`} configaccesspolicy Default
+	bcdedit /set `{current`} MSI Default
+	bcdedit /set `{current`} usephysicaldestination No
+}
+
+# Disable integrity checks
+function DisableIntegrityChecks {
+	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
+	bcdedit /set `{current`} nointegritychecks on
+}
+
+# Disable last access
+function DisableLastAccess {
+	fsutil behavior set disablelastaccess 1
+}
+
+# Set memory usage
+function SetMemoryUsage {
+	fsutil behavior set memoryusage 1
+}
+
+# Disable boot logging
+function DisableBootLogging {
+	bcdedit /bootdebug `{current`} off
+	bcdedit /debug `{current`} off
+	bcdedit /set `{current`} bootlog no
+}
+
+# Increase default size buffer
+function IncreaseDefaultSizeBuffer {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 65536 -Force
+}
+
+# IRP stack size
+function IRPStackSize {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "autodisconnect" -Type DWord -Value 15 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "EnableOplocks" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxRawWorkItems" -Type DWord -Value 512 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MinFreeConnections" -Type DWord -Value 16 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "InitWorkItems" -Type DWord -Value 512 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 32 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationDelay" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationRetries" -Type DWord -Value 0 -Force
+
+}
+
+# Size
+function Size {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "Size" -Type DWord -Value 3 -Force
+}
+
+# Max work items
+function MaxWorkItems {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxWorkItems" -Type DWord -Value 16384 -Force
+}
+
+# Maxmpxct
+function MaxMpxCt {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxMpxCt" -Type DWord -Value 4096 -Force
+}
+
+# Max cmds
+function MaxCmds {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxCmds" -Type DWord -Value 4096 -Force
+}
+
+# Disable strict name checking
+function DisableStrictNameChecking {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "DisableStrictNameChecking" -Type DWord -Value 1 -Force
+}
+
+# Enable dynamic backlog
+function EnableDynamicBacklog {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "EnableDynamicBacklog" -Type DWord -Value 1 -Force
+}
+
+# Minimum dynamic backlog
+function MinimumDynamicBacklog {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MinimumDynamicBacklog" -Type DWord -Value 200 -Force
+}
+
+# Maximum dynamic backlog
+function MaximumDynamicBacklog {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MaximumDynamicBacklog" -Type DWord -Value 20000 -Force
+}
+
+# Dynamic backlog growth delta
+function DynamicBacklogGrowthDelta {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
+}
+
+# Increase mft zone
+function IncreaseMFTZone {
+	fsutil behavior set mftzone 2
+}
+
+# Enable memory allocation in graphics driver
+function EnableMemoryAllocationInGraphicsDriver {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
+	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
+}
+
+# Disable realtime monitoring
+function DisableRealtimeMonitoring {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring" -Type DWord -Value 1 -Force
+	Set-MpPreference -DisableRealtimeMonitoring 1
+	Set-MpPreference -DisableRealtimeMonitoring $true
+}
+
+# Enable hardware accelerated GPU scheduling
+function EnableHardwareAcceleratedGPUScheduling {
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
+}
+
+# Indexer respect power modes
+function IndexerRespectPowerModes {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
+}
+
+# Disable delete notify
+function DisableDeleteNotify {
+	fsutil behavior set DisableDeleteNotify 1
+}
+
+# Disable power throttling
+function DisablePowerThrottling {
+	Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
+}
+
+# Disable wpp software tracing logs
+function DisableWPPSoftwareTracingLogs {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Name "LogLevel" -Type DWord -Value 0 -Force
+}
+
+# Cpu rate limit
+function CpuRateLimit {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Force
+	}	
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Name "CpuRateLimit" -Type DWord -Value 100 -Force
+}
+
+# Disable search history 
+function DisableSearchHistory {
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
+	}
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Name "IsDeviceSearchHistoryEnabled" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
+}
+
+# Thread priority 
+function ThreadPriority {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Force
+	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
+	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Force
+	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Force
+	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
+}
+#endregion Performance
 #region System
 # Uninstall OneDrive
 # Удалить OneDrive
@@ -2476,649 +3116,6 @@ function DisableWarningSounds {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Warning Sounds" -PropertyType DWord -Value 0 -Force
 }
 #endregion System
-#region Performance
-# Adjust best performance(that would able to increase the overall performance)
-function AdjustBestPerformance {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name ActiveWndTrackTimeout -PropertyType String -Value 10 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MouseWheelRouting -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name FontSmoothing -PropertyType String -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 8 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -PropertyType Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name AutoColorization -PropertyType String -Value 1 -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Keyboard" -Name KeyboardDelay -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name "Browse For Folder Width" -PropertyType DWord -Value 258 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name "Browse For Folder Height" -PropertyType DWord -Value 320 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name FirstRunTelemetryComplete -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name DesktopReadyTimeout -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name ExplorerStartupTraceRecorded -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name TelemetrySalt -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewAlphaSelect -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisableThumbnailCache -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisallowShaking -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTimes -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DesktopLivePreviewHoverTime -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name DisableThumbsDBOnNetworkFolders -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name EnableBalloonTips -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name SharingWizardOn -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name StartButtonBalloonTip -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowSyncProviderNotifications -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowInfoTip -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowTaskViewButton -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name "Start_ShowRun" -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AlwaysHibernateThumbnails -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableWindowColorization -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name ColorPrevalence -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name DWMWA_TRANSITIONS_FORCEDISABLED -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name DisallowAnimations -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize -Name EnableTransparency -PropertyType DWord -Value 0 -Force
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Privacy")) {
-		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Privacy -Force
-	}
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Privacy -Name Favorites -PropertyType DWord -Value 0 -Force
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\Shell\NoRoam")) {
-		New-Item -Path HKCU:\Software\Microsoft\Windows\Shell\NoRoam -Force
-	}
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\Shell\BagMRU -Name "BagMRU Size" -PropertyType DWord -Value 250 -Force
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\Shell\NoRoam -Name "BagMRU Size" -PropertyType DWord -Value 250 -Force
-}
-
-# Prevent battery saver
-function PreventBatterySaver {
-	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBATTTHRESHOLD 0
-	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBRIGHTNESS 100 
-}
-
-# Disable default disk defragmenter
-function DisableDefaultDiskDefragmenter {
-	Stop-Service "defragsvc" -Force -WarningAction SilentlyContinue
-	Set-Service "defragsvc" -StartupType Disabled -ErrorAction SilentlyContinue
-	Disable-ScheduledTask -TaskName 'ScheduledDefrag' -TaskPath '\Microsoft\Windows\Defrag'
-}
-
-# Let personalize power plan
-function LetPersonalizePowerPlan {
-	powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 7648efa3-dd9c-4e3e-b566-50f929386280 0
-	powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 3
-	powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 3
-	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 637ea02f-bbcb-4015-8e2c-a1c7b9c0b546 0
-	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 637ea02f-bbcb-4015-8e2c-a1c7b9c0b546 1
-	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469 8
-	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469 8
-	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f d8742dcb-3e6a-4b3c-b3fe-374623cdcf06 0
-	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f d8742dcb-3e6a-4b3c-b3fe-374623cdcf06 0
-	powercfg -setacvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
-	powercfg -setdcvalueindex SCHEME_CURRENT e73a048d-bf27-4f12-9731-8b2076e8891f 8183ba9a-e910-48da-8769-14ae6dc1170a 15
-	powercfg -setacvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 7516b95f-f776-4464-8c53-06167f40cc99 3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e 0
-	powercfg -setacvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 0012ee47-9041-4b5d-9b77-535fba8b1442 6738e2c4-e8a5-4a42-b16a-e040e769756e 0
-	powercfg -setacvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 501a4d13-42af-4429-9fd1-a8218c268e20 ee12f906-d277-404b-b6da-e5fa1a576df5 0
-	powercfg -setacvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
-	powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 9d7815a6-7ee4-497e-8888-515a05f02364 0
-	powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
-	powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da 1500
-	powercfg -setacvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
-	powercfg -setdcvalueindex SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d 0
-}
-
-# Prevent require sign-in when after sleep
-function PreventRequireSignInWhenAfterSleep {
-	powercfg -setacvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
-	powercfg -setdcvalueindex SCHEME_CURRENT SUB_NONE CONSOLELOCK 0
-	powercfg /setactive SCHEME_CURRENT
-}
-# Disable indexing
-function DisableIndexing {
-	$DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
-	$Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
-	Stop-Service "WSearch" -Force -WarningAction SilentlyContinue
-	Set-Service "WSearch" -StartupType Disabled -ErrorAction SilentlyContinue
-	if ($DriveLetters.Count -notmatch 2) {
-		if (($Object.IndexingEnabled -match $True)) {
-			Write-Output "Disabling indexing of drive C:"
-			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
-		}
-		else {
-			Write-Output "Indexing already disabled. SKIPPING..."
-		}
-	}
-    
-	if ($DriveLetters.Count -notmatch 3) {
-		if (($Object.IndexingEnabled -match $True)) {
-			Write-Output "Disabling indexing of drive C:"
-			$Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
-		}
-		else {
-			Write-Output "Indexing already disabled. SKIPPING..."
-		}
-	}
-
-	else {
-		Write-Output "Unable to find the right option. SKIPPING..."
-	}
-}
-
-# Set current boot timeout value to 0
-function SetBootTimeoutValue {
-	bcdedit /timeout 0
-}
-
-# Ntfs allow extended character 8dot3 rename
-function NtfsAllowExtendedCharacter8dot3Rename {
-	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 1 -Force
-}
-
-# Ntfs disable 8dot3 name creation
-function NtfsDisable8dot3NameCreation {
-	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
-	fsutil behavior set disable8dot3 1
-}
-
-# Auto end tasks
-function AutoEndTasks {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "AutoEndTasks" -PropertyType String -Value "1" -Force
-}
-
-# Hung app timeout
-function HungAppTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -PropertyType String -Value "2000" -Force
-}
-
-# Wait to kill app timeout
-function WaitToKillAppTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -PropertyType String -Value "2000" -Force
-}
-
-# Low-level hooks timeout
-function LowLevelHooksTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "LowLevelHooksTimeout" -PropertyType String -Value "1000" -Force
-}
-
-# Foreground lock timeout
-function ForegroundLockTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "ForegroundLockTimeout" -PropertyType String -Value "0" -Force
-}
-
-# No low disk space checks
-function NoLowDiskSpaceChecks {
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
-		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Force
-	}
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 1 -Force
-}
-
-# Link resolve ignore link info
-function LinkResolveIgnoreLinkInfo {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "LinkResolveIgnoreLinkInfo" -PropertyType DWord -Value 1 -Force
-}
-
-# No resolve search
-function NoResolveSearch {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveSearch" -PropertyType DWord -Value 1 -Force
-}
-
-# No resolve track
-function NoResolveTrack {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveTrack" -PropertyType DWord -Value 1 -Force
-}
-
-# No internet open with
-function NoInternetOpenWith {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoInternetOpenWith" -PropertyType DWord -Value 1 -Force
-}
-
-# Wait to kill service timeout
-function WaitToKillServiceTimeout {
-	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
-}
-
-# Disable paging executive
-function DisablePagingExecutive {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
-}
-
-# Large system cache
-function LargeSystemCache {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "LargeSystemCache" -PropertyType DWord -Value 1 -Force
-}
-
-# IO page lock limit
-function IoPageLockLimit {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 983040 -Force
-}
-
-# Paging files
-function PagingFiles {
-	$Value = "00,00"
-	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
-	
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "PagingFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingCombining" -PropertyType DWord -Value 1 -Force
-}
-
-# Second-level data cache
-function SecondLevelDataCache {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SecondLevelDataCache" -PropertyType DWord -Value 1 -Force
-}
-
-# Existing page files
-function ExistingPageFiles {
-	$Value = "00,00"
-	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
-	
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ExistingPageFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
-}
-
-# Enable prefetcher
-function EnablePrefetcher {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -Name "EnablePrefetcher" -PropertyType DWord -Value 1 -Force
-}
-
-# Wait to kill service timeout
-function WaitToKillServiceTimeout1 {
-	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control")) {
-		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
-	}
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
-}
-
-# Disable paging executive
-function DisablePagingExecutive1 {
-	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management")) {
-		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Force
-	}
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
-}
-
-# Enable boot optimization function
-function EnableBootOptimizationFunction {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Dfrg\BootOptimizeFunction" -Name "Enable" -PropertyType String -Value "y" -Force
-}
-
-# Ntfs disable last access update
-function NtfsDisableLastAccessUpdate {
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\FileSystem" -Name "NtfsDisableLastAccessUpdate" -PropertyType DWord -Value 1 -Force
-}
-
-# Max connections per 1_0 server
-function MaxConnectionsPer1_0Server {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "MaxConnectionsPer1_0Server" -PropertyType DWord -Value 10 -Force
-}
-
-# Max connections per server
-function MaxConnectionsPerServer {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "MaxConnectionsPerServer" -PropertyType DWord -Value 10 -Force
-}
-
-# Non best effort limit
-function NonBestEffortLimit {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Force
-	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Psched" -Name NonBestEffortLimit -PropertyType DWord -Value 0 -Force
-}
-
-# Double click height width
-function DoubleClickHeightWidth {
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickHeight -PropertyType String -Value "6" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "6" -Force	
-}
-
-# ValueMax
-function ValueMax {
-	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name ValueMax -PropertyType DWord -Value 0 -Force
-}
-
-# Debloat microsoft services
-function DebloatMicrosoftServices {
-	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
-	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
-	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
-	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "BITS" -Force -WarningAction SilentlyContinue
-	Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
-	Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
-	Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
-	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
-	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
-	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "CDPSvc" -Force -WarningAction SilentlyContinue
-	Set-Service CDPSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "CDPUserSvc" -Force -WarningAction SilentlyContinue
-	Set-Service CDPUserSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
-	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
-	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
-	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "TermService" -Force -WarningAction SilentlyContinue
-	Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
-	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
-	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
-	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
-	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
-	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
-	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "swprv" -Force -WarningAction SilentlyContinue
-	Set-Service swprv -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "VSS" -Force -WarningAction SilentlyContinue
-	Set-Service VSS -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "vds" -Force -WarningAction SilentlyContinue
-	Set-Service vds -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "NetTcpPortSharing" -Force -WarningAction SilentlyContinue
-	Set-Service NetTcpPortSharing -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "NcbService" -Force -WarningAction SilentlyContinue
-	Set-Service NcbService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "PhoneSvc" -Force -WarningAction SilentlyContinue
-	Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
-	Set-Service Spooler -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "PrintNotify" -Force -WarningAction SilentlyContinue
-	Set-Service PrintNotify -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "QWAVE" -Force -WarningAction SilentlyContinue
-	Set-Service QWAVE -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "TapiSrv" -Force -WarningAction SilentlyContinue
-	Set-Service TapiSrv -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "RemoteAccess" -Force -WarningAction SilentlyContinue
-	Set-Service RemoteAccess -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SensorDataService" -Force -WarningAction SilentlyContinue
-	Set-Service SensorDataService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SensrSvc" -Force -WarningAction SilentlyContinue
-	Set-Service SensrSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SensorService" -Force -WarningAction SilentlyContinue
-	Set-Service SensorService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "ShellHWDetection" -Force -WarningAction SilentlyContinue
-	Set-Service ShellHWDetection -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SEMgrSvc" -Force -WarningAction SilentlyContinue
-	Set-Service SEMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SCardSvr" -Force -WarningAction SilentlyContinue
-	Set-Service SCardSvr -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "ScDeviceEnum" -Force -WarningAction SilentlyContinue
-	Set-Service ScDeviceEnum -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SstpSvc" -Force -WarningAction SilentlyContinue
-	Set-Service SstpSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "SSDPSRV" -Force -WarningAction SilentlyContinue
-	Set-Service SSDPSRV -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WiaRpc" -Force -WarningAction SilentlyContinue
-	Set-Service WiaRpc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "upnphost" -Force -WarningAction SilentlyContinue
-	Set-Service upnphost -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "hidserv" -Force -WarningAction SilentlyContinue
-	Set-Service hidserv -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
-	Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
-	Set-Service WalletService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
-	Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "stisvc" -Force -WarningAction SilentlyContinue
-	Set-Service stisvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "wisvc" -Force -WarningAction SilentlyContinue
-	Set-Service wisvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "icssvc" -Force -WarningAction SilentlyContinue
-	Set-Service icssvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "XblAuthManager" -Force -WarningAction SilentlyContinue
-	Set-Service XblAuthManager -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "XblGameSave" -Force -WarningAction SilentlyContinue
-	Set-Service XblGameSave -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "XboxNetApiSvc" -Force -WarningAction SilentlyContinue
-	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
-	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
-	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
-	Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "PcaSvc" -Force -WarningAction SilentlyContinue
-	Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "perceptionsimulation" -Force -WarningAction SilentlyContinue
-	Set-Service perceptionsimulation -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
-	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
-	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
-	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
-	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WinRM" -Force -WarningAction SilentlyContinue
-	Set-Service WinRM -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
-	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
-	Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
-}
-
-# Disable boot splash animations
-function DisableBootSplashAnimations {
-	bcdedit /set `{current`} bootux disabled
-	bcdedit /set `{current`} quietboot yes
-	bcdedit /set `{current`} quietboot On
-}
-
-# Disable trusted platform module
-function DisableTrustedPlatformModule {
-	bcdedit /set `{current`} tpmbootentropy ForceDisable
-}
-
-# Enable legacy apic mode
-function EnableLegacyApicMode {
-	bcdedit /set `{current`} uselegacyapicmode yes
-	bcdedit /set `{current`} x2apicpolicy disable
-	bcdedit /set `{current`} configaccesspolicy Default
-	bcdedit /set `{current`} MSI Default
-	bcdedit /set `{current`} usephysicaldestination No
-}
-
-# Disable integrity checks
-function DisableIntegrityChecks {
-	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
-	bcdedit /set `{current`} nointegritychecks on
-}
-
-# Disable last access
-function DisableLastAccess {
-	fsutil behavior set disablelastaccess 1
-}
-
-# Set memory usage
-function SetMemoryUsage {
-	fsutil behavior set memoryusage 1
-}
-
-# Disable boot logging
-function DisableBootLogging {
-	bcdedit /bootdebug `{current`} off
-	bcdedit /debug `{current`} off
-	bcdedit /set `{current`} bootlog no
-}
-
-# Increase default size buffer
-function IncreaseDefaultSizeBuffer {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 65536 -Force
-}
-
-# IRP stack size
-function IRPStackSize {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "autodisconnect" -Type DWord -Value 15 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "EnableOplocks" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxRawWorkItems" -Type DWord -Value 512 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MinFreeConnections" -Type DWord -Value 16 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "InitWorkItems" -Type DWord -Value 512 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 32 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationDelay" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationRetries" -Type DWord -Value 0 -Force
-
-}
-
-# Size
-function Size {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "Size" -Type DWord -Value 3 -Force
-}
-
-# Max work items
-function MaxWorkItems {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxWorkItems" -Type DWord -Value 16384 -Force
-}
-
-# Maxmpxct
-function MaxMpxCt {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxMpxCt" -Type DWord -Value 4096 -Force
-}
-
-# Max cmds
-function MaxCmds {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxCmds" -Type DWord -Value 4096 -Force
-}
-
-# Disable strict name checking
-function DisableStrictNameChecking {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "DisableStrictNameChecking" -Type DWord -Value 1 -Force
-}
-
-# Enable dynamic backlog
-function EnableDynamicBacklog {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "EnableDynamicBacklog" -Type DWord -Value 1 -Force
-}
-
-# Minimum dynamic backlog
-function MinimumDynamicBacklog {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MinimumDynamicBacklog" -Type DWord -Value 200 -Force
-}
-
-# Maximum dynamic backlog
-function MaximumDynamicBacklog {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MaximumDynamicBacklog" -Type DWord -Value 20000 -Force
-}
-
-# Dynamic backlog growth delta
-function DynamicBacklogGrowthDelta {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
-}
-
-# Increase mft zone
-function IncreaseMFTZone {
-	fsutil behavior set mftzone 2
-}
-
-# Enable memory allocation in graphics driver
-function EnableMemoryAllocationInGraphicsDriver {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
-	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
-}
-
-# Disable realtime monitoring
-function DisableRealtimeMonitoring {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Force
-	}	
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring" -Type DWord -Value 1 -Force
-	Set-MpPreference -DisableRealtimeMonitoring 1
-	Set-MpPreference -DisableRealtimeMonitoring $true
-}
-
-# Enable hardware accelerated GPU scheduling
-function EnableHardwareAcceleratedGPUScheduling {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
-}
-
-# Indexer respect power modes
-function IndexerRespectPowerModes {
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
-	}	
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
-}
-
-# Disable delete notify
-function DisableDeleteNotify {
-	fsutil behavior set DisableDeleteNotify 1
-}
-
-# Disable power throttling
-function DisablePowerThrottling {
-	Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
-}
-
-# Disable wpp software tracing logs
-function DisableWPPSoftwareTracingLogs {
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Force
-	}	
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Name "LogLevel" -Type DWord -Value 0 -Force
-}
-
-# Cpu rate limit
-function CpuRateLimit {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Force
-	}	
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Name "CpuRateLimit" -Type DWord -Value 100 -Force
-}
-
-# Disable search history 
-function DisableSearchHistory {
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings")) {
-		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
-	}
-	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Name "IsDeviceSearchHistoryEnabled" -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
-}
-
-# Thread priority 
-function ThreadPriority {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Force
-	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
-	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Force
-	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Force
-	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
-}
-#endregion Performance
 #region Chocolatey
 # Install Chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
