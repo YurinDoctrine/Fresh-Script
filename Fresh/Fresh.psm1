@@ -25,17 +25,14 @@ function Check {
 		}
 	}
 
-	# Run DISM
-	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
-
-	# Reset Windows store cache
-	WSreset.exe
-
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
 
 	# Flush DNS resolver cache
 	ipconfig /flushdns
+
+	# Run SFC system file repair
+	sfc.exe /scannow
 
 	# Disable compression
 	fsutil behavior set disablecompression 1; Compact.exe /CompactOS:never; Compact.exe /CompactOS:query
@@ -1550,6 +1547,12 @@ function DisableCortanaAutostart {
 	}
 }
 #endregion UWP apps
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+function ChocolateyPackageManager {
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Preview", "Silverlight" -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; choco install 7zip.install notepadplusplus.install cpu-z.install teracopy transmission-qt jpegview potplayer spotify; choco install --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy transmission-qt jpegview potplayer spotify
+}
+#endregion Chocolatey
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -3116,16 +3119,10 @@ function DisableWarningSounds {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Warning Sounds" -PropertyType DWord -Value 0 -Force
 }
 #endregion System
-#region Chocolatey
-# Install Chocolatey package manager and pre-installs as well
-function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose; choco install 7zip.install notepadplusplus.install cpu-z.install teracopy transmission-qt jpegview potplayer spotify; choco install --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy transmission-qt jpegview potplayer spotify
-}
-#endregion Chocolatey
 function Errors {
 
-	# Run SFC system file repair
-	sfc.exe /scannow
+	# Run DISM
+	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
