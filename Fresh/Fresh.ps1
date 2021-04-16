@@ -588,6 +588,34 @@ EnableFullScreenOptimization
 #region O&OShutup
 OOShutup
 #endregion O&OShutup
+#region UWP apps
+<#
+	Uninstall UWP apps
+	A dialog box that enables the user to select packages to remove
+	App packages will not be installed for new users if "Uninstall for All Users" is checked
+
+	Удалить UWP-приложения
+	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
+	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
+#>
+UninstallUWPApps
+
+# Do not let UWP apps run in the background, except the followings... (current user only)
+# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
+DisableBackgroundUWPApps
+
+# Disable the following Windows features
+# Отключить следующие компоненты Windows
+DisableWindowsFeatures
+
+# Disable certain Feature On Demand v2 (FODv2) capabilities
+# Отключить определенные компоненты "Функции по требованию" (FODv2)
+DisableWindowsCapabilities
+
+# Turn off Cortana autostarting
+# Удалить Кортана из автозагрузки
+DisableCortanaAutostart
+#endregion UWP apps
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -710,34 +738,6 @@ DisableDefenderCloud
 # Disable ntfs refs mitigations
 DisableNTFSREFSMitigations
 #endregion Microsoft Defender & Security
-#region UWP apps
-<#
-	Uninstall UWP apps
-	A dialog box that enables the user to select packages to remove
-	App packages will not be installed for new users if "Uninstall for All Users" is checked
-
-	Удалить UWP-приложения
-	Диалоговое окно, позволяющее пользователю отметить пакеты на удаление
-	Приложения не будут установлены для новых пользователе, если отмечено "Удалять для всех пользователей"
-#>
-UninstallUWPApps
-
-# Do not let UWP apps run in the background, except the followings... (current user only)
-# Не разрешать UWP-приложениям работать в фоновом режиме, кроме следующих... (только для текущего пользователя)
-DisableBackgroundUWPApps
-
-# Disable the following Windows features
-# Отключить следующие компоненты Windows
-DisableWindowsFeatures
-
-# Disable certain Feature On Demand v2 (FODv2) capabilities
-# Отключить определенные компоненты "Функции по требованию" (FODv2)
-DisableWindowsCapabilities
-
-# Turn off Cortana autostarting
-# Удалить Кортана из автозагрузки
-DisableCortanaAutostart
-#endregion UWP apps
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
