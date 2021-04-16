@@ -12,140 +12,6 @@ Import-LocalizedData -BindingVariable Global:Localization  -FileName Fresh
 # Проверка
 Check
 
-#region Privacy & Telemetry
-# Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
-# Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
-DisableTelemetryServices
-
-# Set the OS level of diagnostic data gathering to minimum
-# Установить уровень сбора диагностических сведений ОС на минимальный
-SetMinimalDiagnosticDataLevel
-
-# Set the default OS level of diagnostic data gathering
-# Установить уровень сбора диагностических сведений ОС по умолчанию
-# SetDefaultDiagnosticDataLevel
-
-# Turn off Windows Error Reporting for the current user
-# Отключить отчеты об ошибках Windows для текущего пользователя
-DisableWindowsErrorReporting
-
-# Turn on Windows Error Reporting for the current user
-# Включить отчеты об ошибках Windows для текущего пользователя
-# EnableWindowsErrorReporting
-
-# Change Windows feedback frequency to "Never" for the current user
-# Изменить частоту формирования отзывов на "Никогда" для текущего пользователя
-DisableWindowsFeedback
-
-# Change Windows Feedback frequency to "Automatically" for the current user
-# Изменить частоту формирования отзывов на "Автоматически" для текущего пользователя
-# EnableWindowsFeedback
-
-# Turn off tracking apps launch event
-TurnOffAppLaunchTracking
-
-# Turn off diagnostics tracking scheduled tasks
-# Отключить задачи диагностического отслеживания
-DisableScheduledTasks
-
-# Turn on diagnostics tracking scheduled tasks
-# Включить задачи диагностического отслеживания
-# EnableScheduledTasks
-
-# Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
-# Не использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
-DisableSigninInfo
-
-# Use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
-# Использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
-# EnableSigninInfo
-
-# Do not let websites provide locally relevant content by accessing language list (current user only)
-# Не позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
-DisableLanguageListAccess
-
-# Let websites provide locally relevant content by accessing language list (current user only)
-# Позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
-# EnableLanguageListAccess
-
-# Do not allow apps to use advertising ID (current user only)
-# Не разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
-DisableAdvertisingID
-
-# Allow apps to use advertising ID (current user only)
-# Разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
-# EnableAdvertisingID
-
-# Do not let apps on other devices open and message apps on this device, and vice versa (current user only)
-# Не разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
-DisableShareAcrossDevices
-
-# Let apps on other devices open and message apps on this device, and vice versa (current user only)
-# Разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
-# EnableShareAcrossDevices
-
-# Do not show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
-# Не показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
-DisableWindowsWelcomeExperience
-
-# Show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
-# Показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
-# EnableWindowsWelcomeExperience
-
-# Get tip, trick, and suggestions as you use Windows (current user only)
-# Получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
-#EnableWindowsTips
-
-# Do not get tip, trick, and suggestions as you use Windows (current user only)
-# Не получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
-DisableWindowsTips
-
-# Do not show suggested content in the Settings app (current user only)
-# Не показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
-DisableSuggestedContent
-
-# Show suggested content in the Settings app (current user only)
-# Показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
-# EnableSuggestedContent
-
-# Turn off automatic installing suggested apps (current user only)
-# Отключить автоматическую установку рекомендованных приложений (только для текущего пользователя)
-DisableAppsSilentInstalling
-
-# Turn on automatic installing suggested apps (current user only)
-# Включить автоматическую установку рекомендованных приложений (только для текущего пользователя)
-# EnableAppsSilentInstalling
-
-# Do not suggest ways I can finish setting up my device to get the most out of Windows (current user only)
-# Не предлагать способы завершения настройки устройства для максимально эффективного использования Windows (только для текущего пользователя)
-DisableWhatsNewInWindows
-
-# Suggest ways I can finish setting up my device to get the most out of Windows
-# Предлагать способы завершения настройки устройства для максимально эффективного использования Windows
-# EnableWhatsNewInWindows
-
-# Do not offer tailored experiences based on the diagnostic data setting (current user only)
-# Не предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных (только для текущего пользователя)
-DisableTailoredExperiences
-
-# Offer tailored experiences based on the diagnostic data setting
-# Предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных
-# EnableTailoredExperiences
-
-# Disable Bing search in the Start Menu
-# Отключить в меню "Пуск" поиск через Bing
-DisableBingSearch
-
-# Enable Bing search in the Start Menu
-# Включить поиск через Bing в меню "Пуск"
-# EnableBingSearch
-
-# Disable find my device
-DisableFindMyDevice
-
-# Disable apps suggestions, tips, welcome experience
-DisableAppsSuggestionsTipsWelcomeExperience
-#endregion Privacy & Telemetry
 #region Start menu
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
@@ -567,6 +433,140 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
+#region Privacy & Telemetry
+# Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
+# Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
+DisableTelemetryServices
+
+# Set the OS level of diagnostic data gathering to minimum
+# Установить уровень сбора диагностических сведений ОС на минимальный
+SetMinimalDiagnosticDataLevel
+
+# Set the default OS level of diagnostic data gathering
+# Установить уровень сбора диагностических сведений ОС по умолчанию
+# SetDefaultDiagnosticDataLevel
+
+# Turn off Windows Error Reporting for the current user
+# Отключить отчеты об ошибках Windows для текущего пользователя
+DisableWindowsErrorReporting
+
+# Turn on Windows Error Reporting for the current user
+# Включить отчеты об ошибках Windows для текущего пользователя
+# EnableWindowsErrorReporting
+
+# Change Windows feedback frequency to "Never" for the current user
+# Изменить частоту формирования отзывов на "Никогда" для текущего пользователя
+DisableWindowsFeedback
+
+# Change Windows Feedback frequency to "Automatically" for the current user
+# Изменить частоту формирования отзывов на "Автоматически" для текущего пользователя
+# EnableWindowsFeedback
+
+# Turn off tracking apps launch event
+TurnOffAppLaunchTracking
+
+# Turn off diagnostics tracking scheduled tasks
+# Отключить задачи диагностического отслеживания
+DisableScheduledTasks
+
+# Turn on diagnostics tracking scheduled tasks
+# Включить задачи диагностического отслеживания
+# EnableScheduledTasks
+
+# Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
+# Не использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
+DisableSigninInfo
+
+# Use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
+# Использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
+# EnableSigninInfo
+
+# Do not let websites provide locally relevant content by accessing language list (current user only)
+# Не позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
+DisableLanguageListAccess
+
+# Let websites provide locally relevant content by accessing language list (current user only)
+# Позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
+# EnableLanguageListAccess
+
+# Do not allow apps to use advertising ID (current user only)
+# Не разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
+DisableAdvertisingID
+
+# Allow apps to use advertising ID (current user only)
+# Разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
+# EnableAdvertisingID
+
+# Do not let apps on other devices open and message apps on this device, and vice versa (current user only)
+# Не разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
+DisableShareAcrossDevices
+
+# Let apps on other devices open and message apps on this device, and vice versa (current user only)
+# Разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
+# EnableShareAcrossDevices
+
+# Do not show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
+# Не показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
+DisableWindowsWelcomeExperience
+
+# Show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
+# Показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
+# EnableWindowsWelcomeExperience
+
+# Get tip, trick, and suggestions as you use Windows (current user only)
+# Получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
+#EnableWindowsTips
+
+# Do not get tip, trick, and suggestions as you use Windows (current user only)
+# Не получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
+DisableWindowsTips
+
+# Do not show suggested content in the Settings app (current user only)
+# Не показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
+DisableSuggestedContent
+
+# Show suggested content in the Settings app (current user only)
+# Показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
+# EnableSuggestedContent
+
+# Turn off automatic installing suggested apps (current user only)
+# Отключить автоматическую установку рекомендованных приложений (только для текущего пользователя)
+DisableAppsSilentInstalling
+
+# Turn on automatic installing suggested apps (current user only)
+# Включить автоматическую установку рекомендованных приложений (только для текущего пользователя)
+# EnableAppsSilentInstalling
+
+# Do not suggest ways I can finish setting up my device to get the most out of Windows (current user only)
+# Не предлагать способы завершения настройки устройства для максимально эффективного использования Windows (только для текущего пользователя)
+DisableWhatsNewInWindows
+
+# Suggest ways I can finish setting up my device to get the most out of Windows
+# Предлагать способы завершения настройки устройства для максимально эффективного использования Windows
+# EnableWhatsNewInWindows
+
+# Do not offer tailored experiences based on the diagnostic data setting (current user only)
+# Не предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных (только для текущего пользователя)
+DisableTailoredExperiences
+
+# Offer tailored experiences based on the diagnostic data setting
+# Предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных
+# EnableTailoredExperiences
+
+# Disable Bing search in the Start Menu
+# Отключить в меню "Пуск" поиск через Bing
+DisableBingSearch
+
+# Enable Bing search in the Start Menu
+# Включить поиск через Bing в меню "Пуск"
+# EnableBingSearch
+
+# Disable find my device
+DisableFindMyDevice
+
+# Disable apps suggestions, tips, welcome experience
+DisableAppsSuggestionsTipsWelcomeExperience
+#endregion Privacy & Telemetry
 #region Gaming
 # Turn off Xbox Game Bar tips
 # Отключить советы Xbox Game Bar

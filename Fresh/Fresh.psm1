@@ -40,347 +40,6 @@ function Check {
 	# Disable compression
 	fsutil behavior set disablecompression 1; Compact.exe /CompactOS:never; Compact.exe /CompactOS:query
 }
-#region Privacy & Telemetry
-# Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
-# Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
-function DisableTelemetryServices {
-	Get-Service -Name DiagTrack | Stop-Service -Force
-	Get-Service -Name DiagTrack | Set-Service -StartupType Disabled
-	Get-NetFirewallRule -Group DiagTrack | Set-NetFirewallRule -Enabled False -Action Block
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack -Name ShowedToastAtLevel -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\EventTranscriptKey -Name EnableEventTranscript -PropertyType DWord -Value 0 -Force
-}
-
-# Set the OS level of diagnostic data gathering to "Minimum"
-# Установить уровень сбора диагностических сведений ОС на "Минимальный"
-function SetMinimalDiagnosticDataLevel {
-	if (Get-WindowsEdition -Online | Where-Object -FilterScript { $_.Edition -like "Enterprise*" -or $_.Edition -eq "Education" }) {
-		# "Security"
-		# "Безопасность"
-		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
-	}
-	else {
-		# "Basic"
-		# "Базовая настройка"
-		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
-	}
-}
-
-# Set the default OS level of diagnostic data gathering
-# Установить уровень сбора диагностических сведений ОС по умолчанию
-function SetDefaultDiagnosticDataLevel {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 3 -Force
-}
-
-# Turn off Windows Error Reporting for the current user
-# Отключить отчеты об ошибках Windows для текущего пользователя
-function DisableWindowsErrorReporting {
-	if ((Get-WindowsEdition -Online).Edition -notmatch "Core*") {
-		Get-ScheduledTask -TaskName QueueReporting | Disable-ScheduledTask
-		New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\Windows Error Reporting" -Name Disabled -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Turn on Windows Error Reporting for the current user
-# Включить отчеты об ошибках Windows для текущего пользователя
-function EnableWindowsErrorReporting {
-	Get-ScheduledTask -TaskName QueueReporting | Enable-ScheduledTask
-	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\Windows Error Reporting" -Name Disabled -Force -ErrorAction SilentlyContinue
-}
-
-# Change Windows feedback frequency to "Never" for the current user
-# Изменить частоту формирования отзывов на "Никогда" для текущего пользователя
-function DisableWindowsFeedback {
-	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Name NumberOfSIUFInPeriod -PropertyType DWord -Value 0 -Force
-}
-
-# Change Windows Feedback frequency to "Automatically" for the current user
-# Изменить частоту формирования отзывов на "Автоматически" для текущего пользователя
-function EnableWindowsFeedback {
-	Remove-Item -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Force -ErrorAction SilentlyContinue
-}
-
-# Turn off tracking apps launch event
-function TurnOffAppLaunchTracking { 
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name Start_TrackProgs -PropertyType DWord -Value 0 -Force
-}
-
-# Turn off diagnostics tracking scheduled tasks
-# Отключить задачи диагностического отслеживания
-function DisableScheduledTasks {
-	$ScheduledTaskList = @(
-		# Collects program telemetry information if opted-in to the Microsoft Customer Experience Improvement Program.
-		# Собирает телеметрические данные программы при участии в Программе улучшения качества программного обеспечения Майкрософт
-		"Microsoft Compatibility Appraiser",
-
-		# Collects program telemetry information if opted-in to the Microsoft Customer Experience Improvement Program
-		# Сбор телеметрических данных программы при участии в программе улучшения качества ПО
-		"ProgramDataUpdater",
-
-		# This task collects and uploads autochk SQM data if opted-in to the Microsoft Customer Experience Improvement Program
-		# Эта задача собирает и загружает данные SQM при участии в программе улучшения качества программного обеспечения
-		"Proxy",
-
-		# If the user has consented to participate in the Windows Customer Experience Improvement Program, this job collects and sends usage data to Microsoft
-		# Если пользователь изъявил желание участвовать в программе по улучшению качества программного обеспечения Windows, эта задача будет собирать и отправлять сведения о работе программного обеспечения в Майкрософт
-		"Consolidator",
-
-		# The USB CEIP (Customer Experience Improvement Program) task collects Universal Serial Bus related statistics and information about your machine and sends it to the Windows Device Connectivity engineering group at Microsoft
-		# При выполнении задачи программы улучшения качества ПО шины USB (USB CEIP) осуществляется сбор статистических данных об использовании универсальной последовательной шины USB и с ведений о компьютере, которые направляются инженерной группе Майкрософт по вопросам подключения устройств в Windows
-		"UsbCeip",
-
-		# The Windows Disk Diagnostic reports general disk and system information to Microsoft for users participating in the Customer Experience Program
-		# Для пользователей, участвующих в программе контроля качества программного обеспечения, служба диагностики дисков Windows предоставляет общие сведения о дисках и системе в корпорацию Майкрософт
-		"Microsoft-Windows-DiskDiagnosticDataCollector",
-
-		# Protects user files from accidental loss by copying them to a backup location when the system is unattended
-		# Защищает файлы пользователя от случайной потери за счет их копирования в резервное расположение, когда система находится в автоматическом режиме
-		"File History (maintenance mode)",
-
-		# Measures a system's performance and capabilities
-		# Измеряет быстродействие и возможности системы
-		"WinSAT",
-
-		# This task shows various Map related toasts
-		# Эта задача показывает различные тосты (всплывающие уведомления) приложения "Карты"
-		"MapsToastTask",
-
-		# This task checks for updates to maps which you have downloaded for offline use
-		# Эта задача проверяет наличие обновлений для карт, загруженных для автономного использования
-		"MapsUpdateTask",
-
-		# Initializes Family Safety monitoring and enforcement
-		# Инициализация контроля и применения правил семейной безопасности
-		"FamilySafetyMonitor",
-
-		# Synchronizes the latest settings with the Microsoft family features service
-		# Синхронизирует последние параметры со службой функций семьи учетных записей Майкрософт
-		"FamilySafetyRefreshTask",
-
-		# XblGameSave Standby Task
-		"XblGameSaveTask",
-	
-		# Microsoft Edge update task
-		"MicrosoftEdgeUpdateTaskMachineCore",
-		
-		# Microsoft Edge update task
-		"MicrosoftEdgeUpdateTaskMachineUA"
-	)
-
-	# If device is not a laptop disable FODCleanupTask too
-	# Если устройство не является ноутбуком, отключить также и FODCleanupTask
-	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2) {
-		# Windows Hello
-		$ScheduledTaskList += "FODCleanupTask"
-	}
-
-	Get-ScheduledTask -TaskName $ScheduledTaskList | Disable-ScheduledTask
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\AitAgent"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
-	schtasks /Change /DISABLE /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
-	schtasks /Change /DISABLE /TN "Microsoft\Office\Office ClickToRun Service Monitor"
-	schtasks /Change /DISABLE /TN "Microsoft\Office\OfficeTelemetryAgentLogOn2016"
-	schtasks /Change /DISABLE /TN "Microsoft\Office\OfficeTelemetryAgentFallBack2016"
-	schtasks /Delete /F /TN "Microsoft\Windows\SetupSQMTask"
-	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
-	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
-	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"
-	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask"
-	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
-	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
-	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
-	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\AitAgent"
-	schtasks /Delete /F /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
-}
-
-# Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
-# Не использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
-function DisableSigninInfo {
-	$SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $env:USERNAME }).SID
-	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Name OptOut -PropertyType DWord -Value 1 -Force
-}
-
-# Use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
-# Использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
-function EnableSigninInfo {
-	$SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $env:USERNAME }).SID
-	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Name OptOut -Force -ErrorAction SilentlyContinue
-}
-
-# Do not let websites provide locally relevant content by accessing language list (current user only)
-# Не позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
-function DisableLanguageListAccess {
-	New-ItemProperty -Path "HKCU:\Control Panel\International\User Profile" -Name HttpAcceptLanguageOptOut -PropertyType DWord -Value 1 -Force
-}
-
-# Let websites provide locally relevant content by accessing language list (current user only)
-# Позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
-function EnableLanguageListAccess {
-	Remove-ItemProperty -Path "HKCU:\Control Panel\International\User Profile" -Name HttpAcceptLanguageOptOut -Force -ErrorAction SilentlyContinue
-}
-
-# Do not allow apps to use advertising ID (current user only)
-# Не разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
-function DisableAdvertisingID {
-	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Name Enabled -PropertyType DWord -Value 0 -Force
-}
-
-# Allow apps to use advertising ID (current user only)
-# Разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
-function EnableAdvertisingID {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Name Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Do not let apps on other devices open and message apps on this device, and vice versa (current user only)
-# Не разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
-function DisableShareAcrossDevices {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP -Name RomeSdkChannelUserAuthzPolicy -PropertyType DWord -Value 0 -Force
-}
-
-# Let apps on other devices open and message apps on this device, and vice versa (current user only)
-# Разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
-function EnableShareAcrossDevices {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP -Name RomeSdkChannelUserAuthzPolicy -PropertyType DWord -Value 1 -Force
-}
-
-# Do not show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
-# Не показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
-function DisableWindowsWelcomeExperience {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-310093Enabled -PropertyType DWord -Value 0 -Force
-}
-
-# Show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
-# Показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
-function EnableWindowsWelcomeExperience {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-310093Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Get tip, trick, and suggestions as you use Windows (current user only)
-# Получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
-function EnableWindowsTips {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338389Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Do not get tip, trick, and suggestions as you use Windows (current user only)
-# Не получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
-function DisableWindowsTips {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338389Enabled -PropertyType DWord -Value 0 -Force
-}
-
-# Do not show suggested content in the Settings app (current user only)
-# Не показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
-function DisableSuggestedContent {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338393Enabled -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353694Enabled -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353696Enabled -PropertyType DWord -Value 0 -Force
-}
-
-# Show suggested content in the Settings app (current user only)
-# Показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
-function EnableSuggestedContent {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338393Enabled -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353694Enabled -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353696Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Turn off automatic installing suggested apps (current user only)
-# Отключить автоматическую установку рекомендованных приложений (только для текущего пользователя)
-function DisableAppsSilentInstalling {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SilentInstalledAppsEnabled -PropertyType DWord -Value 0 -Force
-}
-
-# Turn on automatic installing suggested apps (current user only)
-# Включить автоматическую установку рекомендованных приложений (только для текущего пользователя)
-function EnableAppsSilentInstalling {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SilentInstalledAppsEnabled -PropertyType DWord -Value 1 -Force
-}
-
-# Do not suggest ways I can finish setting up my device to get the most out of Windows (current user only)
-# Не предлагать способы завершения настройки устройства для максимально эффективного использования Windows (только для текущего пользователя)
-function DisableWhatsNewInWindows {
-	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Name ScoobeSystemSettingEnabled -PropertyType DWord -Value 0 -Force
-}
-
-# Suggest ways I can finish setting up my device to get the most out of Windows
-# Предлагать способы завершения настройки устройства для максимально эффективного использования Windows
-function EnableWhatsNewInWindows {
-	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Name ScoobeSystemSettingEnabled -PropertyType DWord -Value 1 -Force
-}
-
-# Do not offer tailored experiences based on the diagnostic data setting (current user only)
-# Не предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных (только для текущего пользователя)
-function DisableTailoredExperiences {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy -Name TailoredExperiencesWithDiagnosticDataEnabled -PropertyType DWord -Value 0 -Force
-}
-
-# Offer tailored experiences based on the diagnostic data setting
-# Предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных
-function EnableTailoredExperiences {
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy -Name TailoredExperiencesWithDiagnosticDataEnabled -PropertyType DWord -Value 1 -Force
-}
-
-# Disable Bing search in the Start Menu (for the USA only)
-# Отключить поиск через Bing в меню "Пуск" (только для США)
-function DisableBingSearch {
-	if ((Get-WinHomeLocation).GeoId -eq 244) {
-		if (-not (Test-Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
-			New-Item -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
-		}
-		New-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name DisableSearchBoxSuggestions -PropertyType DWord -Value 1 -Force
-	}
-}
-
-# Enable Bing search in the Start Menu only (for the USA only)
-# Включить в меню "Пуск" поиск через Bing (только для США)
-function EnableBingSearch {
-	if ((Get-WinHomeLocation).GeoId -eq 244) {
-		Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name DisableSearchBoxSuggestions -Force -ErrorAction SilentlyContinue
-	}
-}
-
-# Disable find my device
-function DisableFindMyDevice {
-	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice)) {
-		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Force
-	}
-	if (-not (Test-Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice)) {
-		New-Item -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Name AllowFindMyDevice -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Name LocationSyncEnabled -PropertyType DWord -Value 0 -Force
-}
-
-# Disable apps suggestions, tips, welcome experience
-function DisableAppsSuggestionsTipsWelcomeExperience {
-	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent)) {
-		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Force
-	}
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableSoftLanding -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableWindowsConsumerFeatures -PropertyType DWord -Value 0 -Force
-}
-#endregion Privacy & Telemetry
 #region Start menu
 # Unpin all the Start tiles
 # Открепить все ярлыки от начального экрана
@@ -1290,6 +949,347 @@ function EnablePreviousVersionsPage {
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
 }
 #endregion Context menu
+#region Privacy & Telemetry
+# Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
+# Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
+function DisableTelemetryServices {
+	Get-Service -Name DiagTrack | Stop-Service -Force
+	Get-Service -Name DiagTrack | Set-Service -StartupType Disabled
+	Get-NetFirewallRule -Group DiagTrack | Set-NetFirewallRule -Enabled False -Action Block
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack -Name ShowedToastAtLevel -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\EventTranscriptKey -Name EnableEventTranscript -PropertyType DWord -Value 0 -Force
+}
+
+# Set the OS level of diagnostic data gathering to "Minimum"
+# Установить уровень сбора диагностических сведений ОС на "Минимальный"
+function SetMinimalDiagnosticDataLevel {
+	if (Get-WindowsEdition -Online | Where-Object -FilterScript { $_.Edition -like "Enterprise*" -or $_.Edition -eq "Education" }) {
+		# "Security"
+		# "Безопасность"
+		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
+	}
+	else {
+		# "Basic"
+		# "Базовая настройка"
+		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 0 -Force
+	}
+}
+
+# Set the default OS level of diagnostic data gathering
+# Установить уровень сбора диагностических сведений ОС по умолчанию
+function SetDefaultDiagnosticDataLevel {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection -Name AllowTelemetry -PropertyType DWord -Value 3 -Force
+}
+
+# Turn off Windows Error Reporting for the current user
+# Отключить отчеты об ошибках Windows для текущего пользователя
+function DisableWindowsErrorReporting {
+	if ((Get-WindowsEdition -Online).Edition -notmatch "Core*") {
+		Get-ScheduledTask -TaskName QueueReporting | Disable-ScheduledTask
+		New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\Windows Error Reporting" -Name Disabled -PropertyType DWord -Value 1 -Force
+	}
+}
+
+# Turn on Windows Error Reporting for the current user
+# Включить отчеты об ошибках Windows для текущего пользователя
+function EnableWindowsErrorReporting {
+	Get-ScheduledTask -TaskName QueueReporting | Enable-ScheduledTask
+	Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\Windows Error Reporting" -Name Disabled -Force -ErrorAction SilentlyContinue
+}
+
+# Change Windows feedback frequency to "Never" for the current user
+# Изменить частоту формирования отзывов на "Никогда" для текущего пользователя
+function DisableWindowsFeedback {
+	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Name NumberOfSIUFInPeriod -PropertyType DWord -Value 0 -Force
+}
+
+# Change Windows Feedback frequency to "Automatically" for the current user
+# Изменить частоту формирования отзывов на "Автоматически" для текущего пользователя
+function EnableWindowsFeedback {
+	Remove-Item -Path HKCU:\SOFTWARE\Microsoft\Siuf\Rules -Force -ErrorAction SilentlyContinue
+}
+
+# Turn off tracking apps launch event
+function TurnOffAppLaunchTracking { 
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name Start_TrackProgs -PropertyType DWord -Value 0 -Force
+}
+
+# Turn off diagnostics tracking scheduled tasks
+# Отключить задачи диагностического отслеживания
+function DisableScheduledTasks {
+	$ScheduledTaskList = @(
+		# Collects program telemetry information if opted-in to the Microsoft Customer Experience Improvement Program.
+		# Собирает телеметрические данные программы при участии в Программе улучшения качества программного обеспечения Майкрософт
+		"Microsoft Compatibility Appraiser",
+
+		# Collects program telemetry information if opted-in to the Microsoft Customer Experience Improvement Program
+		# Сбор телеметрических данных программы при участии в программе улучшения качества ПО
+		"ProgramDataUpdater",
+
+		# This task collects and uploads autochk SQM data if opted-in to the Microsoft Customer Experience Improvement Program
+		# Эта задача собирает и загружает данные SQM при участии в программе улучшения качества программного обеспечения
+		"Proxy",
+
+		# If the user has consented to participate in the Windows Customer Experience Improvement Program, this job collects and sends usage data to Microsoft
+		# Если пользователь изъявил желание участвовать в программе по улучшению качества программного обеспечения Windows, эта задача будет собирать и отправлять сведения о работе программного обеспечения в Майкрософт
+		"Consolidator",
+
+		# The USB CEIP (Customer Experience Improvement Program) task collects Universal Serial Bus related statistics and information about your machine and sends it to the Windows Device Connectivity engineering group at Microsoft
+		# При выполнении задачи программы улучшения качества ПО шины USB (USB CEIP) осуществляется сбор статистических данных об использовании универсальной последовательной шины USB и с ведений о компьютере, которые направляются инженерной группе Майкрософт по вопросам подключения устройств в Windows
+		"UsbCeip",
+
+		# The Windows Disk Diagnostic reports general disk and system information to Microsoft for users participating in the Customer Experience Program
+		# Для пользователей, участвующих в программе контроля качества программного обеспечения, служба диагностики дисков Windows предоставляет общие сведения о дисках и системе в корпорацию Майкрософт
+		"Microsoft-Windows-DiskDiagnosticDataCollector",
+
+		# Protects user files from accidental loss by copying them to a backup location when the system is unattended
+		# Защищает файлы пользователя от случайной потери за счет их копирования в резервное расположение, когда система находится в автоматическом режиме
+		"File History (maintenance mode)",
+
+		# Measures a system's performance and capabilities
+		# Измеряет быстродействие и возможности системы
+		"WinSAT",
+
+		# This task shows various Map related toasts
+		# Эта задача показывает различные тосты (всплывающие уведомления) приложения "Карты"
+		"MapsToastTask",
+
+		# This task checks for updates to maps which you have downloaded for offline use
+		# Эта задача проверяет наличие обновлений для карт, загруженных для автономного использования
+		"MapsUpdateTask",
+
+		# Initializes Family Safety monitoring and enforcement
+		# Инициализация контроля и применения правил семейной безопасности
+		"FamilySafetyMonitor",
+
+		# Synchronizes the latest settings with the Microsoft family features service
+		# Синхронизирует последние параметры со службой функций семьи учетных записей Майкрософт
+		"FamilySafetyRefreshTask",
+
+		# XblGameSave Standby Task
+		"XblGameSaveTask",
+	
+		# Microsoft Edge update task
+		"MicrosoftEdgeUpdateTaskMachineCore",
+		
+		# Microsoft Edge update task
+		"MicrosoftEdgeUpdateTaskMachineUA"
+	)
+
+	# If device is not a laptop disable FODCleanupTask too
+	# Если устройство не является ноутбуком, отключить также и FODCleanupTask
+	if ((Get-CimInstance -ClassName Win32_ComputerSystem).PCSystemType -ne 2) {
+		# Windows Hello
+		$ScheduledTaskList += "FODCleanupTask"
+	}
+
+	Get-ScheduledTask -TaskName $ScheduledTaskList | Disable-ScheduledTask
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\AitAgent"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
+	schtasks /Change /DISABLE /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
+	schtasks /Change /DISABLE /TN "Microsoft\Office\Office ClickToRun Service Monitor"
+	schtasks /Change /DISABLE /TN "Microsoft\Office\OfficeTelemetryAgentLogOn2016"
+	schtasks /Change /DISABLE /TN "Microsoft\Office\OfficeTelemetryAgentFallBack2016"
+	schtasks /Delete /F /TN "Microsoft\Windows\SetupSQMTask"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask"
+	schtasks /Delete /F /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"
+	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
+	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\AitAgent"
+	schtasks /Delete /F /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
+}
+
+# Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
+# Не использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
+function DisableSigninInfo {
+	$SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $env:USERNAME }).SID
+	if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Name OptOut -PropertyType DWord -Value 1 -Force
+}
+
+# Use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
+# Использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
+function EnableSigninInfo {
+	$SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $env:USERNAME }).SID
+	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Name OptOut -Force -ErrorAction SilentlyContinue
+}
+
+# Do not let websites provide locally relevant content by accessing language list (current user only)
+# Не позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
+function DisableLanguageListAccess {
+	New-ItemProperty -Path "HKCU:\Control Panel\International\User Profile" -Name HttpAcceptLanguageOptOut -PropertyType DWord -Value 1 -Force
+}
+
+# Let websites provide locally relevant content by accessing language list (current user only)
+# Позволять веб-сайтам предоставлять местную информацию за счет доступа к списку языков (только для текущего пользователя)
+function EnableLanguageListAccess {
+	Remove-ItemProperty -Path "HKCU:\Control Panel\International\User Profile" -Name HttpAcceptLanguageOptOut -Force -ErrorAction SilentlyContinue
+}
+
+# Do not allow apps to use advertising ID (current user only)
+# Не разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
+function DisableAdvertisingID {
+	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Name Enabled -PropertyType DWord -Value 0 -Force
+}
+
+# Allow apps to use advertising ID (current user only)
+# Разрешать приложениям использовать идентификатор рекламы (только для текущего пользователя)
+function EnableAdvertisingID {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo -Name Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Do not let apps on other devices open and message apps on this device, and vice versa (current user only)
+# Не разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
+function DisableShareAcrossDevices {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP -Name RomeSdkChannelUserAuthzPolicy -PropertyType DWord -Value 0 -Force
+}
+
+# Let apps on other devices open and message apps on this device, and vice versa (current user only)
+# Разрешать приложениям на других устройствах запускать приложения и отправлять сообщения на этом устройстве и наоборот (только для текущего пользователя)
+function EnableShareAcrossDevices {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP -Name RomeSdkChannelUserAuthzPolicy -PropertyType DWord -Value 1 -Force
+}
+
+# Do not show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
+# Не показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
+function DisableWindowsWelcomeExperience {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-310093Enabled -PropertyType DWord -Value 0 -Force
+}
+
+# Show the Windows welcome experiences after updates and occasionally when I sign in to highlight what's new and suggested (current user only)
+# Показывать экран приветствия Windows после обновлений и иногда при входе, чтобы сообщить о новых функциях и предложениях (только для текущего пользователя)
+function EnableWindowsWelcomeExperience {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-310093Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Get tip, trick, and suggestions as you use Windows (current user only)
+# Получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
+function EnableWindowsTips {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338389Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Do not get tip, trick, and suggestions as you use Windows (current user only)
+# Не получать советы, подсказки и рекомендации при использованию Windows (только для текущего пользователя)
+function DisableWindowsTips {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338389Enabled -PropertyType DWord -Value 0 -Force
+}
+
+# Do not show suggested content in the Settings app (current user only)
+# Не показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
+function DisableSuggestedContent {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338393Enabled -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353694Enabled -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353696Enabled -PropertyType DWord -Value 0 -Force
+}
+
+# Show suggested content in the Settings app (current user only)
+# Показывать рекомендуемое содержимое в приложении "Параметры" (только для текущего пользователя)
+function EnableSuggestedContent {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-338393Enabled -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353694Enabled -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SubscribedContent-353696Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Turn off automatic installing suggested apps (current user only)
+# Отключить автоматическую установку рекомендованных приложений (только для текущего пользователя)
+function DisableAppsSilentInstalling {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SilentInstalledAppsEnabled -PropertyType DWord -Value 0 -Force
+}
+
+# Turn on automatic installing suggested apps (current user only)
+# Включить автоматическую установку рекомендованных приложений (только для текущего пользователя)
+function EnableAppsSilentInstalling {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager -Name SilentInstalledAppsEnabled -PropertyType DWord -Value 1 -Force
+}
+
+# Do not suggest ways I can finish setting up my device to get the most out of Windows (current user only)
+# Не предлагать способы завершения настройки устройства для максимально эффективного использования Windows (только для текущего пользователя)
+function DisableWhatsNewInWindows {
+	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Name ScoobeSystemSettingEnabled -PropertyType DWord -Value 0 -Force
+}
+
+# Suggest ways I can finish setting up my device to get the most out of Windows
+# Предлагать способы завершения настройки устройства для максимально эффективного использования Windows
+function EnableWhatsNewInWindows {
+	if (-not (Test-Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement -Name ScoobeSystemSettingEnabled -PropertyType DWord -Value 1 -Force
+}
+
+# Do not offer tailored experiences based on the diagnostic data setting (current user only)
+# Не предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных (только для текущего пользователя)
+function DisableTailoredExperiences {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy -Name TailoredExperiencesWithDiagnosticDataEnabled -PropertyType DWord -Value 0 -Force
+}
+
+# Offer tailored experiences based on the diagnostic data setting
+# Предлагать персонализированные возможности, основанные на выбранном параметре диагностических данных
+function EnableTailoredExperiences {
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy -Name TailoredExperiencesWithDiagnosticDataEnabled -PropertyType DWord -Value 1 -Force
+}
+
+# Disable Bing search in the Start Menu (for the USA only)
+# Отключить поиск через Bing в меню "Пуск" (только для США)
+function DisableBingSearch {
+	if ((Get-WinHomeLocation).GeoId -eq 244) {
+		if (-not (Test-Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer)) {
+			New-Item -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Force
+		}
+		New-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name DisableSearchBoxSuggestions -PropertyType DWord -Value 1 -Force
+	}
+}
+
+# Enable Bing search in the Start Menu only (for the USA only)
+# Включить в меню "Пуск" поиск через Bing (только для США)
+function EnableBingSearch {
+	if ((Get-WinHomeLocation).GeoId -eq 244) {
+		Remove-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer -Name DisableSearchBoxSuggestions -Force -ErrorAction SilentlyContinue
+	}
+}
+
+# Disable find my device
+function DisableFindMyDevice {
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Force
+	}
+	if (-not (Test-Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice)) {
+		New-Item -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FindMyDevice -Name AllowFindMyDevice -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Settings\FindMyDevice -Name LocationSyncEnabled -PropertyType DWord -Value 0 -Force
+}
+
+# Disable apps suggestions, tips, welcome experience
+function DisableAppsSuggestionsTipsWelcomeExperience {
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableSoftLanding -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableWindowsConsumerFeatures -PropertyType DWord -Value 0 -Force
+}
+#endregion Privacy & Telemetry
 #region Gaming
 # Turn off Xbox Game Bar
 # Отключить Xbox Game Bar
