@@ -3067,7 +3067,9 @@ function DisableDeleteNotify {
 
 # Disable power throttling
 function DisablePowerThrottling {
-	Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
+	if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
+		Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
+	}	
 }
 
 # Disable wpp software tracing logs
