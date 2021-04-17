@@ -616,10 +616,6 @@ DisableWindowsCapabilities
 # Удалить Кортана из автозагрузки
 DisableCortanaAutostart
 #endregion UWP apps
-#region Chocolatey
-# Install Chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion Chocolatey
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -1183,4 +1179,8 @@ DisableHiberboot
 # Disable warning sounds 
 DisableWarningSounds
 #endregion System
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion Chocolatey
 Errors
