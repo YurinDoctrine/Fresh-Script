@@ -433,6 +433,9 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
+#region O&OShutup
+OOShutup
+#endregion O&OShutup
 #region Privacy & Telemetry
 # Disable the "Connected User Experiences and Telemetry" service (DiagTrack)
 # Отключить службу "Функциональные возможности для подключенных пользователей и телеметрия" (DiagTrack)
@@ -585,9 +588,6 @@ DisableMouseFeedback
 # Enable full-screen optimization
 EnableFullScreenOptimization
 #endregion Gaming
-#region O&OShutup
-OOShutup
-#endregion O&OShutup
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
@@ -710,205 +710,6 @@ DisableDefenderCloud
 # Disable ntfs refs mitigations
 DisableNTFSREFSMitigations
 #endregion Microsoft Defender & Security
-#region Performance
-# Adjust best performance(that would able to increase the overall performance)
-AdjustBestPerformance
-
-# Prevent battery saver
-PreventBatterySaver
-
-# Disable default disk defragmenter
-DisableDefaultDiskDefragmenter
-
-# Let personalize power plan, neither switch it off so
-LetPersonalizePowerPlan
-
-# Prevent require sign-in when after sleep 
-PreventRequireSignInWhenAfterSleep
-
-# Disable indexing
-DisableIndexing
-
-# Set current boot timeout value to 0
-SetBootTimeoutValue
-
-# Ntfs allow extended character 8dot3 rename
-NtfsAllowExtendedCharacter8dot3Rename
-
-# Ntfs disable 8dot3 name creation
-NtfsDisable8dot3NameCreation
-
-# Auto end tasks 
-AutoEndTasks
-
-# Hung app timeout
-HungAppTimeout
-
-# Wait to kill app timeout
-WaitToKillAppTimeout
-
-# Low-level hooks timeout
-LowLevelHooksTimeout
-
-# Foreground lock timeout
-ForegroundLockTimeout
-
-# No low disk space checks
-NoLowDiskSpaceChecks
-
-# Link resolve ignore link info
-LinkResolveIgnoreLinkInfo
-
-# No resolve search
-NoResolveSearch
-
-# No resolve track
-NoResolveTrack
-
-# No internet open with
-NoInternetOpenWith
-
-# Wait to kill service timeout
-WaitToKillServiceTimeout
-
-# Disable paging executive
-DisablePagingExecutive
-
-# Large system cache
-LargeSystemCache
-
-# IO page lock limit
-IoPageLockLimit
-
-# Paging files
-PagingFiles
-
-# Second-level data cache
-SecondLevelDataCache
-
-# Existing page files
-ExistingPageFiles
-
-# Enable prefetcher
-EnablePrefetcher
-
-# Wait to kill service timeout
-WaitToKillServiceTimeout1
-
-# Disable paging executive
-DisablePagingExecutive1
-
-# Enable boot optimization function
-EnableBootOptimizationFunction
-
-# Ntfs disable last access update
-NtfsDisableLastAccessUpdate
-
-# Max connections per 1_0 server
-MaxConnectionsPer1_0Server
-
-# Max connections per server
-MaxConnectionsPerServer
-
-# Non best effort limit
-NonBestEffortLimit
-
-# Double click height width
-DoubleClickHeightWidth
-
-# ValueMax
-ValueMax
-
-# Debloat microsoft services
-DebloatMicrosoftServices
-
-# Disable boot splash animations
-DisableBootSplashAnimations
-
-# Disable trusted platform module
-DisableTrustedPlatformModule
-
-# Enable legacy apic mode
-EnableLegacyApicMode
-
-# Disable integrity checks
-DisableIntegrityChecks
-
-# Disable last access
-DisableLastAccess
-
-# Set memory usage
-SetMemoryUsage
-
-# Disable boot logging
-DisableBootLogging
-
-# Increase default size buffer
-IncreaseDefaultSizeBuffer
-
-# IRP stack size
-IRPStackSize
-
-# Size
-Size
-
-# Max work items
-MaxWorkItems
-
-# Maxmpxct
-MaxMpxCt
-
-# Max cmds
-MaxCmds
-
-# Disable strict name checking
-DisableStrictNameChecking
-
-# Enable dynamic backlog
-EnableDynamicBacklog
-
-# Minimum dynamic backlog
-MinimumDynamicBacklog
-
-# Maximum dynamic backlog
-MaximumDynamicBacklog
-
-# Dynamic backlog growth delta
-DynamicBacklogGrowthDelta
-
-# Increase mft zone
-IncreaseMFTZone
-
-# Enable memory allocation in graphics driver
-EnableMemoryAllocationInGraphicsDriver
-
-# Disable realtime monitoring
-DisableRealtimeMonitoring
-
-# Enable hardware accelerated GPU scheduling
-EnableHardwareAcceleratedGPUScheduling
-
-# Indexer respect power modes
-IndexerRespectPowerModes
-
-# Disable delete notify
-DisableDeleteNotify
-
-# Disable power throttling
-DisablePowerThrottling
-
-# Disable wpp software tracing logs
-DisableWPPSoftwareTracingLogs
-
-# Cpu rate limit
-CpuRateLimit
-
-# Disable search history 
-DisableSearchHistory
-
-# Thread priority 
-ThreadPriority
-#endregion Performance
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -1183,4 +984,203 @@ DisableWarningSounds
 # Install Chocolatey package manager and pre-installs as well
 ChocolateyPackageManager
 #endregion Chocolatey
+#region Performance
+# Adjust best performance(that would able to increase the overall performance)
+AdjustBestPerformance
+
+# Prevent battery saver
+PreventBatterySaver
+
+# Disable default disk defragmenter
+DisableDefaultDiskDefragmenter
+
+# Let personalize power plan, neither switch it off so
+LetPersonalizePowerPlan
+
+# Prevent require sign-in when after sleep 
+PreventRequireSignInWhenAfterSleep
+
+# Disable indexing
+DisableIndexing
+
+# Set current boot timeout value to 0
+SetBootTimeoutValue
+
+# Ntfs allow extended character 8dot3 rename
+NtfsAllowExtendedCharacter8dot3Rename
+
+# Ntfs disable 8dot3 name creation
+NtfsDisable8dot3NameCreation
+
+# Auto end tasks 
+AutoEndTasks
+
+# Hung app timeout
+HungAppTimeout
+
+# Wait to kill app timeout
+WaitToKillAppTimeout
+
+# Low-level hooks timeout
+LowLevelHooksTimeout
+
+# Foreground lock timeout
+ForegroundLockTimeout
+
+# No low disk space checks
+NoLowDiskSpaceChecks
+
+# Link resolve ignore link info
+LinkResolveIgnoreLinkInfo
+
+# No resolve search
+NoResolveSearch
+
+# No resolve track
+NoResolveTrack
+
+# No internet open with
+NoInternetOpenWith
+
+# Wait to kill service timeout
+WaitToKillServiceTimeout
+
+# Disable paging executive
+DisablePagingExecutive
+
+# Large system cache
+LargeSystemCache
+
+# IO page lock limit
+IoPageLockLimit
+
+# Paging files
+PagingFiles
+
+# Second-level data cache
+SecondLevelDataCache
+
+# Existing page files
+ExistingPageFiles
+
+# Enable prefetcher
+EnablePrefetcher
+
+# Wait to kill service timeout
+WaitToKillServiceTimeout1
+
+# Disable paging executive
+DisablePagingExecutive1
+
+# Enable boot optimization function
+EnableBootOptimizationFunction
+
+# Ntfs disable last access update
+NtfsDisableLastAccessUpdate
+
+# Max connections per 1_0 server
+MaxConnectionsPer1_0Server
+
+# Max connections per server
+MaxConnectionsPerServer
+
+# Non best effort limit
+NonBestEffortLimit
+
+# Double click height width
+DoubleClickHeightWidth
+
+# ValueMax
+ValueMax
+
+# Debloat microsoft services
+DebloatMicrosoftServices
+
+# Disable boot splash animations
+DisableBootSplashAnimations
+
+# Disable trusted platform module
+DisableTrustedPlatformModule
+
+# Enable legacy apic mode
+EnableLegacyApicMode
+
+# Disable integrity checks
+DisableIntegrityChecks
+
+# Disable last access
+DisableLastAccess
+
+# Set memory usage
+SetMemoryUsage
+
+# Disable boot logging
+DisableBootLogging
+
+# Increase default size buffer
+IncreaseDefaultSizeBuffer
+
+# IRP stack size
+IRPStackSize
+
+# Size
+Size
+
+# Max work items
+MaxWorkItems
+
+# Maxmpxct
+MaxMpxCt
+
+# Max cmds
+MaxCmds
+
+# Disable strict name checking
+DisableStrictNameChecking
+
+# Enable dynamic backlog
+EnableDynamicBacklog
+
+# Minimum dynamic backlog
+MinimumDynamicBacklog
+
+# Maximum dynamic backlog
+MaximumDynamicBacklog
+
+# Dynamic backlog growth delta
+DynamicBacklogGrowthDelta
+
+# Increase mft zone
+IncreaseMFTZone
+
+# Enable memory allocation in graphics driver
+EnableMemoryAllocationInGraphicsDriver
+
+# Disable realtime monitoring
+DisableRealtimeMonitoring
+
+# Enable hardware accelerated GPU scheduling
+EnableHardwareAcceleratedGPUScheduling
+
+# Indexer respect power modes
+IndexerRespectPowerModes
+
+# Disable delete notify
+DisableDeleteNotify
+
+# Disable power throttling
+DisablePowerThrottling
+
+# Disable wpp software tracing logs
+DisableWPPSoftwareTracingLogs
+
+# Cpu rate limit
+CpuRateLimit
+
+# Disable search history 
+DisableSearchHistory
+
+# Thread priority 
+ThreadPriority
+#endregion Performance
 Errors
