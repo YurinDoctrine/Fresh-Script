@@ -35,7 +35,7 @@ function Check {
 	sfc.exe /scannow
 
 	# Disable compression
-	fsutil behavior set disablecompression 1; Compact.exe /CompactOS:never; Compact.exe /CompactOS:query
+	Compact.exe /CompactOS:always; Compact.exe /CompactOS:query
 }
 #region Start menu
 # Unpin all the Start tiles
