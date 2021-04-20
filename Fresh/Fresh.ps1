@@ -950,8 +950,8 @@ EnablePae
 # Disable au power management
 DisableAUPowerManagement
 
-# Prioritize csrr.exe service
-PrioritizeCSRRService
+# Prioritize csrrs.exe service
+PrioritizeCSRRSService
 
 # Disable lock screen
 DisableLockScreen
