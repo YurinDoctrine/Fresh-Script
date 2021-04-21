@@ -1090,7 +1090,7 @@ NonBestEffortLimit
 # Double click height width
 DoubleClickHeightWidth
 
-# ValueMax
+# Value max
 ValueMax
 
 # Debloat microsoft services

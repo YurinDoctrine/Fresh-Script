@@ -2391,7 +2391,7 @@ function DisableAUPowerManagement {
 }
 
 # Prioritize csrss.exe service
-function PrioritizeCSRSService {
+function PrioritizeCSRSSService {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions")) {
 		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions"
 	}
@@ -2787,7 +2787,7 @@ function DoubleClickHeightWidth {
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "6" -Force	
 }
 
-# ValueMax
+# Value max
 function ValueMax {
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name ValueMax -PropertyType DWord -Value 0 -Force
 }
