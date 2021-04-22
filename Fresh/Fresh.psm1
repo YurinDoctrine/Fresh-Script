@@ -2940,15 +2940,6 @@ function DisableTrustedPlatformModule {
 	bcdedit /set `{current`} tpmbootentropy ForceDisable
 }
 
-# Enable legacy apic mode
-function EnableLegacyApicMode {
-	bcdedit /set `{current`} uselegacyapicmode yes
-	bcdedit /set `{current`} x2apicpolicy disable
-	bcdedit /set `{current`} configaccesspolicy Default
-	bcdedit /set `{current`} MSI Default
-	bcdedit /set `{current`} usephysicaldestination No
-}
-
 # Disable integrity checks
 function DisableIntegrityChecks {
 	bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS

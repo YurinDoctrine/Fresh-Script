@@ -1102,9 +1102,6 @@ DisableBootSplashAnimations
 # Disable trusted platform module
 DisableTrustedPlatformModule
 
-# Enable legacy apic mode
-EnableLegacyApicMode
-
 # Disable integrity checks
 DisableIntegrityChecks
 
