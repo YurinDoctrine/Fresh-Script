@@ -2732,8 +2732,8 @@ function ExistingPageFiles {
 
 # Enable prefetcher
 function EnablePrefetcher {
-	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management\PrefetchParameters")) {
-		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -Force
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -Name "EnablePrefetcher" -PropertyType DWord -Value 1 -Force
 }
