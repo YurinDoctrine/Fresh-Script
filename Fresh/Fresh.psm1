@@ -2363,11 +2363,12 @@ function NetworkConnectionStatusIndicator {
 
 # Fix timers
 function FixTimers {
+	bcdedit /set `{current`} useplatformtick true
+	bcdedit /set `{current`} disabledynamictick true
+	bcdedit /set `{current`} tscsyncpolicy Legacy
+	bcdedit /set `{current`} x2apicpolicy Disable
+	bcdedit /set `{current`} uselegacyapicmode Yes
 	bcdedit /deletevalue `{current`} useplatformclock
-	bcdedit /set `{current`} useplatformclock false
-	bcdedit /set `{current`} useplatformtick yes
-	bcdedit /set `{current`} disabledynamictick yes
-	bcdedit /set `{current`} tscsyncpolicy Enhanced
 }
 
 # Don't use firmware pci settings
