@@ -25,17 +25,20 @@ function Check {
 		}
 	}
 
-	# Run Disk cleanup utility
-	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
-
-	# Flush DNS resolver cache
-	ipconfig /flushdns
-
 	# Run SFC system file repair
 	sfc.exe /scannow
 
 	# Disable compression
 	Compact.exe /CompactOS:always; Compact.exe /CompactOS:query
+
+	# Flush DNS resolver cache
+	ipconfig /flushdns
+
+	# Run Disk cleanup utility
+	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
+
+	# Run Windows store reset
+	WSReset.exe
 }
 #region Start menu
 # Unpin all the Start tiles
