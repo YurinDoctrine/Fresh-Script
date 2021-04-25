@@ -2384,6 +2384,7 @@ function FixTimers {
 	bcdedit /set `{current`} tscsyncpolicy Legacy
 	bcdedit /set `{current`} x2apicpolicy Disable
 	bcdedit /set `{current`} uselegacyapicmode Yes
+	bcdedit /set `{current`} debug No
 	bcdedit /deletevalue `{current`} useplatformclock
 }
 
