@@ -966,6 +966,9 @@ function DisableTelemetryServices {
 	Get-NetFirewallRule -Group DiagTrack | Set-NetFirewallRule -Enabled False -Action Block
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack -Name ShowedToastAtLevel -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack\EventTranscriptKey -Name EnableEventTranscript -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\WMI\Autologger\Diagtrack-Listener -Name Start -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\WMI\Autologger\DiagLog -Name Start -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\WMI\Autologger\WiFiSession -Name Start -PropertyType DWord -Value 0 -Force
 }
 
 # Set the OS level of diagnostic data gathering to "Minimum"
@@ -1441,10 +1444,10 @@ function EnableFullScreenOptimization {
 		New-Item -Force "HKCU:\System\GameConfigStore"
 	}
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DSEBehavior" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DSEBehavior" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 1 -Force
 }
 #endregion Gaming
@@ -2978,6 +2981,7 @@ function SetMemoryUsage {
 
 # Disable boot logging
 function DisableBootLogging {
+	New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\AeDebug" -Name "Auto" -Type DWord -Value 0 -Force
 	bcdedit /bootdebug `{current`} off
 	bcdedit /debug `{current`} off
 	bcdedit /set `{current`} bootlog no
