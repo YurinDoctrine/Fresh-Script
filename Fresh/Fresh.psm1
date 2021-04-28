@@ -1335,7 +1335,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DisableExceptionChainValidation -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DistributeTimers -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 40 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 30 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 8 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name LazyModeTimeout -PropertyType DWord -Value 10000 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name NetworkThrottlingIndex -PropertyType DWord -Value 4294967295 -Force
@@ -2699,7 +2699,7 @@ function NoLowDiskSpaceChecks {
 	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
 		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Force
 	}
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 69 -Force
 }
 
 # Link resolve ignore link info
@@ -2709,7 +2709,7 @@ function LinkResolveIgnoreLinkInfo {
 
 # No resolve search
 function NoResolveSearch {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveSearch" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveSearch" -PropertyType DWord -Value 255 -Force
 }
 
 # No resolve track
@@ -2719,7 +2719,7 @@ function NoResolveTrack {
 
 # No internet open with
 function NoInternetOpenWith {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoInternetOpenWith" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoInternetOpenWith" -PropertyType DWord -Value 52 -Force
 }
 
 # Wait to kill service timeout
@@ -2735,6 +2735,7 @@ function DisablePagingExecutive {
 # Large system cache
 function LargeSystemCache {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "LargeSystemCache" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SystemCacheLimit" -PropertyType DWord -Value 512 -Force
 }
 
 # IO page lock limit
