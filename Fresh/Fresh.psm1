@@ -2862,6 +2862,8 @@ function DebloatMicrosoftServices {
 	Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TermService" -Force -WarningAction SilentlyContinue
 	Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "TieringEngineService" -Force -WarningAction SilentlyContinue
+	Set-Service TieringEngineService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
 	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
@@ -2876,6 +2878,8 @@ function DebloatMicrosoftServices {
 	Set-Service lltdsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "swprv" -Force -WarningAction SilentlyContinue
 	Set-Service swprv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "spectrum" -Force -WarningAction SilentlyContinue
+	Set-Service spectrum -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "VSS" -Force -WarningAction SilentlyContinue
 	Set-Service VSS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "vds" -Force -WarningAction SilentlyContinue
@@ -2918,6 +2922,8 @@ function DebloatMicrosoftServices {
 	Set-Service WiaRpc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "upnphost" -Force -WarningAction SilentlyContinue
 	Set-Service upnphost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "UsoSvc" -Force -WarningAction SilentlyContinue
+	Set-Service UsoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "hidserv" -Force -WarningAction SilentlyContinue
 	Set-Service hidserv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
@@ -2952,12 +2958,18 @@ function DebloatMicrosoftServices {
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
 	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WFDSConMgrSvc" -Force -WarningAction SilentlyContinue
+	Set-Service WFDSConMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
 	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WinRM" -Force -WarningAction SilentlyContinue
 	Set-Service WinRM -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WPDBusEnum" -Force -WarningAction SilentlyContinue
+	Set-Service WPDBusEnum -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "wmiApSrv" -Force -WarningAction SilentlyContinue
+	Set-Service wmiApSrv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
