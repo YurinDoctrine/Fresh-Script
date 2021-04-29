@@ -2884,8 +2884,6 @@ function DebloatMicrosoftServices {
 	Set-Service spectrum -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "VSS" -Force -WarningAction SilentlyContinue
 	Set-Service VSS -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "vds" -Force -WarningAction SilentlyContinue
-	Set-Service vds -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "NetTcpPortSharing" -Force -WarningAction SilentlyContinue
 	Set-Service NetTcpPortSharing -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "NcbService" -Force -WarningAction SilentlyContinue
