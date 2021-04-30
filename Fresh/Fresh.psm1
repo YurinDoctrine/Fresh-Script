@@ -1331,9 +1331,9 @@ function EnableXboxGameTips {
 # Adjust best performance for all programs and also foreground services
 function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\NlaSvc\Parameters\Internet" -Name EnableActiveProbing -PropertyType DWord -Value 0 -Force
+	Remove-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DistributeTimers -Force
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name KernelSEHOPEnabled -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DisableExceptionChainValidation -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DistributeTimers -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 30 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name SystemResponsiveness -PropertyType DWord -Value 8 -Force
@@ -2430,11 +2430,11 @@ function PrioritizeCSRSSService {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winlogon.exe\PerfOptions")) {
 		New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winlogon.exe\PerfOptions"
 	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "2" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\csrss.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "3" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "2" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\dwm.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "3" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winlogon.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "4" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winlogon.exe\PerfOptions" -Name CpuPriorityClass -Type "DWORD" -Value "2" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\winlogon.exe\PerfOptions" -Name IoPriority -Type "DWORD" -Value "3" -Force
 }
 
@@ -2503,7 +2503,12 @@ function DisableSleepStudy {
 
 # Disable system energy saving
 function DisableSystemEnergySaving {
-	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
 }
 
 # Disable hiberboot
@@ -2872,6 +2877,10 @@ function DebloatMicrosoftServices {
 	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "InstallService" -Force -WarningAction SilentlyContinue
+	Set-Service InstallService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
+	Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
 	Set-Service SharedAccess -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lltdsvc" -Force -WarningAction SilentlyContinue
@@ -3111,8 +3120,8 @@ function DisableDeleteNotify {
 	fsutil behavior set DisableDeleteNotify 1
 }
 
-# Disable power throttling
-function DisablePowerThrottling {
+# Enable power throttling
+function EnablePowerThrottling {
 	if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
 		Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
 	}	

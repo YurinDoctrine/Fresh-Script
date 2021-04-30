@@ -1165,8 +1165,8 @@ IndexerRespectPowerModes
 # Disable delete notify
 DisableDeleteNotify
 
-# Disable power throttling
-DisablePowerThrottling
+# Enable power throttling
+EnablePowerThrottling
 
 # Disable wpp software tracing logs
 DisableWPPSoftwareTracingLogs
