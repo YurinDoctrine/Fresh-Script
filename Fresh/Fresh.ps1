@@ -232,13 +232,9 @@ HideFirstSigninAnimation
 # Показывать анимацию при первом входе в систему после обновления
 # ShowFirstSigninAnimation
 
-# Set the quality factor of the JPEG desktop wallpapers to maximum (current user only)
-# Установить коэффициент качества обоев рабочего стола в формате JPEG на максимальный (только для текущего пользователя)
-JPEGWallpapersQualityMax
-
 # Set the quality factor of the JPEG desktop wallpapers to default (current user only)
 # Установить коэффициент качества обоев рабочего стола в формате JPEG по умолчанию (только для текущего пользователя)
-# JPEGWallpapersQualityDefault
+JPEGWallpapersQualityDefault
 
 # Start Task Manager in expanded mode (current user only)
 # Запускать Диспетчера задач в развернутом виде (только для текущего пользователя)

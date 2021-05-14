@@ -540,12 +540,6 @@ function ShowFirstSigninAnimation {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name EnableFirstLogonAnimation -PropertyType DWord -Value 1 -Force
 }
 
-# Set the quality factor of the JPEG desktop wallpapers to maximum (current user only)
-# Установить коэффициент качества обоев рабочего стола в формате JPEG на максимальный (только для текущего пользователя)
-function JPEGWallpapersQualityMax {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name JPEGImportQuality -PropertyType DWord -Value 64 -Force
-}
-
 # Set the quality factor of the JPEG desktop wallpapers to default (current user only)
 # Установить коэффициент качества обоев рабочего стола в формате JPEG по умолчанию (только для текущего пользователя)
 function JPEGWallpapersQualityDefault {
