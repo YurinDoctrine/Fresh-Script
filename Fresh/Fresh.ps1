@@ -624,19 +624,19 @@ DismissSmartScreenFilter
 	Включать командную строку в событиях создания процесса
 	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
 #>
-# EnableAuditProcess
+EnableAuditProcess
 
 # Turn off events auditing generated when a process is created or starts
 # Выключить аудит событий, возникающих при создании или запуске процесса
-DisableAuditProcess
+# DisableAuditProcess
 
 # Turn on events auditing generated when a process is created or starts
 # Включить аудит событий, возникающих при создании или запуске процесса
-# EnableAuditCommandLineProcess
+EnableAuditCommandLineProcess
 
 # Do not include command line in process creation events
 # Не включать командную строку в событиях создания процесса
-DisableAuditCommandLineProcess
+# DisableAuditCommandLineProcess
 
 # Do not check apps and files within Microsofot Defender SmartScreen
 # Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
