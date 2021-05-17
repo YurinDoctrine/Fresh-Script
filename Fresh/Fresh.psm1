@@ -543,7 +543,9 @@ function ShowFirstSigninAnimation {
 # Set the quality factor of the JPEG desktop wallpapers to default (current user only)
 # Установить коэффициент качества обоев рабочего стола в формате JPEG по умолчанию (только для текущего пользователя)
 function JPEGWallpapersQualityDefault {
-	Remove-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name JPEGImportQuality -Force -ErrorAction SilentlyContinue
+	if ((Test-Path -Path "HKCU:\Control Panel\Desktop")) {
+		Remove-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name JPEGImportQuality -Force -ErrorAction SilentlyContinue
+	}
 }
 
 # Start Task Manager in expanded mode (current user only)
@@ -2066,77 +2068,36 @@ function EnableHibernate {
 # Change the %TEMP% environment variable path to the %SystemDrive%\Temp (both machine-wide, and for the current user)
 # Изменить путь переменной среды для %TEMP% на %SystemDrive%\Temp (для всех пользователей)
 function SetTempPath {
-	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\Temp", "User")
-	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\Temp", "Machine")
-	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\Temp", "Process")
-	New-ItemProperty -Path HKCU:\Environment -Name TMP -PropertyType ExpandString -Value %SystemDrive%\Temp -Force
+	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\temp", "User")
+	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\temp", "Machine")
+	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\temp", "Process")
+	New-ItemProperty -Path HKCU:\Environment -Name TMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
-	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\Temp", "User")
-	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\Temp", "Machine")
-	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\Temp", "Process")
-	New-ItemProperty -Path HKCU:\Environment -Name TEMP -PropertyType ExpandString -Value %SystemDrive%\Temp -Force
+	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\temp", "User")
+	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\temp", "Machine")
+	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\temp", "Process")
+	New-ItemProperty -Path HKCU:\Environment -Name TEMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TMP -PropertyType ExpandString -Value %SystemDrive%\Temp -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TEMP -PropertyType ExpandString -Value %SystemDrive%\Temp -Force
-
-	# Restart the Printer Spooler service (Spooler)
-	# Перезапустить службу "Диспетчер печати" (Spooler)
-	Restart-Service -Name Spooler -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TEMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
 	Stop-Process -Name FileCoAuth -Force -ErrorAction Ignore
 
-	Remove-Item -Path $env:SystemRoot\Temp -Recurse -Force -ErrorAction Ignore
-	Get-Item -Path $env:LOCALAPPDATA\Temp | Where-Object -FilterScript { $_.LinkType -ne "SymbolicLink" } | Remove-Item -Recurse -Force -ErrorAction Ignore
+	Remove-Item -Path $env:SystemRoot\temp -Recurse -Force -ErrorAction Ignore
+	Get-Item -Path $env:LOCALAPPDATA\temp | Where-Object -FilterScript { $_.LinkType -ne "SymbolicLink" } | Remove-Item -Recurse -Force -ErrorAction Ignore
 
-	# Create a symbolic link to the %SystemDrive%\Temp folder
-	# Создать символическую ссылку к папке %SystemDrive%\Temp
+	# Create a symbolic link to the %SystemDrive%\temp folder
+	# Создать символическую ссылку к папке %SystemDrive%\temp
 	try {
-		New-Item -Path $env:LOCALAPPDATA\Temp -ItemType SymbolicLink -Value $env:SystemDrive\Temp -Force
+		New-Item -Path $env:LOCALAPPDATA\temp -ItemType SymbolicLink -Value $env:SystemDrive\temp -Force
 	}
  catch [System.Exception] {
 		$Message = Invoke-Command -ScriptBlock ([ScriptBlock]::Create($Localization.LOCALAPPDATANotEmptyFolder))
 		Write-Error -Message $Message -ErrorAction SilentlyContinue
 	}
  finally {
-		Invoke-Item -Path $env:LOCALAPPDATA\Temp
+		Invoke-Item -Path $env:LOCALAPPDATA\temp
 	}
-}
-
-# Change the %TEMP% environment variable path to the %LOCALAPPDATA%\Temp (default value) (both machine-wide, and for the current user)
-# Изменить путь переменной среды для %TEMP% на LOCALAPPDATA%\Temp (значение по умолчанию) (для всех пользователей)
-function SetDefaultTempPath {
-	# Remove a symbolic link to the %SystemDrive%\Temp folder
-	# Удалить символическую ссылку к папке %SystemDrive%\Temp
-	(Get-Item -Path $env:LOCALAPPDATA\Temp -Force).Delete()
-
-	if (-not (Test-Path -Path $env:SystemRoot\Temp)) {
-		New-Item -Path $env:SystemRoot\Temp
-	}
-	if (-not (Test-Path -Path $env:LOCALAPPDATA\Temp)) {
-		New-Item -Path $env:LOCALAPPDATA\Temp -ItemType Directory -Force
-	}
-
-	[Environment]::SetEnvironmentVariable("TMP", "$env:LOCALAPPDATA\Temp", "User")
-	[Environment]::SetEnvironmentVariable("TMP", "$env:SystemRoot\TEMP", "Machine")
-	[Environment]::SetEnvironmentVariable("TMP", "$env:LOCALAPPDATA\Temp", "Process")
-	New-ItemProperty -Path HKCU:\Environment -Name TMP -PropertyType ExpandString -Value %LOCALAPPDATA%\Temp -Force
-
-	[Environment]::SetEnvironmentVariable("TEMP", "$env:LOCALAPPDATA\Temp", "User")
-	[Environment]::SetEnvironmentVariable("TEMP", "$env:SystemRoot\TEMP", "Machine")
-	[Environment]::SetEnvironmentVariable("TEMP", "$env:LOCALAPPDATA\Temp", "Process")
-	New-ItemProperty -Path HKCU:\Environment -Name TEMP -PropertyType ExpandString -Value %LOCALAPPDATA%\Temp -Force
-
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TMP -PropertyType ExpandString -Value %SystemRoot%\TEMP -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TEMP -PropertyType ExpandString -Value %SystemRoot%\TEMP -Force
-
-	# Restart the Printer Spooler service (Spooler)
-	# Перезапустить службу "Диспетчер печати" (Spooler)
-	Restart-Service -Name Spooler -Force
-
-	Stop-Process -Name OneDrive -Force -ErrorAction Ignore
-	Stop-Process -Name FileCoAuth -Force -ErrorAction Ignore
-
-	Remove-Item -Path $env:SystemDrive\Temp -Recurse -Force -ErrorAction Ignore
 }
 
 # Enable Windows 260 character path limit
