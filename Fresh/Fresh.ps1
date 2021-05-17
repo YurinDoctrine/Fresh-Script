@@ -759,10 +759,6 @@ DisableHibernate
 # Изменить путь переменной среды для %TEMP% на %SystemDrive%\Temp (для всех пользователей)
 SetTempPath
 
-# Change %TEMP% environment variable path to the %LOCALAPPDATA%\Temp (default value) (both machine-wide, and for the current user)
-# Изменить путь переменной среды для %TEMP% на LOCALAPPDATA%\Temp (значение по умолчанию) (для всех пользователей)
-# SetDefaultTempPath
-
 # Enable Windows 260 character path limit
 # Включить ограничение Windows на 260 символов в пути
 EnableWin32LongPaths
