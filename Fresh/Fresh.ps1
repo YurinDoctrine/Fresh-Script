@@ -555,7 +555,6 @@ DisableDefenderCloud
 # Disable ntfs refs mitigations
 DisableNTFSREFSMitigations
 #endregion Microsoft Defender & Security
-
 #region O&OShutup
 OOShutup
 #endregion O&OShutup
