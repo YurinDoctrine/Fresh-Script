@@ -945,6 +945,254 @@ function EnablePreviousVersionsPage {
 	Remove-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name NoPreviousVersionsPage -Force -ErrorAction SilentlyContinue
 }
 #endregion Context menu
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+function ChocolateyPackageManager {
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; cinst pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose;	cinst --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; cinst 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer transmission spotify; cinst --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer transmission spotify
+}
+#endregion Chocolatey
+#region Microsoft Defender & Security
+# Turn on Microsoft Defender Exploit Guard network protection
+# Включить защиту сети в Microsoft Defender Exploit Guard
+function EnableNetworkProtection {
+	Set-MpPreference -EnableNetworkProtection Enabled
+}
+
+# Turn off Microsoft Defender Exploit Guard network protection
+# Выключить защиту сети в Microsoft Defender Exploit Guard
+function DisableNetworkProtection {
+	Set-MpPreference -EnableNetworkProtection Disabled
+}
+
+# Turn on detection for potentially unwanted applications and block them
+# Включить обнаружение потенциально нежелательных приложений и блокировать их
+function EnablePUAppsDetection {
+	Set-MpPreference -PUAProtection Enabled
+}
+
+# Turn off detection for potentially unwanted applications and block them
+# Выключить обнаружение потенциально нежелательных приложений и блокировать их
+function DisabledPUAppsDetection {
+	Set-MpPreference -PUAProtection Disabled
+}
+
+# Run Microsoft Defender within a sandbox
+# Запускать Microsoft Defender в песочнице
+function EnableDefenderSandbox {
+	setx /M MP_FORCE_USE_SANDBOX 1
+}
+
+# Do not run Microsoft Defender within a sandbox
+# Не запускать Microsoft Defender в песочнице
+function DisableDefenderSandbox {
+	setx /M MP_FORCE_USE_SANDBOX 0
+}
+
+# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
+function DismissMSAccount {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AccountProtection_MicrosoftAccount_Disconnected -PropertyType DWord -Value 1 -Force
+}
+
+# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
+function DismissSmartScreenFilter {
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Type DWord -Value 0 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
+	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")) {
+		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force
+	}
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name EnableWebContentEvaluation -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name PreventOverride -Type DWord -Value 0 -Force
+}
+
+<#
+	Include command line in process creation events
+	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
+
+	Включать командную строку в событиях создания процесса
+	Необходимо включить аудит событий, чтобы работал данный функционал (функция "EnableAuditProcess")
+#>
+function EnableAuditProcess {
+	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
+}
+
+# Turn off events auditing generated when a process is created or starts
+# Выключить аудит событий, возникающих при создании или запуске процесса
+function DisableAuditProcess {
+	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:disable /failure:disable
+}
+
+# Turn on events auditing generated when a process is created or starts
+# Включить аудит событий, возникающих при создании или запуске процесса
+function EnableAuditCommandLineProcess {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Do not include command line in process creation events
+# Не включать командную строку в событиях создания процесса
+function DisableAuditCommandLineProcess {
+	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
+		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
+	} 
+}
+
+# Do not check apps and files within Microsoft Defender SmartScreen
+# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+function DisableAppsSmartScreen {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Off -Force
+}
+
+# Check apps and files within Microsoft Defender SmartScreen
+# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+function EnableAppsSmartScreen {
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Warn -Force
+}
+
+# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
+# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
+function DisableSaveZoneInformation {
+	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments)) {
+		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Force
+	}
+	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -PropertyType DWord -Value 1 -Force
+}
+
+# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
+# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
+function EnableSaveZoneInformation {
+	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -Force -ErrorAction SilentlyContinue
+}
+
+# Disable activity history
+function DisableActivityHistory {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableActivityFeed -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name PublishUserActivities -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name UploadUserActivities -Type DWord -Value 0 -Force
+}
+
+# Disable automatic map updates
+function DisableMapUpdates {
+	New-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0 -Force
+}
+
+# Disable wap push service
+function DisableWAPPush {
+	Stop-Service "dmwappushservice" -Force -WarningAction SilentlyContinue
+	Set-Service "dmwappushservice" -StartupType Disabled
+}
+
+# Enable strong cryptography for .NET Framework(version 4 and above)
+function EnableDotNetStrongCrypto {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1")) {
+		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000")) {
+		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
+}
+
+<#
+Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
+This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
+Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
+#>
+function EnableMeltdownCompatFlag {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -Type DWord -Value 0 -Force
+}
+
+# Disable password complexity and maximum age requirements
+function DisablePasswordPolicy {
+	$tmpfile = New-TemporaryFile
+	secedit /export /cfg $tmpfile /quiet
+	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
+	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
+	Remove-Item -Path $tmpfile
+}
+
+# Schedule automatic maintenance hours
+function AutomaticMaintenanceHours {
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name "Activation Boundary" -Type String -Value "2001-01-01T11:00:00" -Force
+}
+
+# Turn on memory integry(virtualization based security)
+function TurnOnMemoryIntegry {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -PropertyType DWord -Value 1 -Force
+}
+
+# Disable implicit administrative shares
+function DisableAdminShares {
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "AutoShareWks" -PropertyType DWord -Value 0 -Force
+}
+
+# Disable obsolete SMB protocol(disabled by default since 1709)
+function DisableSMB {
+	Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+	Set-SmbServerConfiguration -EnableSMB2Protocol $false -Force
+}
+
+# Disable link-local multicast name resolution(LLMNR) protocol
+function DisableLLMNR {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -PropertyType DWord -Value 0 -Force
+}
+
+# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
+function SetUnknownNetworksPublic {
+	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24")) {
+		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" -Name "Category" -ErrorAction SilentlyContinue
+	}
+}
+
+# Disable automatic installation of network devices
+function DisableNetDevicesAutoInst {
+	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private")) {
+		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
+}
+
+# Hide tray icon
+function HideTrayIcon {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1 -Force
+}
+
+# Disable defender cloud
+function DisableDefenderCloud {
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
+		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SpynetReporting" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
+}
+
+# Disable ntfs refs mitigations
+function DisableNTFSREFSMitigations {
+	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name "ProtectionMode" -Type DWord -Value 0 -Force
+}
+#endregion Microsoft Defender & Security
 #region O&OShutup
 function OOShutup {
 	Write-Warning -Message $Localization.OOShutup
@@ -1583,248 +1831,6 @@ function EnableFullScreenOptimization {
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 1 -Force
 }
 #endregion Gaming
-#region Microsoft Defender & Security
-# Turn on Microsoft Defender Exploit Guard network protection
-# Включить защиту сети в Microsoft Defender Exploit Guard
-function EnableNetworkProtection {
-	Set-MpPreference -EnableNetworkProtection Enabled
-}
-
-# Turn off Microsoft Defender Exploit Guard network protection
-# Выключить защиту сети в Microsoft Defender Exploit Guard
-function DisableNetworkProtection {
-	Set-MpPreference -EnableNetworkProtection Disabled
-}
-
-# Turn on detection for potentially unwanted applications and block them
-# Включить обнаружение потенциально нежелательных приложений и блокировать их
-function EnablePUAppsDetection {
-	Set-MpPreference -PUAProtection Enabled
-}
-
-# Turn off detection for potentially unwanted applications and block them
-# Выключить обнаружение потенциально нежелательных приложений и блокировать их
-function DisabledPUAppsDetection {
-	Set-MpPreference -PUAProtection Disabled
-}
-
-# Run Microsoft Defender within a sandbox
-# Запускать Microsoft Defender в песочнице
-function EnableDefenderSandbox {
-	setx /M MP_FORCE_USE_SANDBOX 1
-}
-
-# Do not run Microsoft Defender within a sandbox
-# Не запускать Microsoft Defender в песочнице
-function DisableDefenderSandbox {
-	setx /M MP_FORCE_USE_SANDBOX 0
-}
-
-# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
-function DismissMSAccount {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AccountProtection_MicrosoftAccount_Disconnected -PropertyType DWord -Value 1 -Force
-}
-
-# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
-function DismissSmartScreenFilter {
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows Security Health\State" -Name AppAndBrowser_EdgeSmartScreenOff -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Type DWord -Value 0 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" -Name EnabledV9 -Type DWord -Value 0 -Force
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost")) {
-		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Force
-	}
-	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name EnableWebContentEvaluation -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\AppHost" -Name PreventOverride -Type DWord -Value 0 -Force
-}
-
-<#
-	Include command line in process creation events
-	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
-
-	Включать командную строку в событиях создания процесса
-	Необходимо включить аудит событий, чтобы работал данный функционал (функция "EnableAuditProcess")
-#>
-function EnableAuditProcess {
-	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
-}
-
-# Turn off events auditing generated when a process is created or starts
-# Выключить аудит событий, возникающих при создании или запуске процесса
-function DisableAuditProcess {
-	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:disable /failure:disable
-}
-
-# Turn on events auditing generated when a process is created or starts
-# Включить аудит событий, возникающих при создании или запуске процесса
-function EnableAuditCommandLineProcess {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Do not include command line in process creation events
-# Не включать командную строку в событиях создания процесса
-function DisableAuditCommandLineProcess {
-	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
-		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
-	} 
-}
-
-# Do not check apps and files within Microsoft Defender SmartScreen
-# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-function DisableAppsSmartScreen {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Off -Force
-}
-
-# Check apps and files within Microsoft Defender SmartScreen
-# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-function EnableAppsSmartScreen {
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Warn -Force
-}
-
-# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
-# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
-function DisableSaveZoneInformation {
-	if (-not (Test-Path -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments)) {
-		New-Item -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Force
-	}
-	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -PropertyType DWord -Value 1 -Force
-}
-
-# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
-# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
-function EnableSaveZoneInformation {
-	Remove-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments -Name SaveZoneInformation -Force -ErrorAction SilentlyContinue
-}
-
-# Disable activity history
-function DisableActivityHistory {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableActivityFeed -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name PublishUserActivities -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name UploadUserActivities -Type DWord -Value 0 -Force
-}
-
-# Disable automatic map updates
-function DisableMapUpdates {
-	New-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0 -Force
-}
-
-# Disable wap push service
-function DisableWAPPush {
-	Stop-Service "dmwappushservice" -Force -WarningAction SilentlyContinue
-	Set-Service "dmwappushservice" -StartupType Disabled
-}
-
-# Enable strong cryptography for .NET Framework(version 4 and above)
-function EnableDotNetStrongCrypto {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1")) {
-		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.1" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-	if (!(Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000")) {
-		New-Item -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.5.25000" -Name "SchUseStrongCrypto" -Type DWord -Value 1 -Force
-}
-
-<#
-Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
-This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
-Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
-#>
-function EnableMeltdownCompatFlag {
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -Type DWord -Value 0 -Force
-}
-
-# Disable password complexity and maximum age requirements
-function DisablePasswordPolicy {
-	$tmpfile = New-TemporaryFile
-	secedit /export /cfg $tmpfile /quiet
-	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
-	secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
-	Remove-Item -Path $tmpfile
-}
-
-# Schedule automatic maintenance hours
-function AutomaticMaintenanceHours {
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance" -Name "Activation Boundary" -Type String -Value "2001-01-01T11:00:00" -Force
-}
-
-# Turn on memory integry(virtualization based security)
-function TurnOnMemoryIntegry {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" -Name Enabled -PropertyType DWord -Value 1 -Force
-}
-
-# Disable implicit administrative shares
-function DisableAdminShares {
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "AutoShareWks" -PropertyType DWord -Value 0 -Force
-}
-
-# Disable obsolete SMB protocol(disabled by default since 1709)
-function DisableSMB {
-	Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
-	Set-SmbServerConfiguration -EnableSMB2Protocol $false -Force
-}
-
-# Disable link-local multicast name resolution(LLMNR) protocol
-function DisableLLMNR {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -PropertyType DWord -Value 0 -Force
-}
-
-# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
-function SetUnknownNetworksPublic {
-	if ((Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24")) {
-		Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\010103000F0000F0010000000F0000F0C967A3643C3AD745950DA7859209176EF5B87C875FA20DF21951640E807D7C24" -Name "Category" -ErrorAction SilentlyContinue
-	}
-}
-
-# Disable automatic installation of network devices
-function DisableNetDevicesAutoInst {
-	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private")) {
-		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" -Name "AutoSetup" -Type DWord -Value 0 -Force
-}
-
-# Hide tray icon
-function HideTrayIcon {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" -Name "HideSystray" -Type DWord -Value 1 -Force
-}
-
-# Disable defender cloud
-function DisableDefenderCloud {
-	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet")) {
-		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Force
-	}
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SpynetReporting" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" -Name "SubmitSamplesConsent" -Type DWord -Value 2 -Force
-}
-
-# Disable ntfs refs mitigations
-function DisableNTFSREFSMitigations {
-	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name "ProtectionMode" -Type DWord -Value 0 -Force
-}
-#endregion Microsoft Defender & Security
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -2605,12 +2611,6 @@ function DisableWarningSounds {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Warning Sounds" -PropertyType DWord -Value 0 -Force
 }
 #endregion System
-#region Chocolatey
-# Install Chocolatey package manager and pre-installs as well
-function ChocolateyPackageManager {
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; cinst pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose;	cinst --ignore-checksums pswindowsupdate dotnetfx directx vcredist-all jre8 openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; cinst 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer transmission spotify; cinst --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer transmission spotify
-}
-#endregion Chocolatey
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 function AdjustBestPerformance {

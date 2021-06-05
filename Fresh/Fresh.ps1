@@ -429,6 +429,133 @@ DisablePreviousVersionsPage
 # Отображать вкладку "Предыдущие версии" в свойствах файлов и папок, а также пункт контекстного меню "Восстановить прежнюю версию"
 # EnablePreviousVersionsPage
 #endregion Context menu
+#region Chocolatey
+# Install Chocolatey package manager and pre-installs as well
+ChocolateyPackageManager
+#endregion Chocolatey
+#region Microsoft Defender & Security
+# Turn on Microsoft Defender Exploit Guard network protection
+# Включить защиту сети в Microsoft Defender Exploit Guard
+EnableNetworkProtection
+
+# Turn off Microsoft Defender Exploit Guard network protection
+# Выключить защиту сети в Microsoft Defender Exploit Guard
+# DisableNetworkProtection
+
+# Turn on detection for potentially unwanted applications and block them
+# Включить обнаружение потенциально нежелательных приложений и блокировать их
+# EnablePUAppsDetection
+
+# Turn off detection for potentially unwanted applications and block them
+# Выключить обнаружение потенциально нежелательных приложений и блокировать их
+DisabledPUAppsDetection
+
+# Run Microsoft Defender within a sandbox
+# Запускать Microsoft Defender в песочнице
+EnableDefenderSandbox
+
+# Do not run Microsoft Defender within a sandbox
+# Не запускать Microsoft Defender в песочнице
+# DisableDefenderSandbox
+
+# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
+DismissMSAccount
+
+# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
+# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
+DismissSmartScreenFilter
+
+<#
+	Include command line in process creation events
+	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
+
+	Включать командную строку в событиях создания процесса
+	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
+#>
+EnableAuditProcess
+
+# Turn off events auditing generated when a process is created or starts
+# Выключить аудит событий, возникающих при создании или запуске процесса
+# DisableAuditProcess
+
+# Turn on events auditing generated when a process is created or starts
+# Включить аудит событий, возникающих при создании или запуске процесса
+EnableAuditCommandLineProcess
+
+# Do not include command line in process creation events
+# Не включать командную строку в событиях создания процесса
+# DisableAuditCommandLineProcess
+
+# Do not check apps and files within Microsofot Defender SmartScreen
+# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+DisableAppsSmartScreen
+
+# Check apps and files within Microsofot Defender SmartScreen
+# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
+# EnableAppsSmartScreen
+
+# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
+# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
+DisableSaveZoneInformation
+
+# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
+# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
+# EnableSaveZoneInformation
+
+# Disable activity history
+DisableActivityHistory
+
+# Disable automatic map updates
+DisableMapUpdates
+
+# Disable wap push service
+DisableWAPPush
+
+# Enable strong cryptography for .NET Framework(version 4 and above)
+EnableDotNetStrongCrypto
+
+<#
+Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
+This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
+Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
+#>
+EnableMeltdownCompatFlag
+
+# Disable password complexity and maximum age requirements
+DisablePasswordPolicy
+
+# Schedule automatic maintenance hours
+AutomaticMaintenanceHours
+
+# Turn on memory integry(virtualization based security)
+TurnOnMemoryIntegry
+
+# Disable implicit administrative shares
+DisableAdminShares
+
+# Disable obsolete SMB protocol(disabled by default since 1709)
+DisableSMB
+
+# Disable link-local multicast name resolution(LLMNR) protocol
+DisableLLMNR
+
+# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
+SetUnknownNetworksPublic
+
+# Disable automatic installation of network devices
+DisableNetDevicesAutoInst
+
+# Hide tray icon
+HideTrayIcon
+
+# Disable defender cloud
+DisableDefenderCloud
+
+# Disable ntfs refs mitigations
+DisableNTFSREFSMitigations
+#endregion Microsoft Defender & Security
+
 #region O&OShutup
 OOShutup
 #endregion O&OShutup
@@ -584,128 +711,6 @@ DisableMouseFeedback
 # Enable full-screen optimization
 EnableFullScreenOptimization
 #endregion Gaming
-#region Microsoft Defender & Security
-# Turn on Microsoft Defender Exploit Guard network protection
-# Включить защиту сети в Microsoft Defender Exploit Guard
-EnableNetworkProtection
-
-# Turn off Microsoft Defender Exploit Guard network protection
-# Выключить защиту сети в Microsoft Defender Exploit Guard
-# DisableNetworkProtection
-
-# Turn on detection for potentially unwanted applications and block them
-# Включить обнаружение потенциально нежелательных приложений и блокировать их
-# EnablePUAppsDetection
-
-# Turn off detection for potentially unwanted applications and block them
-# Выключить обнаружение потенциально нежелательных приложений и блокировать их
-DisabledPUAppsDetection
-
-# Run Microsoft Defender within a sandbox
-# Запускать Microsoft Defender в песочнице
-EnableDefenderSandbox
-
-# Do not run Microsoft Defender within a sandbox
-# Не запускать Microsoft Defender в песочнице
-# DisableDefenderSandbox
-
-# Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" о входе в аккаунт Microsoft
-DismissMSAccount
-
-# Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge
-# Отклонить предложение Microsoft Defender в "Безопасность Windows" включить фильтр SmartScreen для Microsoft Edge
-DismissSmartScreenFilter
-
-<#
-	Include command line in process creation events
-	In order this feature to work events auditing must be enabled ("EnableAuditProcess" function)
-
-	Включать командную строку в событиях создания процесса
-	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
-#>
-EnableAuditProcess
-
-# Turn off events auditing generated when a process is created or starts
-# Выключить аудит событий, возникающих при создании или запуске процесса
-# DisableAuditProcess
-
-# Turn on events auditing generated when a process is created or starts
-# Включить аудит событий, возникающих при создании или запуске процесса
-EnableAuditCommandLineProcess
-
-# Do not include command line in process creation events
-# Не включать командную строку в событиях создания процесса
-# DisableAuditCommandLineProcess
-
-# Do not check apps and files within Microsofot Defender SmartScreen
-# Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-DisableAppsSmartScreen
-
-# Check apps and files within Microsofot Defender SmartScreen
-# Проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
-# EnableAppsSmartScreen
-
-# Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
-# Не позволять SmartScreen отмечать файлы, скачанные из интернета, как небезопасные (только для текущего пользователя)
-DisableSaveZoneInformation
-
-# Mark files that have been downloaded from the Internet as unsafe within SmartScreen (current user only)
-# Отмечать файлы, скачанные из интернета, как небезопасные с помощью SmartScreen (только для текущего пользователя)
-# EnableSaveZoneInformation
-
-# Disable activity history
-DisableActivityHistory
-
-# Disable automatic map updates
-DisableMapUpdates
-
-# Disable wap push service
-DisableWAPPush
-
-# Enable strong cryptography for .NET Framework(version 4 and above)
-EnableDotNetStrongCrypto
-
-<#
-Enable Meltdown (CVE-2017-5754) compatibility flag(required for january 2018 and all subsequent windows updates)
-This flag is normally automatically enabled by compatible antivirus software (such as Windows Defender).
-Use the tweak only if you have confirmed that your AV is compatible but unable to set the flag automatically or if you don't use any AV at all
-#>
-EnableMeltdownCompatFlag
-
-# Disable password complexity and maximum age requirements
-DisablePasswordPolicy
-
-# Schedule automatic maintenance hours
-AutomaticMaintenanceHours
-
-# Turn on memory integry(virtualization based security)
-TurnOnMemoryIntegry
-
-# Disable implicit administrative shares
-DisableAdminShares
-
-# Disable obsolete SMB protocol(disabled by default since 1709)
-DisableSMB
-
-# Disable link-local multicast name resolution(LLMNR) protocol
-DisableLLMNR
-
-# Set unknown networks profile to public(deny file sharing, device discovery, etc.)
-SetUnknownNetworksPublic
-
-# Disable automatic installation of network devices
-DisableNetDevicesAutoInst
-
-# Hide tray icon
-HideTrayIcon
-
-# Disable defender cloud
-DisableDefenderCloud
-
-# Disable ntfs refs mitigations
-DisableNTFSREFSMitigations
-#endregion Microsoft Defender & Security
 #region UWP apps
 <#
 	Uninstall UWP apps
@@ -972,10 +977,6 @@ DisableHiberboot
 # Disable warning sounds 
 DisableWarningSounds
 #endregion System
-#region Chocolatey
-# Install Chocolatey package manager and pre-installs as well
-ChocolateyPackageManager
-#endregion Chocolatey
 #region Performance
 # Adjust best performance(that would able to increase the overall performance)
 AdjustBestPerformance
