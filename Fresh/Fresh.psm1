@@ -2750,12 +2750,18 @@ function SetBootTimeoutValue {
 
 # Ntfs allow extended character 8dot3 rename
 function NtfsAllowExtendedCharacter8dot3Rename {
-	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "PathCache" -PropertyType DWord -Value 128 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "PathCache" -PropertyType DWord -Value 128 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "FileNameCache" -PropertyType DWord -Value 1024 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "FileNameCache" -PropertyType DWord -Value 1024 -Force
 }
 
 # Ntfs disable 8dot3 name creation
 function NtfsDisable8dot3NameCreation {
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
 	fsutil behavior set disable8dot3 1
 }
 
@@ -3165,7 +3171,7 @@ function DynamicBacklogGrowthDelta {
 
 # Increase mft zone
 function IncreaseMFTZone {
-	fsutil behavior set mftzone 2
+	fsutil behavior set mftzone 3
 }
 
 # Enable memory allocation in graphics driver
