@@ -3051,19 +3051,25 @@ function DebloatMicrosoftServices {
 	Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "perceptionsimulation" -Force -WarningAction SilentlyContinue
 	Set-Service perceptionsimulation -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "PushToInstall" -Force -WarningAction SilentlyContinue
+	Set-Service PushToInstall -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service RmSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
 	Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "W32Time" -Force -WarningAction SilentlyContinue
+	Set-Service W32Time -StartupType Disabled -ErrorAction SilentlyContinue
 	Set-Service WFDSConMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiServiceHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiServiceHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WarpJITSvc" -Force -WarningAction SilentlyContinue
+	Set-Service WarpJITSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WbioSrvc" -Force -WarningAction SilentlyContinue
 	Set-Service WbioSrvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WinRM" -Force -WarningAction SilentlyContinue
 	Set-Service WinRM -StartupType Disabled -ErrorAction SilentlyContinue
 	Set-Service WPDBusEnum -StartupType Disabled -ErrorAction SilentlyContinue
-	Set-Service wmiApSrv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
