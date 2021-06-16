@@ -14,7 +14,7 @@ NoInternetConnection = No Internet connection
 # SetTempPath
 LOCALAPPDATANotEmptyFolder = "The $env:LOCALAPPDATA\\Temp folder is not empty `nDeleteClear it manually and try again"
 
-# ChocolateyPackageManager
+# OOShutup
 OOShutup = Running O&O Shutup with Recommended Settings
 
 # Refresh
