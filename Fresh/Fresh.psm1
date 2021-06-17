@@ -1705,8 +1705,6 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Latency Sensitive" -PropertyType String -Value "True" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Priority" -PropertyType DWord -Value 8 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "NoLazyMode" -PropertyType String -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "Scheduling Category" -PropertyType String -Value "High" -Force
-	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" -Name "SFIO Priority" -PropertyType String -Value "High" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" -Name HostsPriority -PropertyType DWord -Value 5 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" -Name DnsPriority -PropertyType DWord -Value 6 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" -Name NetbtPriority -PropertyType DWord -Value 7 -Force
@@ -2718,7 +2716,6 @@ function DisableIndexing {
 			Write-Output "Indexing already disabled. SKIPPING..."
 		}
 	}
-    
 	if ($DriveLetters.Count -notmatch 3) {
 		if (($Object.IndexingEnabled -match $True)) {
 			Write-Output "Disabling indexing of drive C:"
@@ -2763,12 +2760,12 @@ function AutoEndTasks {
 
 # Hung app timeout
 function HungAppTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -PropertyType String -Value "2000" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -PropertyType String -Value "1000" -Force
 }
 
 # Wait to kill app timeout
 function WaitToKillAppTimeout {
-	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -PropertyType String -Value "2000" -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -PropertyType String -Value "1000" -Force
 }
 
 # Low-level hooks timeout
@@ -2811,7 +2808,7 @@ function NoInternetOpenWith {
 
 # Wait to kill service timeout
 function WaitToKillServiceTimeout {
-	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "WaitToKillServiceTimeout" -PropertyType String -Value 2000 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "WaitToKillServiceTimeout" -PropertyType String -Value 1000 -Force
 }
 
 # Disable paging executive
