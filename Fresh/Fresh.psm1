@@ -1671,15 +1671,6 @@ function DisableAppsSuggestionsTipsWelcomeExperience {
 }
 #endregion Privacy & Telemetry
 #region Gaming
-# Turn off Xbox Game Bar
-# Отключить Xbox Game Bar
-function DisableXboxGameBar {
-	if (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR")) {
-		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Force
-	}
-	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -PropertyType DWord -Value 0 -Force
-}
-
 # Turn off Xbox Game Bar tips
 # Отключить советы Xbox Game Bar
 function DisableXboxGameTips {
@@ -2478,7 +2469,7 @@ function NetworkConnectionStatusIndicator {
 function FixTimers {
 	bcdedit /set `{current`} useplatformtick true
 	bcdedit /set `{current`} disabledynamictick true
-	bcdedit /set `{current`} tscsyncpolicy Legacy
+	bcdedit /set `{current`} tscsyncpolicy legacy
 	bcdedit /set `{current`} x2apicpolicy Disable
 	bcdedit /set `{current`} uselegacyapicmode Yes
 	bcdedit /set `{current`} debug No
