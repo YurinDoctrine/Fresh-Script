@@ -2927,6 +2927,7 @@ function WaitToKillServiceTimeout {
 # Disable paging executive
 function DisablePagingExecutive {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
 }
 
 # Large system cache
