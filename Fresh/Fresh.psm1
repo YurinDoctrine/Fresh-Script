@@ -1796,9 +1796,14 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\TaggedEnergy" -Name DisableTaggedEnergyLogging -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\TaggedEnergy" -Name TelemetryMaxApplication -PropertyType DWord -Value 0 -Force
 
+	netsh int tcp set global timestamps=disabled
+	netsh int tcp set heuristics disabled
 	netsh int tcp set global netdma=enabled
 	netsh int tcp set global dca=enabled
-	netsh int tcp set global autotuninglevel=Normal
+	netsh int tcp set global autotuninglevel=disabled
+	netsh int tcp set supplemental template=internet congestionprovider=ctcp
+	netsh int tcp set global rss=enabled
+	netsh int tcp set global ecncapability=enabled
 }
 
 # Disable mouse feedback
