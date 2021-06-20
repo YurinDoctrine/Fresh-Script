@@ -2004,12 +2004,19 @@ function DisableBackgroundUWPApps {
 # Отключить следующие компоненты Windows
 function DisableWindowsFeatures {
 	$WindowsOptionalFeatures = @(
-		# Media Features
-		# Компоненты работы с мультимедиа
-		"MediaPlayback",
+
+		# Legacy Components
+		"LegacyComponents",
+
+		# PowerShell 2.0
+		"MicrosoftWindowsPowerShellV2",
+		"MicrosoftWindowsPowershellV2Root",
+
+		# Microsoft XPS Document Writer
+		# Средство записи XPS-документов (Microsoft)
+		"Printing-XPSServices-Features",
 
 		# Work Folders Client
-		# Клиент рабочих папок
 		"WorkFolders-Client"
 	)
 	Disable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
@@ -2021,12 +2028,15 @@ function DisableWindowsCapabilities {
 	# The following FODv2 items will be shown, but their checkboxes would be clear
 	# Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
 	$ExcludedCapabilities = @(
+
 		# The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
-		# База данных DirectX для настройки и оптимизации приложений при наличии нескольких графических адаптеров
 		"DirectX.Configuration.Database*",
 
 		# Language components
-		"Language.*"
+		"Language.*",
+		
+		# Features critical to Windows functionality
+		"Windows.Client.ShellComponents*"
 	)
 	
 	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) } | Remove-WindowsCapability -Online ) {
