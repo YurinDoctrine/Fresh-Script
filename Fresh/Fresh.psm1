@@ -2013,7 +2013,6 @@ function DisableWindowsFeatures {
 		"MicrosoftWindowsPowershellV2Root",
 
 		# Microsoft XPS Document Writer
-		# Средство записи XPS-документов (Microsoft)
 		"Printing-XPSServices-Features",
 
 		# Work Folders Client
