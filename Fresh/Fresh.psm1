@@ -2902,7 +2902,7 @@ function ForegroundLockTimeout {
 
 # No low disk space checks
 function NoLowDiskSpaceChecks {
-	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 71 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 1 -Force
 }
 
 # Link resolve ignore link info
