@@ -2902,30 +2902,27 @@ function ForegroundLockTimeout {
 
 # No low disk space checks
 function NoLowDiskSpaceChecks {
-	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
-		New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Force
-	}
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 71 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoLowDiskSpaceChecks" -PropertyType DWord -Value 71 -Force
 }
 
 # Link resolve ignore link info
 function LinkResolveIgnoreLinkInfo {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "LinkResolveIgnoreLinkInfo" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "LinkResolveIgnoreLinkInfo" -PropertyType DWord -Value 1 -Force
 }
 
 # No resolve search
 function NoResolveSearch {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveSearch" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveSearch" -PropertyType DWord -Value 1 -Force
 }
 
 # No resolve track
 function NoResolveTrack {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveTrack" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoResolveTrack" -PropertyType DWord -Value 1 -Force
 }
 
 # No internet open with
 function NoInternetOpenWith {
-	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoInternetOpenWith" -PropertyType DWord -Value 52 -Force
+	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer -Name "NoInternetOpenWith" -PropertyType DWord -Value 52 -Force
 }
 
 # Wait to kill service timeout
