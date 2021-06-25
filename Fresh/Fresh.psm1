@@ -1517,7 +1517,6 @@ function DisableScheduledTasks {
 	schtasks /Change /TN "Microsoft\Windows\DiskCleanup\SilentCleanup" /Disable
 	schtasks /Change /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" /Disable
 	schtasks /Change /TN "Microsoft\Windows\DiskFootprint\Diagnostics" /Disable
-	schtasks /Change /TN "Microsoft\Windows\DiskFootprint\StorageSense" /Disable
 	schtasks /Change /TN "Microsoft\Windows\DUSM\dusmtask" /Disable
 	schtasks /Change /TN "Microsoft\Windows\EnterpriseMgmt\MDMMaintenenceTask" /Disable
 	schtasks /Change /TN "Microsoft\Windows\Feedback\Siuf\DmClient" /Disable
@@ -2681,9 +2680,6 @@ function DisableWindowsAutoUpgrade {
 
 # Fix windows DPI
 function FixWindowsDPI {
-	if (!("HKCU:\Control Panel\Desktop")) {
-		New-Item -Force "HKCU:\Control Panel\Desktop"
-	}
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name Win8DpiScaling -Type "DWORD" -Value "1" -Force
 }
 
