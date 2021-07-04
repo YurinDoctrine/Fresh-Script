@@ -1915,7 +1915,7 @@ function BestPriorityForeground {
 	netsh int tcp set global netdma=enabled
 	netsh int tcp set global dca=enabled
 	netsh int tcp set global autotuninglevel=disabled
-	netsh int tcp set supplemental template=internet congestionprovider=ctcp
+	netsh int tcp set supplemental internet congestionprovider=ctcp
 	netsh int tcp set global rss=enabled
 	netsh int tcp set global ecncapability=enabled
 }
@@ -3223,7 +3223,7 @@ function DisableBootLogging {
 
 # Increase default size buffer
 function IncreaseDefaultSizeBuffer {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 65536 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 17424 -Force
 }
 
 # IRP stack size
