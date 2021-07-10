@@ -2861,6 +2861,10 @@ function AdjustBestPerformance {
 	}
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\Shell\BagMRU -Name "BagMRU Size" -PropertyType DWord -Value 250 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\Shell\NoRoam -Name "BagMRU Size" -PropertyType DWord -Value 250 -Force
+	if (-not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\DriverSearching)) {
+		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\DriverSearching -Force
+	}
+	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\DriverSearching -Name SearchOrderConfig -PropertyType DWord -Value 0 -Force
 }
 
 # Prevent battery saver
