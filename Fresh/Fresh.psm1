@@ -1857,6 +1857,14 @@ function DisableAppsSuggestionsTipsWelcomeExperience {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableSoftLanding -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableWindowsConsumerFeatures -PropertyType DWord -Value 0 -Force
 }
+
+# Disable feeds
+function DisableFeeds {
+	if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds")) {
+		New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Force
+	}    
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -Type DWord -Value 0 -Force
+}
 #endregion Privacy & Telemetry
 #region Gaming
 # Turn off Xbox Game Bar tips
