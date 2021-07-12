@@ -2865,6 +2865,9 @@ function AdjustBestPerformance {
 		New-Item -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\DriverSearching -Force
 	}
 	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\DriverSearching -Name SearchOrderConfig -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -Name "BufFilesDenyWrite" -Type "DWORD" -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -Name "BufNamedPipes" -Type "DWORD" -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -Name "DormantFileLimit" -Type "DWORD" -Value 0 -Force
 }
 
 # Prevent battery saver
