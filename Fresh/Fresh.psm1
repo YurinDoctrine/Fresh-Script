@@ -3427,10 +3427,10 @@ function DisableDeleteNotify {
 	fsutil behavior set DisableDeleteNotify 1
 }
 
-# Enable power throttling
-function EnablePowerThrottling {
+# Disable power throttling
+function DisablePowerThrottling {
 	if ((Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
-		Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name "PowerThrottlingOff" -Force
+		New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name PowerThrottlingOff -PropertyType DWord -Value 1 -Force
 	}	
 }
 
