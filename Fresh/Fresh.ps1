@@ -695,8 +695,8 @@ DisableFindMyDevice
 # Disable apps suggestions, tips, welcome experience
 DisableAppsSuggestionsTipsWelcomeExperience
 
-# Disable feeds
-DisableFeeds
+# Disable news feeds
+DisableNewsFeeds
 #endregion Privacy & Telemetry
 #region Gaming
 # Turn off Xbox Game Bar tips
