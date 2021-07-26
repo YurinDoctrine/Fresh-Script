@@ -1858,8 +1858,8 @@ function DisableAppsSuggestionsTipsWelcomeExperience {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent -Name DisableWindowsConsumerFeatures -PropertyType DWord -Value 0 -Force
 }
 
-# Disable feeds
-function DisableFeeds {
+# Disable news feeds
+function DisableNewsFeeds {
 	if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds")) {
 		New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Force
 	}    
