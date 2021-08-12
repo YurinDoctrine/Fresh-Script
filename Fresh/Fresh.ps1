@@ -697,6 +697,9 @@ DisableAppsSuggestionsTipsWelcomeExperience
 
 # Disable news feeds
 DisableNewsFeeds
+
+# Disable edge update
+DisableEdgeUpdate
 #endregion Privacy & Telemetry
 #region Gaming
 # Turn off Xbox Game Bar tips
@@ -979,7 +982,7 @@ DisableSystemEnergySaving
 # Disable hiberboot
 DisableHiberboot
 
-# Disable warning sounds 
+# Disable warning sounds
 DisableWarningSounds
 #endregion System
 #region Performance
@@ -995,7 +998,7 @@ DisableDefaultDiskDefragmenter
 # Let personalize power plan, neither switch it off so
 LetPersonalizePowerPlan
 
-# Prevent require sign-in when after sleep 
+# Prevent require sign-in when after sleep
 PreventRequireSignInWhenAfterSleep
 
 # Disable indexing
@@ -1010,7 +1013,7 @@ NtfsAllowExtendedCharacter8dot3Rename
 # Ntfs disable 8dot3 name creation
 NtfsDisable8dot3NameCreation
 
-# Auto end tasks 
+# Auto end tasks
 AutoEndTasks
 
 # Hung app timeout
@@ -1172,10 +1175,10 @@ DisableWPPSoftwareTracingLogs
 # Cpu rate limit
 CpuRateLimit
 
-# Disable search history 
+# Disable search history
 DisableSearchHistory
 
-# Thread priority 
+# Thread priority
 ThreadPriority
 #endregion Performance
 Errors

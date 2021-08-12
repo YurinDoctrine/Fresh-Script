@@ -1038,7 +1038,7 @@ function EnableAuditCommandLineProcess {
 function DisableAuditCommandLineProcess {
 	if ((Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit")) {
 		New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit -Name ProcessCreationIncludeCmdLine_Enabled -PropertyType DWord -Value 0 -Force
-	} 
+	}
 }
 
 # Do not check apps and files within Microsoft Defender SmartScreen
@@ -1159,7 +1159,7 @@ function DisableSMB {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "NoLMHash" -Type "DWORD" -Value 1 -Force
 	Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
 	Set-SmbServerConfiguration -EnableSMB2Protocol $false -Force
-	Set-SmbServerConfiguration -EncryptData $True -Force 
+	Set-SmbServerConfiguration -EncryptData $True -Force
 	Set-SmbClientConfiguration -RequireSecuritySignature $True -Force
 	Set-SmbClientConfiguration -EnableSecuritySignature $True -Force
 	Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -NoRestart
@@ -1350,7 +1350,7 @@ function EnableWindowsFeedback {
 }
 
 # Turn off tracking apps launch event
-function TurnOffAppLaunchTracking { 
+function TurnOffAppLaunchTracking {
 	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name Start_TrackProgs -PropertyType DWord -Value 0 -Force
 }
 
@@ -1408,10 +1408,10 @@ function DisableScheduledTasks {
 
 		# XblGameSave Standby Task
 		"XblGameSaveTask",
-	
+
 		# Microsoft Edge update task
 		"MicrosoftEdgeUpdateTaskMachineCore",
-		
+
 		# Microsoft Edge update task
 		"MicrosoftEdgeUpdateTaskMachineUA"
 	)
@@ -1447,7 +1447,7 @@ function DisableScheduledTasks {
 	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
 	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater"
 	schtasks /Delete /F /TN "Microsoft\Windows\Application Experience\AitAgent"
-	schtasks /Delete /F /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"	
+	schtasks /Delete /F /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor"
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\End Of Support\Notify1"
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\End Of Support\Notify2"
 	schtasks /Delete /F /TN "Microsoft\Windows\End Of Support\Notify1"
@@ -1463,7 +1463,7 @@ function DisableScheduledTasks {
 	schtasks /Delete /F /TN "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" >nul 2>&1
 	schtasks /Delete /F /TN "\Microsoft\Windows\Application Experience\ProgramDataUpdater" >nul 2>&1
 	schtasks /Delete /F /TN "\Microsoft\Windows\Application Experience\AitAgent" >nul 2>&1
-	schtasks /Delete /F /TN "\Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor" >nul 2>&1	
+	schtasks /Delete /F /TN "\Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor" >nul 2>&1
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask"
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
 	schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
@@ -1862,8 +1862,14 @@ function DisableAppsSuggestionsTipsWelcomeExperience {
 function DisableNewsFeeds {
 	if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds")) {
 		New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Force
-	}    
+	}
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name "EnableFeeds" -Type DWord -Value 0 -Force
+}
+
+# Disable edge update
+function DisableEdgeUpdate {
+	New-Item -Path "HKLM:\SOFTWARE\Microsoft\EdgeUpdate" -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\EdgeUpdate" -Name "DoNotUpdateToEdgeWithChromium" -Type DWord -Value 1 -Force
 }
 #endregion Privacy & Telemetry
 #region Gaming
@@ -1938,7 +1944,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name StartupDelayInMSec -PropertyType DWord -Value 0 -Force
 	if (!(Test-Path "HKCU:\AppEvents\Schemes")) {
 		New-Item -Path "HKCU:\AppEvents\Schemes" -Force
-	}	
+	}
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
 	}
@@ -2053,7 +2059,7 @@ function UninstallUWPApps {
 
 		# Microsoft Store
 		"Microsoft.WindowsStore",
-		
+
 		# AMD Radeon UWP panel
 		"AdvancedMicroDevicesInc*",
 
@@ -2062,9 +2068,9 @@ function UninstallUWPApps {
 
 		# Realtek Audio Control
 		"RealtekSemiconductorCorp.RealtekAudioControl"
-		
+
 	)
-	
+
 	if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") } | Remove-AppxPackage -AllUsers ) {
 		Write-Verbose -Message 'Removed UWP apps' -Verbose
 	}
@@ -2133,11 +2139,11 @@ function DisableWindowsCapabilities {
 
 		# Language components
 		"Language.*",
-		
+
 		# Features critical to Windows functionality
 		"Windows.Client.ShellComponents*"
 	)
-	
+
 	if (Get-WindowsCapability -Online | Where-Object -FilterScript { ($_.State -eq "Installed") -and ($_.Name -cnotmatch ($ExcludedCapabilities -join "|")) } | Remove-WindowsCapability -Online ) {
 		Write-Verbose -Message 'Removed Capabilities' -Verbose
 	}
@@ -2205,11 +2211,11 @@ function UninstallOneDrive {
 		# Сохранить все открытые папки, чтобы восстановить их после перезапуска проводника
 		Clear-Variable -Name OpenedFolders -Force -ErrorAction Ignore
 		$OpenedFolders = { (New-Object -ComObject Shell.Application).Windows() | ForEach-Object -Process { $_.Document.Folder.Self.Path } }.Invoke()
-        
+
 		# Restart explorer process
 		TASKKILL /F /IM explorer.exe
 		Start-Process "explorer.exe"
-		
+
 		# Attempt to unregister FileSyncShell64.dll and remove
 		# Попытка разрегистрировать FileSyncShell64.dll и удалить
 		$FileSyncShell64dlls = Get-ChildItem -Path "$OneDriveFolder\*\amd64\FileSyncShell64.dll" -Force
@@ -2654,7 +2660,7 @@ function SvcHostSplitThresholdInKB {
 
 # Function discovery resource publication
 function FDResPub {
-	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Services\FDResPub -Name Start -PropertyType DWord -Value 2 -Force	
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Services\FDResPub -Name Start -PropertyType DWord -Value 2 -Force
 }
 
 # Disable microsoft edge services
@@ -2813,7 +2819,7 @@ function DisableHiberboot {
 	Remove-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -Force
 }
 
-# Disable warning sounds 
+# Disable warning sounds
 function DisableWarningSounds {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Sound on Activation" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility" -Name "Warning Sounds" -PropertyType DWord -Value 0 -Force
@@ -2881,7 +2887,7 @@ function AdjustBestPerformance {
 # Prevent battery saver
 function PreventBatterySaver {
 	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBATTTHRESHOLD 0
-	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBRIGHTNESS 100 
+	powercfg /setdcvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESBRIGHTNESS 100
 }
 
 # Disable default disk defragmenter
@@ -3055,7 +3061,7 @@ function IoPageLockLimit {
 function PagingFiles {
 	$Value = "00,00"
 	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
-	
+
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "PagingFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingCombining" -PropertyType DWord -Value 1 -Force
 }
@@ -3069,7 +3075,7 @@ function SecondLevelDataCache {
 function ExistingPageFiles {
 	$Value = "00,00"
 	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
-	
+
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ExistingPageFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
 }
 
@@ -3129,7 +3135,7 @@ function NonBestEffortLimit {
 # Double click height width
 function DoubleClickHeightWidth {
 	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickHeight -PropertyType String -Value "6" -Force
-	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "6" -Force	
+	New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name DoubleClickWidth -PropertyType String -Value "6" -Force
 }
 
 # Value max
@@ -3403,7 +3409,7 @@ function EnableMemoryAllocationInGraphicsDriver {
 function DisableRealtimeMonitoring {
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Force
-	}	
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring" -Type DWord -Value 1 -Force
 	Set-MpPreference -DisableRealtimeMonitoring 1
 	Set-MpPreference -DisableRealtimeMonitoring $true
@@ -3418,7 +3424,7 @@ function EnableHardwareAcceleratedGPUScheduling {
 function IndexerRespectPowerModes {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
-	}	
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
 }
 
@@ -3439,7 +3445,7 @@ function DisablePowerThrottling {
 function DisableWPPSoftwareTracingLogs {
 	if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Force
-	}	
+	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Name "LogLevel" -Type DWord -Value 0 -Force
 }
 
@@ -3447,11 +3453,11 @@ function DisableWPPSoftwareTracingLogs {
 function CpuRateLimit {
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0")) {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Force
-	}	
+	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Name "CpuRateLimit" -Type DWord -Value 100 -Force
 }
 
-# Disable search history 
+# Disable search history
 function DisableSearchHistory {
 	if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings")) {
 		New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
@@ -3460,7 +3466,7 @@ function DisableSearchHistory {
 	New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
 }
 
-# Thread priority 
+# Thread priority
 function ThreadPriority {
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters")) {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Force
