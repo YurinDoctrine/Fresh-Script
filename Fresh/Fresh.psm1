@@ -3604,12 +3604,12 @@ function Errors {
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
-				[PSCustomObject] @{
-					$Localization.ErrorsLine    = $_.InvocationInfo.ScriptLineNumber
-					$Localization.ErrorsFile    = Split-Path -Path $PSCommandPath -Leaf
-					$Localization.ErrorsMessage = $_.Exception.Message
-				}
-			} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-File -FilePath $HOME\Documents\errorlog.txt
+			[PSCustomObject] @{
+				$Localization.ErrorsLine    = $_.InvocationInfo.ScriptLineNumber
+				$Localization.ErrorsFile    = Split-Path -Path $PSCommandPath -Leaf
+				$Localization.ErrorsMessage = $_.Exception.Message
+			}
+		} | Sort-Object -Property Line | Format-Table -AutoSize -Wrap | Out-File -FilePath $HOME\Documents\errorlog.txt
 		)
 	}
 	exit
