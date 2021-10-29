@@ -3149,6 +3149,8 @@ function ValueMax {
 
 # Debloat microsoft services
 function DebloatMicrosoftServices {
+	Stop-Service "ALG" -Force -WarningAction SilentlyContinue
+	Set-Service ALG -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
@@ -3173,6 +3175,8 @@ function DebloatMicrosoftServices {
 	Set-Service ClipSVC -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CryptSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "diagnosticshub.standardcollector.service" -Force -WarningAction SilentlyContinue
+	Set-Service diagnosticshub.standardcollector.service -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
@@ -3182,12 +3186,16 @@ function DebloatMicrosoftServices {
 	Set-Service TieringEngineService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
 	Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "HvHost" -Force -WarningAction SilentlyContinue
+	Set-Service HvHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
 	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
 	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "fhsvc" -Force -WarningAction SilentlyContinue
+	Set-Service fhsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "InstallService" -Force -WarningAction SilentlyContinue
 	Set-Service InstallService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
@@ -3273,6 +3281,8 @@ function DebloatMicrosoftServices {
 	Stop-Service "PushToInstall" -Force -WarningAction SilentlyContinue
 	Set-Service PushToInstall -StartupType Disabled -ErrorAction SilentlyContinue
 	Set-Service RmSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "seclogon" -Force -WarningAction SilentlyContinue
+	Set-Service seclogon -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
