@@ -528,8 +528,8 @@ DisablePasswordPolicy
 # Schedule automatic maintenance hours
 AutomaticMaintenanceHours
 
-# Turn on memory integry(virtualization based security)
-TurnOnMemoryIntegry
+# Turn off memory integry(virtualization based security)
+TurnOffMemoryIntegry
 
 # Disable implicit administrative shares
 DisableAdminShares
