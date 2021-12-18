@@ -3283,8 +3283,6 @@ function DebloatMicrosoftServices {
 	Set-Service RmSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "seclogon" -Force -WarningAction SilentlyContinue
 	Set-Service seclogon -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "sethc" -Force -WarningAction SilentlyContinue
-	Set-Service sethc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
 	Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
