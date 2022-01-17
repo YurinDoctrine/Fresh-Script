@@ -2656,9 +2656,9 @@ function SvcHostSplitThresholdInKB {
 	if (!(Test-Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control")) {
 		New-Item -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control" -Force
 	}
-	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 380000 -Force
-	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet002\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 380000 -Force
-	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 380000 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 3670016 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet002\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 3670016 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control -Name SvcHostSplitThresholdInKB -PropertyType DWord -Value 3670016 -Force
 }
 
 # Function discovery resource publication
