@@ -3154,6 +3154,8 @@ function ValueMax {
 function DebloatMicrosoftServices {
 	Stop-Service "ALG" -Force -WarningAction SilentlyContinue
 	Set-Service ALG -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "AppIDSvc" -Force -WarningAction SilentlyContinue
+	Set-Service AppIDSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
