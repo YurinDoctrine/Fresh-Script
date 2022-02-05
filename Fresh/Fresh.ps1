@@ -436,11 +436,11 @@ ChocolateyPackageManager
 #region Microsoft Defender & Security
 # Turn on Microsoft Defender Exploit Guard network protection
 # Включить защиту сети в Microsoft Defender Exploit Guard
-EnableNetworkProtection
+# EnableNetworkProtection
 
 # Turn off Microsoft Defender Exploit Guard network protection
 # Выключить защиту сети в Microsoft Defender Exploit Guard
-# DisableNetworkProtection
+DisableNetworkProtection
 
 # Turn on detection for potentially unwanted applications and block them
 # Включить обнаружение потенциально нежелательных приложений и блокировать их
@@ -473,19 +473,19 @@ DismissSmartScreenFilter
 	Включать командную строку в событиях создания процесса
 	Необходимо включить аудит событий, чтобы работала данная опция (функция "EnableAuditProcess")
 #>
-EnableAuditProcess
+# EnableAuditProcess
 
 # Turn off events auditing generated when a process is created or starts
 # Выключить аудит событий, возникающих при создании или запуске процесса
-# DisableAuditProcess
+DisableAuditProcess
 
 # Turn on events auditing generated when a process is created or starts
 # Включить аудит событий, возникающих при создании или запуске процесса
-EnableAuditCommandLineProcess
+# EnableAuditCommandLineProcess
 
 # Do not include command line in process creation events
 # Не включать командную строку в событиях создания процесса
-# DisableAuditCommandLineProcess
+DisableAuditCommandLineProcess
 
 # Do not check apps and files within Microsofot Defender SmartScreen
 # Не проверять приложения и файлы фильтром SmartScreen в Microsoft Defender
