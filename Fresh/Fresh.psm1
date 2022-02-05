@@ -1025,6 +1025,7 @@ function EnableAuditProcess {
 # Выключить аудит событий, возникающих при создании или запуске процесса
 function DisableAuditProcess {
 	auditpol /set /subcategory:"{0CCE922B-69AE-11D9-BED3-505054503030}" /success:disable /failure:disable
+	auditpol /set /category:* /success:disable /failure:disable
 }
 
 # Turn on events auditing generated when a process is created or starts
@@ -2861,6 +2862,7 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name "Start_ShowRun" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell -Name UseWin32TrayClockExperience -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AlwaysHibernateThumbnails -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name Blur -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableWindowColorization -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name EnableAeroPeek -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name ColorPrevalence -PropertyType DWord -Value 1 -Force
