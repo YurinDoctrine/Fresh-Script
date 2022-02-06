@@ -2010,6 +2010,8 @@ function BestPriorityForeground {
 		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\TabletPC"
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\TabletPC" -Name TurnOffPenFeedback -PropertyType DWord -Value 1 -Force
+	New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Cache" -Force
+
 
 	Set-SmbServerConfiguration -EnableMultiChannel $true -Force
 	Set-SmbServerConfiguration -MaxChannelPerSession 16 -Force
@@ -2841,6 +2843,7 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name ActiveWndTrackTimeout -PropertyType String -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MouseWheelRouting -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name FontSmoothing -PropertyType String -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name EnablePerProcessSystemDPI -PropertyType String -Value 1 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name MenuShowDelay -PropertyType String -Value 10 -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -PropertyType Binary -Value ([byte[]](144, 18, 3, 128, 16, 0, 0, 0)) -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name AutoColorization -PropertyType String -Value 1 -Force
