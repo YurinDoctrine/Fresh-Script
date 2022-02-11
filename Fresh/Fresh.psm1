@@ -2014,12 +2014,12 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" -Name PassiveIntRealTimeWorkerPriority -PropertyType DWord -Value 18 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\KernelVelocity" -Name DisableFGBoostDecay -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\FileSystem" -Name "NtfsDisableEncryption" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Multimedia\Audio" -Name "UserDuckingPreference" -PropertyType DWord -Value 3 -Force
 
-	Set-SmbServerConfiguration -MaxChannelPerSession 16 -Force
 	Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
 	Set-SmbServerConfiguration -EnableLeasing $false -Force
 	Set-SmbClientConfiguration -EnableLargeMtu $true -Force
-	Set-SmbClientConfiguration -EnableMultiChannel $true -Force
+
 	netsh int tcp set global timestamps=disabled
 	netsh int tcp set heuristics disabled
 	netsh int tcp set global netdma=enabled
