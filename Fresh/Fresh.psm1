@@ -2015,8 +2015,6 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\KernelVelocity" -Name DisableFGBoostDecay -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\FileSystem" -Name "NtfsDisableEncryption" -PropertyType DWord -Value 1 -Force
 
-
-	Set-SmbServerConfiguration -EnableMultiChannel $true -Force
 	Set-SmbServerConfiguration -MaxChannelPerSession 16 -Force
 	Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
 	Set-SmbServerConfiguration -EnableLeasing $false -Force
