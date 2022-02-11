@@ -3069,7 +3069,7 @@ function WaitToKillServiceTimeout {
 # Disable paging executive
 function DisablePagingExecutive {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 1 -Force
 }
 
 # Large system cache
@@ -3080,7 +3080,7 @@ function LargeSystemCache {
 
 # IO page lock limit
 function IoPageLockLimit {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 983040 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 1 -Force
 }
 
 # Paging files
@@ -3123,7 +3123,7 @@ function WaitToKillServiceTimeout1 {
 # Disable paging executive
 function DisablePagingExecutive1 {
 	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 1 -Force
 }
 
 # Enable boot optimization function
@@ -3177,6 +3177,8 @@ function DebloatMicrosoftServices {
 	Set-Service AppIDSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BcastDVRUserService_48486de" -Force -WarningAction SilentlyContinue
+	Set-Service BcastDVRUserService_48486de -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
 	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
@@ -3192,6 +3194,10 @@ function DebloatMicrosoftServices {
 	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
 	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BluetoothUserService_48486de" -Force -WarningAction SilentlyContinue
+	Set-Service BluetoothUserService_48486de -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "cbdhsvc_48486de" -Force -WarningAction SilentlyContinue
+	Set-Service cbdhsvc_48486de -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CDPSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CDPSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CDPUserSvc" -Force -WarningAction SilentlyContinue
@@ -3214,6 +3220,8 @@ function DebloatMicrosoftServices {
 	Set-Service HvHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "KeyIso" -Force -WarningAction SilentlyContinue
 	Set-Service KeyIso -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "lmhosts" -Force -WarningAction SilentlyContinue
+	Set-Service lmhosts -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
 	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
@@ -3280,6 +3288,10 @@ function DebloatMicrosoftServices {
 	Set-Service WalletService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
 	Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "gupdatem" -Force -WarningAction SilentlyContinue
+	Set-Service gupdatem -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "gupdate" -Force -WarningAction SilentlyContinue
+	Set-Service gupdate -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "stisvc" -Force -WarningAction SilentlyContinue
 	Set-Service stisvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "wisvc" -Force -WarningAction SilentlyContinue
