@@ -3179,8 +3179,6 @@ function DebloatMicrosoftServices {
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "BcastDVRUserService_48486de" -Force -WarningAction SilentlyContinue
 	Set-Service BcastDVRUserService_48486de -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
-	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
 	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "BITS" -Force -WarningAction SilentlyContinue
