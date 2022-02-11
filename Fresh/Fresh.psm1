@@ -3230,6 +3230,8 @@ function DebloatMicrosoftServices {
 	Set-Service fhsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "InstallService" -Force -WarningAction SilentlyContinue
 	Set-Service InstallService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
+	Set-Service iphlpsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
 	Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "SharedAccess" -Force -WarningAction SilentlyContinue
@@ -3282,6 +3284,8 @@ function DebloatMicrosoftServices {
 	Set-Service UsoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "hidserv" -Force -WarningAction SilentlyContinue
 	Set-Service hidserv -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "HPDiagsCap" -Force -WarningAction SilentlyContinue
+	Set-Service HPDiagsCap -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
 	Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
@@ -3306,6 +3310,10 @@ function DebloatMicrosoftServices {
 	Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
 	Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BthAvctpSvc" -Force -WarningAction SilentlyContinue
+	Set-Service BthAvctpSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BDESVC" -Force -WarningAction SilentlyContinue
+	Set-Service BDESVC -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
 	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
@@ -3339,6 +3347,8 @@ function DebloatMicrosoftServices {
 	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
 	Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "WpcMonSvc" -Force -WarningAction SilentlyContinue
+	Set-Service WpcMonSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
 
 # Disable boot splash animations
