@@ -16,19 +16,10 @@ function Check {
 		}
 	}
 
-	# Turn off Controlled folder access to let the script proceed
-	# Выключить контролируемый доступ к папкам
-	switch ((Get-MpPreference).EnableControlledFolderAccess -eq 1) {
-		$true {
-			Write-Warning -Message $Localization.ControlledFolderAccessDisabled
-			Set-MpPreference -EnableControlledFolderAccess Disabled
-		}
-	}
-
 	# Run SFC system file repair
 	sfc.exe /scannow
 
-	# Disable compression
+	# Enable compression OS always
 	Compact.exe /CompactOS:always; Compact.exe /CompactOS:query
 
 	# Flush DNS resolver cache
