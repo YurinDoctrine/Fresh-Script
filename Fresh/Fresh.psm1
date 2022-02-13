@@ -1975,17 +1975,9 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Type "STRING" -Value "0" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Type "STRING" -Value "0" -Force
-
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management")) {
-		New-Item -Force "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"
-	}
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverride" -PropertyType DWord -Value "3" -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverrideMask" -PropertyType DWord -Value "3" -Force
-
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" -Name MiscPolicyInfo -PropertyType DWord -Value 2 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" -Name ShippedWithReserves -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" -Name PassedPolicy -PropertyType DWord -Value 0 -Force
-
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\TaggedEnergy" -Name TelemetryMaxTagPerApplication -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\TaggedEnergy" -Name DisableTaggedEnergyLogging -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\EnergyEstimation\TaggedEnergy" -Name TelemetryMaxApplication -PropertyType DWord -Value 0 -Force
@@ -1998,9 +1990,11 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Enum\USB" -Name AllowIdleIrpInD3 -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Enum\USB" -Name EnhancedPowerManagementEnabled -PropertyType DWord -Value 0 -Force
 	New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Cache" -Force
+
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\TabletPC")) {
 		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\TabletPC"
 	}
+
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\TabletPC" -Name TurnOffPenFeedback -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" -Name PassiveIntRealTimeWorkerPriority -PropertyType DWord -Value 18 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\KernelVelocity" -Name DisableFGBoostDecay -PropertyType DWord -Value 1 -Force
@@ -2008,6 +2002,8 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Multimedia\Audio" -Name "UserDuckingPreference" -PropertyType DWord -Value 3 -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "OpenAtLogon" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "EnableStartMenu" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverride" -PropertyType DWord -Value "72" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverrideMask" -PropertyType DWord -Value "3" -Force
 
 	Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
 	Set-SmbServerConfiguration -EnableLeasing $false -Force
@@ -2023,6 +2019,12 @@ function BestPriorityForeground {
 	netsh int tcp set global ecncapability=enabled
 	netsh int tcp set global nonsackrttresiliency=disabled
 	netsh int tcp set global maxsynretransmissions=2
+	
+	setx GPU_MAX_ALLOC_PERCENT 99
+	setx GPU_SINGLE_ALLOC_PERCENT 90
+	setx CPU_MAX_ALLOC_PERCENT 99
+	setx GPU_MAX_HEAP_SIZE 99
+	setx GPU_MAX_USE_SYNC_OBJECTS 1
 }
 
 # Disable mouse feedback
@@ -3169,8 +3171,8 @@ function DebloatMicrosoftServices {
 	Set-Service AppIDSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
 	Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "BcastDVRUserService_48486de" -Force -WarningAction SilentlyContinue
-	Set-Service BcastDVRUserService_48486de -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BcastDVRUserService" -Force -WarningAction SilentlyContinue
+	Set-Service BcastDVRUserService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "tzautoupdate" -Force -WarningAction SilentlyContinue
 	Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "BITS" -Force -WarningAction SilentlyContinue
@@ -3180,14 +3182,16 @@ function DebloatMicrosoftServices {
 	Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
 	Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "Messenger" -Force -WarningAction SilentlyContinue
+	Set-Service Messenger -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
 	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
 	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "BluetoothUserService_48486de" -Force -WarningAction SilentlyContinue
-	Set-Service BluetoothUserService_48486de -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "cbdhsvc_48486de" -Force -WarningAction SilentlyContinue
-	Set-Service cbdhsvc_48486de -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "BluetoothUserService" -Force -WarningAction SilentlyContinue
+	Set-Service BluetoothUserService -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "cbdhsvc" -Force -WarningAction SilentlyContinue
+	Set-Service cbdhsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CDPSvc" -Force -WarningAction SilentlyContinue
 	Set-Service CDPSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "CDPUserSvc" -Force -WarningAction SilentlyContinue
@@ -3214,6 +3218,8 @@ function DebloatMicrosoftServices {
 	Set-Service lmhosts -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RemoteRegistry" -Force -WarningAction SilentlyContinue
 	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RDSessMgr" -Force -WarningAction SilentlyContinue
+	Set-Service RDSessMgr -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "fhsvc" -Force -WarningAction SilentlyContinue
@@ -3308,6 +3314,8 @@ function DebloatMicrosoftServices {
 	Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DPS" -Force -WarningAction SilentlyContinue
 	Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "ose64" -Force -WarningAction SilentlyContinue
+	Set-Service ose64 -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "PcaSvc" -Force -WarningAction SilentlyContinue
 	Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "perceptionsimulation" -Force -WarningAction SilentlyContinue
