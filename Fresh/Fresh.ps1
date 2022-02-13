@@ -1163,8 +1163,8 @@ EnableHardwareAcceleratedGPUScheduling
 # Indexer respect power modes
 IndexerRespectPowerModes
 
-# Disable delete notify
-DisableDeleteNotify
+# Enable TRIM
+EnableTRIM
 
 # Disable power throttling
 DisablePowerThrottling
