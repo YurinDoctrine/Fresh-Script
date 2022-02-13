@@ -1080,7 +1080,7 @@ EnableBootOptimizationFunction
 NtfsDisableLastAccessUpdate
 
 # Max connections per 0 server
-MaxConnectionsPer0Server
+MaxConnectionsPer_0Server
 
 # Max connections per server
 MaxConnectionsPerServer
