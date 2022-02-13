@@ -1079,8 +1079,8 @@ EnableBootOptimizationFunction
 # Ntfs disable last access update
 NtfsDisableLastAccessUpdate
 
-# Max connections per 1_0 server
-MaxConnectionsPer1_0Server
+# Max connections per 0 server
+MaxConnectionsPer0Server
 
 # Max connections per server
 MaxConnectionsPerServer
