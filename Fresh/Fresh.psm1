@@ -3008,6 +3008,8 @@ function NtfsAllowExtendedCharacter8dot3Rename {
 
 # Ntfs disable 8dot3 name creation
 function NtfsDisable8dot3NameCreation {
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "Win95TruncatedExtensions" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "Win95TruncatedExtensions" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
 	fsutil behavior set disable8dot3 1
