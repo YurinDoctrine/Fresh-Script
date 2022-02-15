@@ -1050,7 +1050,7 @@ function EnableAppsSmartScreen {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\SmartScreen" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\SmartScreen" -Name ConfigureAppInstallControlEnabled -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Off -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name SmartScreenEnabled -PropertyType String -Value Warn -Force
 }
 
 # Prevent SmartScreen from marking files that have been downloaded from the Internet as unsafe (current user only)
