@@ -2019,7 +2019,6 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverrideMask" -PropertyType DWord -Value "3" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -PropertyType DWord -Value 0 -Force
 
-	Remove-Item -Path "HKCU:\Keyboard Layout\Substitutes" -Force
 	Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
 
 	Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
