@@ -1896,7 +1896,7 @@ function BestPriorityForeground {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Force
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -PropertyType DWord -Value 1 -Force
-	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name KernelSEHOPEnabled -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name KernelSEHOPEnabled -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DisableExceptionChainValidation -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name Win32PrioritySeparation -PropertyType DWord -Value 28 -Force
@@ -1999,8 +1999,6 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" -Name "EnableOpLocks" -Type "DWORD" -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Linkage" -Name "UtilizeNtCaching" -Type "DWORD" -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name ConvertibleSlateMode -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Enum\USB" -Name AllowIdleIrpInD3 -PropertyType DWord -Value 0 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Enum\USB" -Name EnhancedPowerManagementEnabled -PropertyType DWord -Value 0 -Force
 	New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Cache" -Force
 
 	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\TabletPC")) {
@@ -2017,8 +2015,10 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettings" -PropertyType DWord -Value "1" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverride" -PropertyType DWord -Value "72" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverrideMask" -PropertyType DWord -Value "3" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "EnableCfg" -PropertyType DWord -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Keyboard Layout\ShowToast" -Name "Show" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services" -Name "IoLatencyCap" -PropertyType DWord -Value 0 -Force
 
 	Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
 
@@ -2054,8 +2054,8 @@ function EnableFullScreenOptimization {
 	}
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_EFSEFeatureFlags" -Type DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DSEBehavior" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 0 -Force
-	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehavior" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_FSEBehaviorMode" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_HonorUserFSEBehaviorMode" -Type DWord -Value 2 -Force
 	New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Type DWord -Value 1 -Force
 }
@@ -2880,6 +2880,7 @@ function AdjustBestPerformance {
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowInfoTip -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowTaskViewButton -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name "Start_ShowRun" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name IconsOnly -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell -Name UseWin32TrayClockExperience -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AlwaysHibernateThumbnails -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\DWM -Name AnimationAttributionEnabled -PropertyType DWord -Value 0 -Force
@@ -3220,6 +3221,8 @@ function DebloatMicrosoftServices {
 	Set-Service CryptSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "diagnosticshub.standardcollector.service" -Force -WarningAction SilentlyContinue
 	Set-Service diagnosticshub.standardcollector.service -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "discache" -Force -WarningAction SilentlyContinue
+	Set-Service discache -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DoSvc" -Force -WarningAction SilentlyContinue
 	Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
@@ -3241,8 +3244,10 @@ function DebloatMicrosoftServices {
 	Set-Service RDSessMgr -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "fhsvc" -Force -WarningAction SilentlyContinue
-	Set-Service fhsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
+	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "luafv" -Force -WarningAction SilentlyContinue
+	Set-Service luafv -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "InstallService" -Force -WarningAction SilentlyContinue
 	Set-Service InstallService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "iphlpsvc" -Force -WarningAction SilentlyContinue
@@ -3465,6 +3470,10 @@ function MaximumDynamicBacklog {
 # Dynamic backlog growth delta
 function DynamicBacklogGrowthDelta {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DoNotHoldNicBuffers" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableRawSecurity" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableAddressSharing" -Type DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableChainedReceive" -Type DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
 }
 
@@ -3495,6 +3504,8 @@ function DisableRealtimeMonitoring {
 # Enable hardware accelerated GPU scheduling
 function EnableHardwareAcceleratedGPUScheduling {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "PlatformSupportMiracast" -Type DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrLevel" -Type DWord -Value 0 -Force
 }
 
 # Indexer respect power modes
@@ -3508,6 +3519,7 @@ function IndexerRespectPowerModes {
 # Enable TRIM
 function EnableTRIM {
 	fsutil behavior set DisableDeleteNotify 0
+	fsutil behavior set quotanotify 7200
 }
 
 # Disable power throttling
@@ -3548,9 +3560,6 @@ function ThreadPriority {
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters")) {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Force
 	}
-	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
-		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
-	}
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters")) {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Force
 	}
@@ -3560,12 +3569,18 @@ function ThreadPriority {
 	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters")) {
 		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Force
 	}
+	if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
+		New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
+	}
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableWriteCombining" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableMshybridNvsrSwitch" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "EnableHybridMode" -PropertyType DWord -Value 0 -Force
 }
 #endregion Performance
 function Errors {
