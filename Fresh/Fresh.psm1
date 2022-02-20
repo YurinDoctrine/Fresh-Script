@@ -23,7 +23,13 @@ function Check {
 	Compact.exe /CompactOS:always; Compact.exe /CompactOS:query
 
 	# Flush DNS resolver cache
+	ipconfig /release
+	ipconfig /renew
+	arp -d *
+	nbtstat -R
+	nbtstat -RR
 	ipconfig /flushdns
+	ipconfig /registerdns
 
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
@@ -2019,6 +2025,8 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKCU:\Keyboard Layout\ShowToast" -Name "Show" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services" -Name "IoLatencyCap" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" -Name "Start" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" -Name "Start" -PropertyType DWord -Value 0 -Force
 
 	Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
 
