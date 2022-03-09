@@ -4,6 +4,7 @@
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
+
 ```
 
  Open a Powershell prompt as Administrator then paste above code, after that Right-click and Run as
