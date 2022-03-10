@@ -16,9 +16,6 @@ function Check {
 		}
 	}
 
-	# Run SFC system file repair
-	sfc.exe /scannow
-
 	# Enable compression OS always
 	Compact.exe /CompactOS:always; Compact.exe /CompactOS:query
 
@@ -31,11 +28,11 @@ function Check {
 	ipconfig /flushdns
 	ipconfig /registerdns
 
-	# Run Disk cleanup utility
-	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
-
 	# Run Windows store reset
 	WSReset.exe
+
+	# Run Disk cleanup utility
+	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
 }
 #region Start menu
 # Unpin all the Start tiles
@@ -3701,6 +3698,7 @@ function Errors {
 	DISM.exe /Online /norestart /Disable-Feature /featurename:FaxServicesClientPackage /Remove
 	DISM.exe /Online /norestart /Disable-Feature /featurename:Printing-Foundation-InternetPrinting-Client /Remove
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
+	sfc.exe /scannow
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
