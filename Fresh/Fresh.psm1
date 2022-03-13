@@ -3699,6 +3699,7 @@ function Errors {
 	DISM.exe /Online /norestart /Disable-Feature /featurename:Printing-Foundation-InternetPrinting-Client /Remove
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 	sfc.exe /scannow
+	chkdsk
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
