@@ -3251,6 +3251,8 @@ function DebloatMicrosoftServices {
 	Set-Service RemoteRegistry -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RDSessMgr" -Force -WarningAction SilentlyContinue
 	Set-Service RDSessMgr -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "RetailDemo" -Force -WarningAction SilentlyContinue
+	Set-Service RetailDemo -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
@@ -3378,6 +3380,7 @@ function DebloatMicrosoftServices {
 	Set-Service WPDBusEnum -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
 	Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
+	Set-Service WebClient -StartupType Manual -ErrorAction SilentlyContinue
 	Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
 	Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "WpcMonSvc" -Force -WarningAction SilentlyContinue
