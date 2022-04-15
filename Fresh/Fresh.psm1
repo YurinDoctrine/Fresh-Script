@@ -33,6 +33,9 @@ function Check {
 
 	# Run Disk cleanup utility
 	cleanmgr.exe /sageset:65535; cleanmgr.exe /sagerun:65535
+
+	# Empty recycle bin
+	Clear-RecycleBin -Force -ErrorAction SilentlyContinue
 }
 #region Start menu
 # Unpin all the Start tiles
