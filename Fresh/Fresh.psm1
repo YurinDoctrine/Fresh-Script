@@ -2032,6 +2032,19 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" -Name "Start" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" -Name "Start" -PropertyType DWord -Value 0 -Force
 
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy")) {
+		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy"
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" -Name "DisableQueryRemoteServer" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" -Name "EnableQueryRemoteServer" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DSCAutomationHostEnabled" -PropertyType DWord -Value 0 -Force
+
+	if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion")) {
+		New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion"
+	}
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion" -Name "DisableContentFileUpdates" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}" -Name "ScenarioExecutionEnabled" -PropertyType DWord -Value 0 -Force
+
 	Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
 
 	Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
@@ -3256,8 +3269,6 @@ function DebloatMicrosoftServices {
 	Set-Service RDSessMgr -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "RetailDemo" -Force -WarningAction SilentlyContinue
 	Set-Service RetailDemo -StartupType Disabled -ErrorAction SilentlyContinue
-	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
-	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
 	Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "luafv" -Force -WarningAction SilentlyContinue
