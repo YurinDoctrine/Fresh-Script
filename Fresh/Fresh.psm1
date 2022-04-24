@@ -3207,15 +3207,6 @@ function DoubleClickHeightWidth {
 # Value max
 function ValueMax {
 	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMax -Value 0 -Force
-
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\dfd10d17-d5eb-45dd-877a-9a34ddd15c82 -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\ea062031-0e34-4ff1-9b6d-eb1059334028 -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\c4581c31-89ab-4597-8e2b-9c9cab440e6b -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\984cf492-3bed-4488-a8f9-4286c97bf5aa -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\9943e905-9a30-4ec1-9b99-44dd3b76f7a2 -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\71021b41-c749-4d21-be74-a00f335d582b -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\c7be0679-2817-4d69-9d02-519a537ed0c6 -Name Attributes -Value 2 -Force
-	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\6c2993b0-8f48-481f-bcc6-00dd2742aa06 -Name Attributes -Value 2 -Force	
 }
 
 # Debloat microsoft services
