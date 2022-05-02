@@ -3206,7 +3206,12 @@ function DoubleClickHeightWidth {
 
 # Value max
 function ValueMax {
+	Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMin -Value 0 -Force
+	Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMax -Value 0 -Force
+	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMin -Value 0 -Force
 	Set-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMax -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMin -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMax -PropertyType DWord -Value 0 -Force
 }
 
 # Debloat microsoft services
@@ -3427,7 +3432,7 @@ function DisableLastAccess {
 
 # Set memory usage
 function SetMemoryUsage {
-	fsutil behavior set memoryusage 1
+	fsutil behavior set memoryusage 2
 }
 
 # Disable boot logging
