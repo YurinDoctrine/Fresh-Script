@@ -28,6 +28,11 @@ function Check {
 	ipconfig /flushdns
 	ipconfig /registerdns
 
+	# Run WMI reset
+	net stop winmgmt /y
+	winmgmt /resetrepository
+	net start winmgmt /y
+
 	# Run Windows store reset
 	WSReset.exe
 
@@ -3725,6 +3730,7 @@ function Errors {
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 	sfc.exe /scannow
 	chkdsk
+	ccmrepair.exe
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
