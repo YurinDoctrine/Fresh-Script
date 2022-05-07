@@ -3730,7 +3730,6 @@ function Errors {
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 	sfc.exe /scannow
 	chkdsk
-	ccmrepair.exe
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
