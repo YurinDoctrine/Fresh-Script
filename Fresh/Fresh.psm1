@@ -2068,6 +2068,9 @@ function BestPriorityForeground {
 	setx CPU_MAX_ALLOC_PERCENT 99
 	setx GPU_MAX_HEAP_SIZE 99
 	setx GPU_MAX_USE_SYNC_OBJECTS 1
+
+	powercfg /setACvalueindex scheme_current SUB_PROCESSOR SYSCOOLPOL 1
+	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR SYSCOOLPOL 1
 }
 
 # Disable mouse feedback
