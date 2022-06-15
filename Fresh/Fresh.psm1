@@ -2069,20 +2069,62 @@ function BestPriorityForeground {
 	setx GPU_MAX_HEAP_SIZE 99
 	setx GPU_MAX_USE_SYNC_OBJECTS 1
 
-	powercfg /setDCvalueindex scheme_current SUB_GRAPHICS GPUPREFERENCEPOLICY 1
-	powercfg /setACvalueindex scheme_current SUB_INTSTEER MODE 5
-	powercfg /setDCvalueindex scheme_current SUB_INTSTEER MODE 5
-	powercfg /setACvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
-	powercfg /setACvalueindex scheme_current SUB_PROCESSOR THROTTLING 2
-	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR THROTTLING 1
-	powercfg /setACvalueindex scheme_current SUB_PROCESSOR CPPERF 2
-	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR CPPERF 1
-	powercfg /setACvalueindex scheme_current SUB_PROCESSOR CPPERF1 2
-	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR CPPERF1 1
-	powercfg /setACvalueindex scheme_current SUB_PROCESSOR SCHEDPOLICY 3
-	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR SCHEDPOLICY 3
-	powercfg /setACvalueindex scheme_current SUB_PROCESSOR SHORTSCHEDPOLICY 3
-	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR SHORTSCHEDPOLICY 3
+	powercfg -setactive SCHEME_BALANCED
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_NONE PERSONALITY 2
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_NONE PERSONALITY 0
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_GRAPHICS GPUPREFERENCEPOLICY 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_INTSTEER MODE 3
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_INTSTEER MODE 3
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_INTSTEER PERPROCLOAD 5000
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_INTSTEER PERPROCLOAD 5000
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 2
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 2
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR THROTTLING 2
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR THROTTLING 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPPERF 2
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPPERF 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPPERF1 2
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPPERF1 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR SCHEDPOLICY 3
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR SCHEDPOLICY 3
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR SHORTSCHEDPOLICY 3
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR SHORTSCHEDPOLICY 3
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES 0
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES 0
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMAXCORES 100
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMAXCORES 100
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPCONCURRENCY 90
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPCONCURRENCY 90
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPDISTRIBUTION 100
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPDISTRIBUTION 100
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPHEADROOM 50
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPHEADROOM 50
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPOVERUTIL 90
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPOVERUTIL 90
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFEPP 50
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFEPP 100
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPINCREASEPOL 1
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPINCREASEPOL 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR CPDECREASEPOL 1
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPDECREASEPOL 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR DISTRIBUTEUTIL 1
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR DISTRIBUTEUTIL 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 3
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 3
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR SCHEDPOLICY 2
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR SCHEDPOLICY 4
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFDUTYCYCLING 1
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFDUTYCYCLING 1
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_SLEEP RTCWAKE 0
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_SLEEP RTCWAKE 0
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_SLEEP d4e98f31-5ffe-4ce1-be31-1b38b384c009 3
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_SLEEP d4e98f31-5ffe-4ce1-be31-1b38b384c009 3
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESPOLICY 1
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESPOLICY 1
+	powercfg -setACvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3
+	powercfg -setDCvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3
+	powercfg -setDCvalueindex SCHEME_CURRENT 44f3beca-a7c0-460e-9df2-bb8b99e0cba6 3619c3f2-afb2-4afc-b0e9-e7fef372de36 0
+	powercfg -setactive SCHEME_CURRENT
 }
 
 # Disable mouse feedback
