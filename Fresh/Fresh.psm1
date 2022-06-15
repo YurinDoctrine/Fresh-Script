@@ -2069,8 +2069,20 @@ function BestPriorityForeground {
 	setx GPU_MAX_HEAP_SIZE 99
 	setx GPU_MAX_USE_SYNC_OBJECTS 1
 
-	powercfg /setACvalueindex scheme_current SUB_PROCESSOR SYSCOOLPOL 1
-	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR SYSCOOLPOL 1
+	powercfg /setDCvalueindex scheme_current SUB_GRAPHICS GPUPREFERENCEPOLICY 1
+	powercfg /setACvalueindex scheme_current SUB_INTSTEER MODE 5
+	powercfg /setDCvalueindex scheme_current SUB_INTSTEER MODE 5
+	powercfg /setACvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
+	powercfg /setACvalueindex scheme_current SUB_PROCESSOR THROTTLING 2
+	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR THROTTLING 1
+	powercfg /setACvalueindex scheme_current SUB_PROCESSOR CPPERF 2
+	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR CPPERF 1
+	powercfg /setACvalueindex scheme_current SUB_PROCESSOR CPPERF1 2
+	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR CPPERF1 1
+	powercfg /setACvalueindex scheme_current SUB_PROCESSOR SCHEDPOLICY 3
+	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR SCHEDPOLICY 3
+	powercfg /setACvalueindex scheme_current SUB_PROCESSOR SHORTSCHEDPOLICY 3
+	powercfg /setDCvalueindex scheme_current SUB_PROCESSOR SHORTSCHEDPOLICY 3
 }
 
 # Disable mouse feedback
