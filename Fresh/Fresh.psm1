@@ -2124,6 +2124,8 @@ function BestPriorityForeground {
 	powercfg -setACvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3
 	powercfg -setDCvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3
 	powercfg -setDCvalueindex SCHEME_CURRENT 44f3beca-a7c0-460e-9df2-bb8b99e0cba6 3619c3f2-afb2-4afc-b0e9-e7fef372de36 0
+	powercfg -setACvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOADAPT 1
+	powercfg -setDCvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOADAPT 1
 	powercfg -setactive SCHEME_CURRENT
 }
 
