@@ -2055,8 +2055,11 @@ function BestPriorityForeground {
 	Set-SmbServerConfiguration -EnableLeasing $false -Force
 	Set-SmbClientConfiguration -EnableLargeMtu $true -Force
 
+	Disable-NetAdapterLso -Name *
+
 	netsh int tcp set global timestamps=disabled
 	netsh int tcp set global netdma=enabled
+	netsh int tcp set global rsc=disabled
 	netsh int tcp set global dca=enabled
 	netsh int tcp set global autotuninglevel=disabled
 	netsh int tcp set global ecncapability=enabled
