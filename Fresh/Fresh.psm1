@@ -1933,6 +1933,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name DefaultTTL -PropertyType DWord -Value 64 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name EnableTCPA -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name TcpTimedWaitDelay -PropertyType DWord -Value 30 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name InterfaceMetric -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name SackOpts -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name SynAttackProtect -PropertyType DWord -Value 2 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name StrictTimeWaitSeqCheck -PropertyType DWord -Value 1 -Force
@@ -2027,6 +2028,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverrideMask" -PropertyType DWord -Value "3" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "EnableCfg" -PropertyType DWord -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name ProtectionMode -PropertyType DWord -Value 1 -Force
 
 	if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
 		New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
@@ -2065,6 +2067,7 @@ function BestPriorityForeground {
 	netsh int tcp set global ecncapability=enabled
 	netsh int tcp set global nonsackrttresiliency=disabled
 	netsh int tcp set global maxsynretransmissions=2
+	netsh int ip set global icmpredirects=disabled
 	
 	setx GPU_MAX_ALLOC_PERCENT 99
 	setx GPU_SINGLE_ALLOC_PERCENT 90
