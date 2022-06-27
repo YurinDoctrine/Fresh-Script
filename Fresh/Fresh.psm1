@@ -3227,6 +3227,7 @@ function PagingFiles {
 # Second-level data cache
 function SecondLevelDataCache {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SecondLevelDataCache" -PropertyType DWord -Value 1024 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ThirdLevelDataCache" -PropertyType DWord -Value 3072 -Force
 }
 
 # Existing page files
