@@ -3226,7 +3226,7 @@ function PagingFiles {
 
 # Second-level data cache
 function SecondLevelDataCache {
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SecondLevelDataCache" -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SecondLevelDataCache" -PropertyType DWord -Value 1024 -Force
 }
 
 # Existing page files
@@ -3235,6 +3235,8 @@ function ExistingPageFiles {
 	$hexified = $Value.Split(',') | ForEach-Object { "0x$_" }
 
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "ExistingPageFiles" -PropertyType Binary -Value ([byte[]]$hexified) -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "NonPagedPoolSize" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "SystemPages" -PropertyType DWord -Value 0 -Force
 }
 
 # Enable prefetcher
