@@ -2040,6 +2040,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "DnsCacheEnabled" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name "NoLazyMode" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name AlwaysUnloadDLL -PropertyType DWord -Value 1 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" -Name CountOperations -PropertyType DWord -Value 0 -Force
 
 	if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
 		New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
