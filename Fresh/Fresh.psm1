@@ -33,6 +33,9 @@ function Check {
 	winmgmt /resetrepository
 	net start winmgmt /y
 
+	# Run WSUS reset
+	wuauclt /resetauthorization /detectnow
+
 	# Run Windows store reset
 	WSReset.exe
 
