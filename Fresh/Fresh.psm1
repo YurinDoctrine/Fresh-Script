@@ -2044,6 +2044,7 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name "NoLazyMode" -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name AlwaysUnloadDLL -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" -Name CountOperations -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" -Name DisableDiskCounters -PropertyType DWord -Value 1 -Force
 
 	if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
 		New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
@@ -2839,6 +2840,7 @@ function NetworkConnectionStatusIndicator {
 
 # Fix timers
 function FixTimers {
+	diskperf -N
 	bcdedit /set `{current`} useplatformtick true
 	bcdedit /set `{current`} disabledynamictick true
 	bcdedit /set `{current`} tscsyncpolicy legacy
