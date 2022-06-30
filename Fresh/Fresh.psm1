@@ -1913,6 +1913,7 @@ function BestPriorityForeground {
 	}
 	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name KernelSEHOPEnabled -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name ForceForegroundBoostDecay -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\kernel" -Name DisableExceptionChainValidation -PropertyType DWord -Value 1 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name RebalanceMinPriority -Type "DWORD" -Value "1" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name DisableLowQosTimerResolution -Type "DWORD" -Value "1" -Force
