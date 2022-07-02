@@ -2059,6 +2059,9 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name ImageExecutionOptions -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name TtmEnabled -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name FlushPolicy -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" -Name SelfHealingEnabled -Type "DWORD" -Value "0" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" -Name FastBoot -Type "DWORD" -Value "1" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" -Name VolatileBoot -Type "DWORD" -Value "1" -Force
 
 	if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
 		New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
