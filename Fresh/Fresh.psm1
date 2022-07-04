@@ -2110,6 +2110,7 @@ function BestPriorityForeground {
 
 	Disable-NetAdapterLso -Name *
 
+	netsh int tcp set global initialRto=2000
 	netsh int tcp set global timestamps=disabled
 	netsh int tcp set global netdma=enabled
 	netsh int tcp set global rsc=disabled
