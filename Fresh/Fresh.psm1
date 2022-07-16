@@ -2072,6 +2072,8 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Configuration Manager" -Name VolatileBoot -Type "DWORD" -Value "1" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" -Name AdditionalCriticalWorkerThreads -Type "DWORD" -Value "20" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" -Name AdditionalDelayedWorkerThreads -Type "DWORD" -Value "20" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" -Name DefaultNumberOfWorkerThreads -Type "DWORD" -Value "64" -Force
+	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Executive" -Name WorkerFactoryThreadIdleTimeout -Type "DWORD" -Value "3" -Force
 
 	if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
 		New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
