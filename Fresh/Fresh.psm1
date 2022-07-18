@@ -15,6 +15,7 @@ function Check {
 			break
 		}
 	}
+	Read-Host 'Please make sure your network connection is available... [HIT RETURN]'
 
 	# Enable compression OS always
 	Compact.exe /CompactOS:always; Compact.exe /CompactOS:query
@@ -615,7 +616,6 @@ function DisablePrtScnSnippingTool {
 
 # Change desktop background
 function ChangeDesktopBackground {
-	Read-Host 'Please make sure your network connection is available... [HIT RETURN]'
 	Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
 	New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
