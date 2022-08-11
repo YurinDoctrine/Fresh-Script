@@ -3879,6 +3879,7 @@ function Errors {
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 	sfc.exe /scannow
 	chkdsk
+	fsutil resource setautoreset true c:\
 
 	if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
