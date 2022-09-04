@@ -1928,7 +1928,6 @@ function BestPriorityForeground {
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name EnablePerCpuClockTickScheduling -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name HeteroSchedulerOptions -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name SerializeTimerExpiration -Type "DWORD" -Value "1" -Force
-	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name MaximumSharedReadyQueueSize -Type "DWORD" -Value "1" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name MinDynamicTickDuration -Type "DWORD" -Value "1000" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name DpcWatchdogProfileOffset -Type "DWORD" -Value "0" -Force
 	New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" -Name IRQ8Priority -PropertyType DWord -Value 1 -Force
@@ -3179,14 +3178,22 @@ function SetBootTimeoutValue {
 function NtfsAllowExtendedCharacter8dot3Rename {
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "NtfsAllowExtendedCharacter8dot3Rename" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsMemoryUsage" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "NtfsMemoryUsage" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "PathCache" -PropertyType DWord -Value 128 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "PathCache" -PropertyType DWord -Value 128 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "LongPathsEnabled" -PropertyType DWord -Value 1024 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "LongPathsEnabled" -PropertyType DWord -Value 1024 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "FileNameCache" -PropertyType DWord -Value 1024 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "FileNameCache" -PropertyType DWord -Value 1024 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsBugcheckOnCorrupt" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "NtfsBugcheckOnCorrupt" -PropertyType DWord -Value 0 -Force
 }
 
 # Ntfs disable 8dot3 name creation
 function NtfsDisable8dot3NameCreation {
+	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "Win31FileSystem" -PropertyType DWord -Value 0 -Force
+	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "Win31FileSystem" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "Win95TruncatedExtensions" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\FileSystem -Name "Win95TruncatedExtensions" -PropertyType DWord -Value 0 -Force
 	New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name "NtfsDisable8dot3NameCreation" -PropertyType DWord -Value 1 -Force
@@ -3778,6 +3785,20 @@ function ThreadPriority {
 #endregion Performance
 function Errors {
 
+	# Disable mitigations
+	powershell set-ProcessMitigation -System -Disable DEP >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable EmulateAtlThunks >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable RequireInfo >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable BottomUp >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable HighEntropy >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable StrictHandle >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable CFG >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable StrictCFG >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable SuppressExports >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable SEHOP >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable AuditSEHOP >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable SEHOPTelemetry >nul 2>&1
+	powershell set-ProcessMitigation -System -Disable ForceRelocateImages >nul 2>&1
 	# Run DISM
 	DISM.exe /Online /norestart /Disable-Feature /featurename:SimpleTCP /Remove
 	DISM.exe /Online /norestart /Disable-Feature /featurename:SNMP /Remove
