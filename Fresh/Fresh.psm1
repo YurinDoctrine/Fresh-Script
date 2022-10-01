@@ -3399,6 +3399,8 @@ function DebloatMicrosoftServices {
 	Set-Service Messenger -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
 	Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
+	Stop-Service "NahimicService" -Force -WarningAction SilentlyContinue
+	Set-Service NahimicService -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
 	Set-Service GraphicsPerfSvc -StartupType Disabled -ErrorAction SilentlyContinue
 	Stop-Service "BluetoothUserService" -Force -WarningAction SilentlyContinue
