@@ -3908,7 +3908,8 @@ function Errors {
 	DISM.exe /Online /norestart /Disable-Feature /featurename:Printing-Foundation-InternetPrinting-Client /Remove
 	DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
 	sfc.exe /scannow
-	chkdsk
+	chkdsk /f
+	chkdsk /r
 	fsutil resource setautoreset true c:\
 
 	if ($Global:Error) {
