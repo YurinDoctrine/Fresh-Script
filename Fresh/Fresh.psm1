@@ -3468,6 +3468,8 @@ function DebloatMicrosoftServices {
     Set-Service DoSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "DusmSvc" -Force -WarningAction SilentlyContinue
     Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "EntAppSvc" -Force -WarningAction SilentlyContinue
+    Set-Service EntAppSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "TermService" -Force -WarningAction SilentlyContinue
     Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service TieringEngineService -StartupType Disabled -ErrorAction SilentlyContinue
@@ -3585,6 +3587,8 @@ function DebloatMicrosoftServices {
     Set-Service BthAvctpSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "BDESVC" -Force -WarningAction SilentlyContinue
     Set-Service BDESVC -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "BFE" -Force -WarningAction SilentlyContinue
+    Set-Service BFE -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
     Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "DPS" -Force -WarningAction SilentlyContinue
