@@ -756,6 +756,10 @@ UninstallOneDrive
 # Не показывать уведомления поставщика синхронизации в проводнике (только для текущего пользователя)
 HideOneDriveFileExplorerAd
 
+# Uninstall MSTeams
+# Удалить MSTeams
+UninstallMSTeams
+
 # Turn on Storage Sense (current user only)
 # Включить Контроль памяти (только для текущего пользователя)
 EnableStorageSense
