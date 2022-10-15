@@ -2435,6 +2435,7 @@ function UninstallOneDrive {
         Remove-Item -Path $env:LOCALAPPDATA\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
         Remove-Item -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force -ErrorAction Ignore
     }
+    cmd /c winget uninstall OneDrive
 }
 
 # Do not show sync provider notification within File Explorer (current user only)
