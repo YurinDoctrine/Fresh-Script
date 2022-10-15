@@ -3420,6 +3420,8 @@ function ValueMax {
 function DebloatMicrosoftServices {
     Stop-Service "ALG" -Force -WarningAction SilentlyContinue
     Set-Service ALG -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "AJRouter" -Force -WarningAction SilentlyContinue
+    Set-Service AJRouter -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "AppIDSvc" -Force -WarningAction SilentlyContinue
     Set-Service AppIDSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
@@ -3430,6 +3432,8 @@ function DebloatMicrosoftServices {
     Set-Service tzautoupdate -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "BITS" -Force -WarningAction SilentlyContinue
     Set-Service BITS -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "Browser" -Force -WarningAction SilentlyContinue
+    Set-Service Browser -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
     Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
@@ -3439,6 +3443,8 @@ function DebloatMicrosoftServices {
     Set-Service Messenger -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "MMCSS" -Force -WarningAction SilentlyContinue
     Set-Service MMCSS -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "MSDTC" -Force -WarningAction SilentlyContinue
+    Set-Service MSDTC -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "NahimicService" -Force -WarningAction SilentlyContinue
     Set-Service NahimicService -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "GraphicsPerfSvc" -Force -WarningAction SilentlyContinue
@@ -3479,6 +3485,8 @@ function DebloatMicrosoftServices {
     Set-Service RDSessMgr -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "RetailDemo" -Force -WarningAction SilentlyContinue
     Set-Service RetailDemo -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "RtkBtManServ" -Force -WarningAction SilentlyContinue
+    Set-Service RtkBtManServ -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "lfsvc" -Force -WarningAction SilentlyContinue
     Set-Service lfsvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "luafv" -Force -WarningAction SilentlyContinue
@@ -3539,8 +3547,16 @@ function DebloatMicrosoftServices {
     Set-Service UsoSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "hidserv" -Force -WarningAction SilentlyContinue
     Set-Service hidserv -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "HPAppHelperCap" -Force -WarningAction SilentlyContinue
+    Set-Service HPAppHelperCap -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "HPDiagsCap" -Force -WarningAction SilentlyContinue
     Set-Service HPDiagsCap -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "HPNetworkCap" -Force -WarningAction SilentlyContinue
+    Set-Service HPNetworkCap -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "HPSysInfoCap" -Force -WarningAction SilentlyContinue
+    Set-Service HPSysInfoCap -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "HpTouchpointAnalyticsService" -Force -WarningAction SilentlyContinue
+    Set-Service HpTouchpointAnalyticsService -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
     Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
