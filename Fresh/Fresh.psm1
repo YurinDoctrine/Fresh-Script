@@ -2356,6 +2356,7 @@ function DisableCortanaAutostart {
         }
         New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -PropertyType DWord -Value 1 -Force
     }
+    New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" -Name AcceptedPrivacyPolicy -PropertyType DWord -Value 0 -Force
 }
 #endregion UWP apps
 #region System
