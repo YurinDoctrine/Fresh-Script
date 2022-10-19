@@ -1898,7 +1898,7 @@ function DisableXboxGameTips {
     New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name ShowStartupPanel -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name UseNexusForGameBarEnabled -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\GameBar -Name GamePanelStartupTipIndex -PropertyType DWord -Value 3 -Force
-    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCatureEnabled -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR -Name AppCaptureEnabled -PropertyType DWord -Value 0 -Force
 }
 
 # Turn on Xbox Game Bar tips
