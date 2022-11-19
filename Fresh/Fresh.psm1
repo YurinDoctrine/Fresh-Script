@@ -1296,7 +1296,7 @@ function OOShutup {
     Write-Warning -Message $Localization.OOShutup
     Import-Module BitsTransfer
     Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
-    ./OOSU10.exe ooshutup.cfg /quiet
+    .\OOSU10.exe ooshutup.cfg /quiet
 }
 #endregion O&OShutup
 #region Privacy & Telemetry
