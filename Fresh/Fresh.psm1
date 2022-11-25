@@ -3474,6 +3474,8 @@ function DebloatMicrosoftServices {
     Set-Service DusmSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "EntAppSvc" -Force -WarningAction SilentlyContinue
     Set-Service EntAppSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "MessagingService" -Force -WarningAction SilentlyContinue
+    Set-Service MessagingService -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "TermService" -Force -WarningAction SilentlyContinue
     Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service TieringEngineService -StartupType Disabled -ErrorAction SilentlyContinue
@@ -3520,6 +3522,8 @@ function DebloatMicrosoftServices {
     Set-Service PhoneSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "Spooler" -Force -WarningAction SilentlyContinue
     Set-Service Spooler -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "PimIndexMaintenanceSvc" -Force -WarningAction SilentlyContinue
+    Set-Service PimIndexMaintenanceSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "PrintNotify" -Force -WarningAction SilentlyContinue
     Set-Service PrintNotify -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "QWAVE" -Force -WarningAction SilentlyContinue
@@ -3563,6 +3567,8 @@ function DebloatMicrosoftServices {
     Set-Service HPSysInfoCap -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "HpTouchpointAnalyticsService" -Force -WarningAction SilentlyContinue
     Set-Service HpTouchpointAnalyticsService -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "MixedRealityOpenXRSvc" -Force -WarningAction SilentlyContinue
+    Set-Service MixedRealityOpenXRSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "UserDataSvc" -Force -WarningAction SilentlyContinue
     Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
@@ -3587,6 +3593,8 @@ function DebloatMicrosoftServices {
     Set-Service XboxNetApiSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "XboxGipSvc" -Force -WarningAction SilentlyContinue
     Set-Service XboxGipSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "autotimesvc" -Force -WarningAction SilentlyContinue
+    Set-Service autotimesvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "BthAvctpSvc" -Force -WarningAction SilentlyContinue
     Set-Service BthAvctpSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "BDESVC" -Force -WarningAction SilentlyContinue
@@ -3606,12 +3614,20 @@ function DebloatMicrosoftServices {
     Stop-Service "PushToInstall" -Force -WarningAction SilentlyContinue
     Set-Service PushToInstall -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service RmSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "SDRSVC" -Force -WarningAction SilentlyContinue
+    Set-Service SDRSVC -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "seclogon" -Force -WarningAction SilentlyContinue
     Set-Service seclogon -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "SharedRealitySvc" -Force -WarningAction SilentlyContinue
+    Set-Service SharedRealitySvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "SmsRouter" -Force -WarningAction SilentlyContinue
+    Set-Service SmsRouter -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
     Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
     Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "UnistoreSvc" -Force -WarningAction SilentlyContinue
+    Set-Service UnistoreSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "W32Time" -Force -WarningAction SilentlyContinue
     Set-Service W32Time -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service WFDSConMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
@@ -3631,6 +3647,8 @@ function DebloatMicrosoftServices {
     Set-Service WebClient -StartupType Manual -ErrorAction SilentlyContinue
     Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
     Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "wercplsupport" -Force -WarningAction SilentlyContinue
+    Set-Service wercplsupport -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "WpcMonSvc" -Force -WarningAction SilentlyContinue
     Set-Service WpcMonSvc -StartupType Disabled -ErrorAction SilentlyContinue
 }
