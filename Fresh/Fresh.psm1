@@ -2126,7 +2126,27 @@ function BestPriorityForeground {
 
     Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
 
+    auditpol /set /category:"Account Logon" /success:disable
+    auditpol /set /category:"Account Logon" /failure:disable
+    auditpol /set /category:"Account Management" /success:disable
+    auditpol /set /category:"Account Management" /failure:disable
+    auditpol /set /category:"DS Access" /success:disable
+    auditpol /set /category:"DS Access" /failure:disable
+    auditpol /set /category:"Logon/Logoff" /success:disable
+    auditpol /set /category:"Logon/Logoff" /failure:disable
+    auditpol /set /category:"Object Access" /success:disable
+    auditpol /set /category:"Object Access" /failure:disable
+    auditpol /set /category:"Policy Change" /success:disable
+    auditpol /set /category:"Policy Change" /failure:disable
+    auditpol /set /category:"Privilege Use" /success:disable
+    auditpol /set /category:"Privilege Use" /failure:disable
+    auditpol /set /category:"Detailed Tracking" /success:disable
+    auditpol /set /category:"Detailed Tracking" /failure:disable
+    auditpol /set /category:"System" /success:disable
+    auditpol /set /category:"System" /failure:disable
+
     Set-MpPreference -ScanAvgCPULoadFactor 5
+    Set-MpPreference -EnableLowCpuPriority $True
 
     Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
     Set-SmbServerConfiguration -EnableLeasing $false -Force
@@ -3990,6 +4010,9 @@ function Errors {
     DISM.exe /Online /norestart /Disable-Feature /featurename:FaxServicesClientPackage /Remove
     DISM.exe /Online /norestart /Disable-Feature /featurename:Printing-Foundation-InternetPrinting-Client /Remove
     DISM /Online /Cleanup-Image /ScanHealth; DISM /Online /Cleanup-Image /RestoreHealth
+    DISM /Online /Cleanup-Image /StartComponentCleanup /ResetBase
+    DISM /Online /Cleanup-Image /SPSuperseded
+
     sfc.exe /scannow
     chkdsk /f
     chkdsk /r
