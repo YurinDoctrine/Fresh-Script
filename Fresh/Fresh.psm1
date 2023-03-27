@@ -2153,18 +2153,25 @@ function BestPriorityForeground {
     Set-SmbClientConfiguration -EnableLargeMtu $true -Force
 
     Disable-NetAdapterLso -Name *
+    Disable-NetAdapterRsc -Name *
 
+    netsh int tcp set supplemental Internet
+    netsh int tcp set supplemental Internet congestionprovider=ctcp
+    netsh int tcp set security mpp=disabled
     netsh int tcp set global initialRto=2000
     netsh int tcp set global timestamps=disabled
     netsh int tcp set global netdma=enabled
     netsh int tcp set global rsc=disabled
+    netsh int tcp set global rss=enabled
     netsh int tcp set global dca=enabled
+    netsh int tcp set global ecn=enabled
     netsh int tcp set global autotuninglevel=disabled
     netsh int tcp set global ecncapability=enabled
     netsh int tcp set global nonsackrttresiliency=disabled
     netsh int tcp set global maxsynretransmissions=2
     netsh int ip set global icmpredirects=disabled
-	
+    netsh winsock set autotuning on
+
     setx GPU_MAX_ALLOC_PERCENT 99
     setx GPU_SINGLE_ALLOC_PERCENT 90
     setx GPU_MAX_SINGLE_ALLOC_PERCENT 99
