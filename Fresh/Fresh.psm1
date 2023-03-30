@@ -2145,7 +2145,7 @@ function BestPriorityForeground {
     auditpol /set /category:"System" /success:disable
     auditpol /set /category:"System" /failure:disable
 
-    Set-MpPreference -ScanAvgCPULoadFactor 5
+    Set-MpPreference -ScanAvgCPULoadFactor 1
     Set-MpPreference -EnableLowCpuPriority $True
 
     Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
