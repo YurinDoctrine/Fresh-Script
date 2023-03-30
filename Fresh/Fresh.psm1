@@ -2155,11 +2155,11 @@ function BestPriorityForeground {
     Disable-NetAdapterLso -Name *
     Disable-NetAdapterRsc -Name *
 
-    netsh int tcp set supplemental Template=Internet CongestionProvider=ctcp
-    netsh int tcp set supplemental Template=Datacenter CongestionProvider=ctcp
-    netsh int tcp set supplemental Template=Compat CongestionProvider=ctcp
-    netsh int tcp set supplemental Template=InternetCustom CongestionProvider=ctcp
-    netsh int tcp set supplemental Template=DatacenterCustom CongestionProvider=ctcp
+    netsh int tcp set supplemental Template=Internet CongestionProvider=dctcp
+    netsh int tcp set supplemental Template=Datacenter CongestionProvider=dctcp
+    netsh int tcp set supplemental Template=Compat CongestionProvider=dctcp
+    netsh int tcp set supplemental Template=InternetCustom CongestionProvider=dctcp
+    netsh int tcp set supplemental Template=DatacenterCustom CongestionProvider=dctcp
     netsh int tcp set supplemental Template=Internet CongestionProvider=bbr2
     netsh int tcp set supplemental Template=Datacenter CongestionProvider=bbr2
     netsh int tcp set supplemental Template=Compat CongestionProvider=bbr2
