@@ -238,7 +238,7 @@ JPEGWallpapersQualityDefault
 
 # Start Task Manager in expanded mode (current user only)
 # Запускать Диспетчера задач в развернутом виде (только для текущего пользователя)
-TaskManagerWindowExpanded
+# TaskManagerWindowExpanded
 
 # Show a notification when your PC requires a restart to finish updating
 # Показывать уведомление, когда компьютеру требуется перезагрузка для завершения обновления
