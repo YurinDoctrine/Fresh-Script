@@ -2067,6 +2067,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "UseLargePages" -PropertyType DWord -Value "0" -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "DnsCacheEnabled" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" -Name "SyncMode5" -PropertyType DWord -Value 3 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" -Name "SendAdditionalOption" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name "NoLazyMode" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Games" -Name "FpsAll" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Games" -Name "GameFluidity" -PropertyType DWord -Value 1 -Force
