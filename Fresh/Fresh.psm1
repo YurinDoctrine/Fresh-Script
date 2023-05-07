@@ -2112,6 +2112,7 @@ function BestPriorityForeground {
 
     Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
 
+    Disable-MMAgent -MemoryCompression
     Disable-MMAgent -PageCombining
 
     auditpol /set /category:"Account Logon" /success:disable
@@ -3834,6 +3835,8 @@ function IndexerRespectPowerModes {
 
 # Enable TRIM
 function EnableTRIM {
+    Optimize-Volume -DriveLetter C -ReTrim
+
     fsutil behavior set DisableDeleteNotify 0
     fsutil behavior set quotanotify 7200
 }
