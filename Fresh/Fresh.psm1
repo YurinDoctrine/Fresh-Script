@@ -2979,6 +2979,7 @@ function FixTimers {
     bcdedit /set `{current`} x2apicpolicy Disable
     bcdedit /set `{current`} uselegacyapicmode Yes
     bcdedit /set `{current`} debug No
+    bcdedit /set `{current`} highestmode Yes
     bcdedit /deletevalue `{current`} useplatformclock
 }
 
