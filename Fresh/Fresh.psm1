@@ -2980,6 +2980,7 @@ function FixTimers {
     bcdedit /set `{current`} uselegacyapicmode Yes
     bcdedit /set `{current`} debug No
     bcdedit /set `{current`} highestmode Yes
+    bcdedit /set `{current`} perfmem 1
     bcdedit /deletevalue `{current`} useplatformclock
 }
 
