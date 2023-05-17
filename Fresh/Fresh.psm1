@@ -2108,12 +2108,22 @@ function BestPriorityForeground {
     }
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsRunInBackground" -Type DWord -Value 2 -Force
 
+    if (!(Test-Path "HKLM:\SYSTEM\ControlSet001\Control\BootControl")) {
+        New-Item -Force "HKLM:\SYSTEM\ControlSet001\Control\BootControl"
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\BootControl" -Name "BootProgressAnimation" -PropertyType DWord -Value 0 -Force
+
     if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
         New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
     }
     New-ItemProperty -Path "HKCU:\Keyboard Layout\ShowToast" -Name "Show" -PropertyType DWord -Value 0 -Force
 
     Remove-ItemProperty -Path "HKCU:\Keyboard Layout\Preload" -Name "2" -Force
+
+    Remove-Item -Path HKCR:\Directory\Background\shellex\ContextMenuHandlers\ACE -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path HKCR:\Directory\Background\shellex\ContextMenuHandlers\igfxcui -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path HKCR:\Directory\Background\shellex\ContextMenuHandlers\igfxDTCM -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path HKCR:\Directory\Background\shellex\ContextMenuHandlers\NvCplDesktopContext -Recurse -Force -ErrorAction Ignore
 
     Disable-MMAgent -MemoryCompression
     Disable-MMAgent -PageCombining
@@ -2185,6 +2195,8 @@ function BestPriorityForeground {
     setx GPU_ENABLE_LARGE_ALLOCATION 99
     setx GPU_MAX_WORKGROUP_SIZE 1024
     setx GPU_FORCE_64BIT_PTR 0
+
+    bcdedit /set tscsyncpolicy Enhanced
 
     powercfg -setactive SCHEME_BALANCED
     powercfg -setACvalueindex SCHEME_CURRENT SUB_NONE PERSONALITY 2
