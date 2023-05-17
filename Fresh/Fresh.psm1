@@ -2196,8 +2196,6 @@ function BestPriorityForeground {
     setx GPU_MAX_WORKGROUP_SIZE 1024
     setx GPU_FORCE_64BIT_PTR 0
 
-    bcdedit /set tscsyncpolicy Enhanced
-
     powercfg -setactive SCHEME_BALANCED
     powercfg -setACvalueindex SCHEME_CURRENT SUB_NONE PERSONALITY 2
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_NONE PERSONALITY 0
@@ -2977,7 +2975,7 @@ function FixTimers {
     diskperf -N
     bcdedit /set `{current`} useplatformtick true
     bcdedit /set `{current`} disabledynamictick true
-    bcdedit /set `{current`} tscsyncpolicy legacy
+    bcdedit /set `{current`} tscsyncpolicy enhanced
     bcdedit /set `{current`} x2apicpolicy Disable
     bcdedit /set `{current`} uselegacyapicmode Yes
     bcdedit /set `{current`} debug No
