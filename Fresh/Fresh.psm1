@@ -2147,12 +2147,15 @@ function BestPriorityForeground {
     auditpol /set /category:"System" /success:disable
     auditpol /set /category:"System" /failure:disable
 
+    Set-MpPreference -EngineUpdatesChannel Staged
+    Set-MpPreference -PlatformUpdatesChannel Staged
     Set-MpPreference -DisableCatchupFullScan $True
     Set-MpPreference -ScanAvgCPULoadFactor 5
     Set-MpPreference -EnableLowCpuPriority $True
     Set-MpPreference -ScanOnlyIfIdleEnabled $True
     Set-MpPreference -DisableCpuThrottleOnIdleScans $False
     Set-MpPreference -SubmitSamplesConsent 2
+    Set-MpPreference -ServiceHealthReportInterval 0
 
     Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
     Set-SmbServerConfiguration -EnableLeasing $false -Force
