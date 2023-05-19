@@ -2147,6 +2147,7 @@ function BestPriorityForeground {
     auditpol /set /category:"System" /success:disable
     auditpol /set /category:"System" /failure:disable
 
+    Set-MpPreference -QuickScanScheduleEnabled $True
     Set-MpPreference -ScanAvgCPULoadFactor 5
     Set-MpPreference -EnableLowCpuPriority $True
     Set-MpPreference -ScanOnlyIfIdleEnabled $True
