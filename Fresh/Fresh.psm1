@@ -3714,6 +3714,7 @@ function DisableBootSplashAnimations {
     bcdedit /set `{current`} bootux disabled
     bcdedit /set `{current`} quietboot yes
     bcdedit /set `{current`} quietboot On
+    bcdedit /set `{current`} bootmenupolicy Legacy
 }
 
 # Disable trusted platform module
