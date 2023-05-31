@@ -1,5 +1,5 @@
 ﻿ConvertFrom-StringData -StringData @'
-UnsupportedOSBitness = The script supports Windows 10 x64 only
+UnsupportedOSBitness = This script supports x64 only
 ControlledFolderAccessDisabled = Controlled folder access disabled
 NoData = Nothing to do
 
