@@ -1178,9 +1178,9 @@ function DisableSMB {
     Set-SmbServerConfiguration -EncryptData $True -Force
     Set-SmbClientConfiguration -RequireSecuritySignature $True -Force
     Set-SmbClientConfiguration -EnableSecuritySignature $True -Force
-    Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -NoRestart
-    Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol-Client" -NoRestart
-    Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol-Server" -NoRestart
+    Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -All -NoRestart
+    Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol-Client" -All -NoRestart
+    Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol-Server" -All -NoRestart
 }
 
 # Disable link-local multicast name resolution(LLMNR) protocol
@@ -2172,6 +2172,9 @@ function BestPriorityForeground {
     regsvr32.exe /s muweb.dll
     regsvr32.exe /s wuwebv.dll
 
+    Enable-WindowsOptionalFeature -Online -FeatureName NetFx4-AdvSrvs -All -NoRestart
+    Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -NoRestart
+
     Disable-MMAgent -MemoryCompression
     Disable-MMAgent -PageCombining
 
@@ -2417,7 +2420,7 @@ function DisableWindowsFeatures {
         # Work Folders Client
         "WorkFolders-Client"
     )
-    Disable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
+    Disable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -All -NoRestart
 }
 
 # Disable certain Feature On Demand v2 (FODv2) capabilities
