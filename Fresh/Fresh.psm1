@@ -2386,12 +2386,6 @@ function DisableBackgroundUWPApps {
 
     $ExcludedBackgroundApps = @(
 
-        # Windows Search
-        "Microsoft.Windows.Search",
-
-        # Windows Security
-        "Microsoft.Windows.SecHealthUI",
-
         # Microsoft Store
         "Microsoft.WindowsStore"
     )
