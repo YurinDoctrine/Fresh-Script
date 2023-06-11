@@ -2426,6 +2426,9 @@ function DisableWindowsCapabilities {
     # Следующие дополнительные компоненты будут видны, но их чекбоксы не будут отмечены
     $ExcludedCapabilities = @(
 
+        # Language components
+        "Language.*",
+
         # The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
         "DirectX.Configuration.Database*",
 
