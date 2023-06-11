@@ -2384,13 +2384,8 @@ function DisableBackgroundUWPApps {
         Remove-ItemProperty -Path $_.PsPath -Name * -Force
     }
 
-    $ExcludedBackgroundApps = @(
-
-        # Microsoft Store
-        "Microsoft.WindowsStore"
-    )
     $OFS = "|"
-    Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | Where-Object -FilterScript { $_.PSChildName -notmatch "^$($ExcludedBackgroundApps.ForEach({[regex]::Escape($_)}))" } | ForEach-Object -Process {
+    Get-ChildItem -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications | ForEach-Object -Process {
         New-ItemProperty -Path $_.PsPath -Name Disabled -PropertyType DWord -Value 1 -Force
         New-ItemProperty -Path $_.PsPath -Name DisabledByUser -PropertyType DWord -Value 1 -Force
     }
