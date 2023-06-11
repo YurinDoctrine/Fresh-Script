@@ -2429,9 +2429,6 @@ function DisableWindowsCapabilities {
         # The DirectX Database to configure and optimize apps when multiple Graphics Adapters are present
         "DirectX.Configuration.Database*",
 
-        # Language components
-        "Language.*",
-
         # Features critical to Windows functionality
         "Windows.Client.ShellComponents*"
     )
