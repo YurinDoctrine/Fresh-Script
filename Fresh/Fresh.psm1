@@ -2354,12 +2354,6 @@ function UninstallUWPApps {
     # UWP-приложения, которые не будут выводиться в форме
     $ExcludedAppxPackages = @(
 
-        # AMD Radeon UWP panel
-        "AdvancedMicroDevicesInc*",
-
-        # NVIDIA Control Panel
-        "NVIDIACorp.NVIDIAControlPanel",
-
         # Realtek Audio Control
         "RealtekSemiconductorCorp.RealtekAudioControl"
 
