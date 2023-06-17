@@ -2033,6 +2033,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "OpenAtLogon" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "EnableStartMenu" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "NavPaneShowAllFolders" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "FileExplorerInTouchImprovement" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\FlightedFeatures" -Name "ImmersiveContextMenu" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettings" -PropertyType DWord -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "FeatureSettingsOverride" -PropertyType DWord -Value "72" -Force
@@ -3698,6 +3699,8 @@ function DebloatMicrosoftServices {
     Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "ose64" -Force -WarningAction SilentlyContinue
     Set-Service ose64 -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "OneSyncSvc" -Force -WarningAction SilentlyContinue
+    Set-Service OneSyncSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "PcaSvc" -Force -WarningAction SilentlyContinue
     Set-Service PcaSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "perceptionsimulation" -Force -WarningAction SilentlyContinue
