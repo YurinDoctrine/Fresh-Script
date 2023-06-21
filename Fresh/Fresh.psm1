@@ -616,7 +616,7 @@ function DisablePrtScnSnippingTool {
 
 # Change desktop background
 function ChangeDesktopBackground {
-    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh-Script/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
