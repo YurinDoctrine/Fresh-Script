@@ -60,7 +60,7 @@ function UnpinAllStartTiles {
 	</DefaultLayoutOverride>
 </LayoutModificationTemplate>
 "@
-    $StartMenuLayoutPath = "$env:TEMP\StartMenuLayout.xml"
+    $StartMenuLayoutPath = "$ENV:TEMP\StartMenuLayout.xml"
     # Saving StartMenuLayout.xml in UTF-8 encoding
     # Сохраняем StartMenuLayout.xml в кодировке UTF-8
     Set-Content -Path $StartMenuLayoutPath -Value (New-Object -TypeName System.Text.UTF8Encoding).GetBytes($StartMenuLayout) -Encoding Byte -Force
@@ -616,8 +616,8 @@ function DisablePrtScnSnippingTool {
 
 # Change desktop background
 function ChangeDesktopBackground {
-    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh/Wallpaper.jpg" -Destination $env:WINDIR\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
-    New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "$env:WINDIR\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
+    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh/Wallpaper.jpg" -Destination $ENV:WINDIR\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+    New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "$ENV:WINDIR\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 
@@ -1139,7 +1139,7 @@ function DisablePasswordPolicy {
     $tmpfile = New-TemporaryFile
     secedit /export /cfg $tmpfile /quiet
 	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
-    secedit /configure /db "$env:WINDIR\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
+    secedit /configure /db "$ENV:WINDIR\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
     Remove-Item -Path $tmpfile
 }
 
@@ -1700,7 +1700,7 @@ function DisableScheduledTasks {
 # Do not use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
 # Не использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
 function DisableSigninInfo {
-    $SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $env:USERNAME }).SID
+    $SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $ENV:USERNAME }).SID
     if (-not (Test-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID")) {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Force
     }
@@ -1710,7 +1710,7 @@ function DisableSigninInfo {
 # Use sign-in info to automatically finish setting up device and reopen apps after an update or restart (current user only)
 # Использовать данные для входа для автоматического завершения настройки устройства и открытия приложений после перезапуска или обновления (только для текущего пользователя)
 function EnableSigninInfo {
-    $SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $env:USERNAME }).SID
+    $SID = (Get-CimInstance -ClassName Win32_UserAccount | Where-Object -FilterScript { $_.Name -eq $ENV:USERNAME }).SID
     Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\UserARSO\$SID" -Name OptOut -Force -ErrorAction SilentlyContinue
 }
 
@@ -2488,8 +2488,8 @@ function UninstallOneDrive {
         Remove-ItemProperty -Path HKCU:\Environment -Name OneDrive, OneDriveConsumer -Force -ErrorAction Ignore
         Remove-Item -Path HKCU:\SOFTWARE\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
         Remove-Item -Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
-        Remove-Item -Path "$env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction Ignore
-        Remove-Item -Path $env:SYSTEMDRIVE\OneDriveTemp -Recurse -Force -ErrorAction Ignore
+        Remove-Item -Path "$ENV:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction Ignore
+        Remove-Item -Path $ENV:SYSTEMDRIVE\OneDriveTemp -Recurse -Force -ErrorAction Ignore
         Unregister-ScheduledTask -TaskName *OneDrive* -Confirm:$false
 
         # Getting the OneDrive folder path
@@ -2527,9 +2527,9 @@ function UninstallOneDrive {
         }
 
         Remove-Item -Path $OneDriveFolder -Recurse -Force -ErrorAction Ignore
-        Remove-Item -Path $env:LOCALAPPDATA\OneDrive -Recurse -Force -ErrorAction Ignore
-        Remove-Item -Path $env:LOCALAPPDATA\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
-        Remove-Item -Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force -ErrorAction Ignore
+        Remove-Item -Path $ENV:LOCALAPPDATA\OneDrive -Recurse -Force -ErrorAction Ignore
+        Remove-Item -Path $ENV:LOCALAPPDATA\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
+        Remove-Item -Path "$ENV:APPDATA\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" -Force -ErrorAction Ignore
     }
     cmd /c winget uninstall OneDrive
 }
@@ -2547,8 +2547,8 @@ function UninstallMSTeams {
     $MachineWide = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Teams Machine-Wide Installer" }
     $MachineWide.Uninstall()
     # Remove Teams for Current Users
-    $localAppData = "$($env:LOCALAPPDATA)\Microsoft\Teams"
-    $programData = "$($env:ProgramData)\$($env:USERNAME)\Microsoft\Teams"
+    $localAppData = "$($ENV:LOCALAPPDATA)\Microsoft\Teams"
+    $programData = "$($ENV:ProgramData)\$($ENV:USERNAME)\Microsoft\Teams"
     If (Test-Path "$($localAppData)\Current\Teams.exe") {
         unInstallTeams($localAppData)
     }
@@ -2559,13 +2559,13 @@ function UninstallMSTeams {
         Write-Warning "Teams installation not found"
     }
     # Get all Users
-    $Users = Get-ChildItem -Path "$($env:SYSTEMDRIVE)\Users"
+    $Users = Get-ChildItem -Path "$($ENV:SYSTEMDRIVE)\Users"
     # Process all the Users
     $Users | ForEach-Object {
         Write-Host "Process user: $($_.Name)" -ForegroundColor Yellow
         #Locate installation folder
-        $localAppData = "$($env:SYSTEMDRIVE)\Users\$($_.Name)\AppData\Local\Microsoft\Teams"
-        $programData = "$($env:ProgramData)\$($_.Name)\Microsoft\Teams"
+        $localAppData = "$($ENV:SYSTEMDRIVE)\Users\$($_.Name)\AppData\Local\Microsoft\Teams"
+        $programData = "$($ENV:ProgramData)\$($_.Name)\Microsoft\Teams"
         If (Test-Path "$($localAppData)\Current\Teams.exe") {
             unInstallTeams($localAppData)
         }
@@ -2616,14 +2616,14 @@ function EnableHibernate {
 # Change the %TEMP% environment variable path to the %SystemDrive%\Temp (both machine-wide, and for the current user)
 # Изменить путь переменной среды для %TEMP% на %SystemDrive%\Temp (для всех пользователей)
 function SetTempPath {
-    [Environment]::SetEnvironmentVariable("TMP", "$env:SYSTEMDRIVE\temp", "User")
-    [Environment]::SetEnvironmentVariable("TMP", "$env:SYSTEMDRIVE\temp", "Machine")
-    [Environment]::SetEnvironmentVariable("TMP", "$env:SYSTEMDRIVE\temp", "Process")
+    [Environment]::SetEnvironmentVariable("TMP", "$ENV:SYSTEMDRIVE\temp", "User")
+    [Environment]::SetEnvironmentVariable("TMP", "$ENV:SYSTEMDRIVE\temp", "Machine")
+    [Environment]::SetEnvironmentVariable("TMP", "$ENV:SYSTEMDRIVE\temp", "Process")
     New-ItemProperty -Path HKCU:\Environment -Name TMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
-    [Environment]::SetEnvironmentVariable("TEMP", "$env:SYSTEMDRIVE\temp", "User")
-    [Environment]::SetEnvironmentVariable("TEMP", "$env:SYSTEMDRIVE\temp", "Machine")
-    [Environment]::SetEnvironmentVariable("TEMP", "$env:SYSTEMDRIVE\temp", "Process")
+    [Environment]::SetEnvironmentVariable("TEMP", "$ENV:SYSTEMDRIVE\temp", "User")
+    [Environment]::SetEnvironmentVariable("TEMP", "$ENV:SYSTEMDRIVE\temp", "Machine")
+    [Environment]::SetEnvironmentVariable("TEMP", "$ENV:SYSTEMDRIVE\temp", "Process")
     New-ItemProperty -Path HKCU:\Environment -Name TEMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
@@ -2631,20 +2631,20 @@ function SetTempPath {
 
     Stop-Process -Name FileCoAuth -Force -ErrorAction Ignore
 
-    Remove-Item -Path $env:WINDIR\temp -Recurse -Force -ErrorAction Ignore
-    Get-Item -Path $env:LOCALAPPDATA\temp | Where-Object -FilterScript { $_.LinkType -ne "SymbolicLink" } | Remove-Item -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path $ENV:WINDIR\temp -Recurse -Force -ErrorAction Ignore
+    Get-Item -Path $ENV:LOCALAPPDATA\temp | Where-Object -FilterScript { $_.LinkType -ne "SymbolicLink" } | Remove-Item -Recurse -Force -ErrorAction Ignore
 
     # Create a symbolic link to the %SystemDrive%\temp folder
     # Создать символическую ссылку к папке %SystemDrive%\temp
     try {
-        New-Item -Path $env:LOCALAPPDATA\temp -ItemType SymbolicLink -Value $env:SYSTEMDRIVE\temp -Force
+        New-Item -Path $ENV:LOCALAPPDATA\temp -ItemType SymbolicLink -Value $ENV:SYSTEMDRIVE\temp -Force
     }
     catch [System.Exception] {
         $Message = Invoke-Command -ScriptBlock ([ScriptBlock]::Create($Localization.LOCALAPPDATANotEmptyFolder))
         Write-Error -Message $Message -ErrorAction SilentlyContinue
     }
     finally {
-        Invoke-Item -Path $env:LOCALAPPDATA\temp
+        Invoke-Item -Path $ENV:LOCALAPPDATA\temp
     }
 }
 
@@ -3283,12 +3283,12 @@ function PreventRequireSignInWhenAfterSleep {
 # Disable indexing
 function DisableIndexing {
     $DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
-    $Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$env:SYSTEMDRIVE'")
+    $Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$ENV:SYSTEMDRIVE'")
     Stop-Service "WSearch" -Force -WarningAction SilentlyContinue
     Set-Service "WSearch" -StartupType Disabled -ErrorAction SilentlyContinue
     if ($DriveLetters.Count -notmatch 2) {
         if (($Object.IndexingEnabled -match $True)) {
-            Write-Output "Disabling indexing of drive $env:SYSTEMDRIVE"
+            Write-Output "Disabling indexing of drive $ENV:SYSTEMDRIVE"
             $Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
         }
         else {
@@ -3297,7 +3297,7 @@ function DisableIndexing {
     }
     if ($DriveLetters.Count -notmatch 3) {
         if (($Object.IndexingEnabled -match $True)) {
-            Write-Output "Disabling indexing of drive $env:SYSTEMDRIVE"
+            Write-Output "Disabling indexing of drive $ENV:SYSTEMDRIVE"
             $Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
         }
         else {
@@ -3910,7 +3910,7 @@ function EnableTRIM {
     fsutil behavior set quotanotify 10800
     fsutil behavior set bugcheckoncorrupt 0
     fsutil behavior set disablespotcorruptionhandling 1
-    fsutil resource setlog shrink 99.9 $env:SYSTEMDRIVE\
+    fsutil resource setlog shrink 99.9 $ENV:SYSTEMDRIVE\
 }
 
 # Disable power throttling
@@ -4100,7 +4100,7 @@ function Errors {
     sfc.exe /scannow
     chkdsk /f
     chkdsk /r
-    fsutil resource setautoreset true $env:SYSTEMDRIVE\
+    fsutil resource setautoreset true $ENV:SYSTEMDRIVE\
 
     if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
