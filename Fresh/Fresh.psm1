@@ -2087,6 +2087,8 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableFontProviders" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
 
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "Latency" -PropertyType DWord -Value 1 -Force
+
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" -Name "*RssBaseProcNumber" -PropertyType DWord -Value 2 -Force
 
     if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing")) {
@@ -2244,6 +2246,7 @@ function BestPriorityForeground {
     netsh int tcp set global ecncapability=enabled
     netsh int tcp set global nonsackrttresiliency=disabled
     netsh int tcp set global maxsynretransmissions=2
+    netsh int udp set global uro=enabled
     netsh int ip set global icmpredirects=disabled
     netsh winsock set autotuning on
 
@@ -3026,11 +3029,10 @@ function FixTimers {
     bcdedit /set `{current`} useplatformtick true
     bcdedit /set `{current`} disabledynamictick true
     bcdedit /set `{current`} tscsyncpolicy enhanced
-    bcdedit /set `{current`} x2apicpolicy Disable
-    bcdedit /set `{current`} uselegacyapicmode Yes
     bcdedit /set `{current`} debug No
     bcdedit /set `{current`} highestmode Yes
     bcdedit /set `{current`} perfmem 1
+    bcdedit /set `{current`} usephysicaldestination No
     bcdedit /deletevalue `{current`} useplatformclock
 }
 
@@ -3859,6 +3861,8 @@ function DynamicBacklogGrowthDelta {
 
 # Increase mft zone
 function IncreaseMFTZone {
+    bcdedit /set `{current`} firstmegabytepolicy UseAll
+
     fsutil behavior set mftzone 3
 }
 
@@ -3960,6 +3964,9 @@ function ThreadPriority {
     if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters")) {
         New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Force
     }
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Force
+    }
     if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
         New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
     }
@@ -3968,6 +3975,8 @@ function ThreadPriority {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Name "KeyboardDataQueueSize" -PropertyType DWord -Value 20 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableWriteCombining" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableMshybridNvsrSwitch" -PropertyType DWord -Value 1 -Force
