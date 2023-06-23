@@ -2233,7 +2233,7 @@ function BestPriorityForeground {
     netsh int tcp set security profiles=disabled
     netsh int tcp set global initialRto=2000
     netsh int tcp set global timestamps=disabled
-    netsh int tcp set global netdma=enabled
+    netsh int tcp set global netdma=disabled
     netsh int tcp set global rsc=disabled
     netsh int tcp set global rss=enabled
     netsh int tcp set global dca=enabled
@@ -3904,8 +3904,8 @@ function IndexerRespectPowerModes {
 function EnableTRIM {
     Get-WmiObject -Class Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | Select-Object -ExpandProperty DeviceID | ForEach-Object { Optimize-Volume -DriveLetter $_[0] -ReTrim -Verbose }
 
-    fsutil behavior set DisableDeleteNotify 0
-    fsutil behavior set quotanotify 7200
+    fsutil behavior set DisableDeleteNotify 1
+    fsutil behavior set quotanotify 0
 }
 
 # Disable power throttling
