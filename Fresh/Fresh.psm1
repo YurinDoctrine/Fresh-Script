@@ -3904,7 +3904,7 @@ function IndexerRespectPowerModes {
 
 # Enable TRIM
 function EnableTRIM {
-    Get-WmiObject -Class Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | Select-Object -ExpandProperty DeviceID | ForEach-Object { Optimize-Volume -DriveLetter $_[0] -ReTrim -Verbose }
+    Get-WmiObject -Class Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | Select-Object -ExpandProperty DeviceID | ForEach-Object { Optimize-Volume -DriveLetter $_[0] -ReTrim -Verbose | Optimize-Volume -DriveLetter $_[0] -SlabConsolidate -Verbose }
 
     fsutil behavior set DisableDeleteNotify 0
     fsutil behavior set quotanotify 10800
