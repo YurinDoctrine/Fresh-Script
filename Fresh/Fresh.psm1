@@ -616,8 +616,8 @@ function DisablePrtScnSnippingTool {
 
 # Change desktop background
 function ChangeDesktopBackground {
-    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh/Wallpaper.jpg" -Destination $env\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
-    New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "C:\Windows\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
+    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh/Wallpaper.jpg" -Destination $env:WINDIR\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+    New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "$env:WINDIR\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
 
@@ -953,7 +953,7 @@ function EnablePreviousVersionsPage {
 #region Chocolatey
 # Install Chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'cacheLocation'" --value="'C:\temp\chococache'"; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; cinst pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; cinst --ignore-checksums pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; cinst 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission; cinst --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; cinst pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; cinst --ignore-checksums pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; cinst 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission; cinst --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission
 }
 #endregion Chocolatey
 #region Microsoft Defender & Security
@@ -1139,7 +1139,7 @@ function DisablePasswordPolicy {
     $tmpfile = New-TemporaryFile
     secedit /export /cfg $tmpfile /quiet
 	(Get-Content $tmpfile).Replace("PasswordComplexity = 1", "PasswordComplexity = 0").Replace("MaximumPasswordAge = 42", "MaximumPasswordAge = -1") | Out-File $tmpfile
-    secedit /configure /db "$env:SYSTEMROOT\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
+    secedit /configure /db "$env:WINDIR\security\database\local.sdb" /cfg $tmpfile /areas SECURITYPOLICY
     Remove-Item -Path $tmpfile
 }
 
@@ -2489,7 +2489,7 @@ function UninstallOneDrive {
         Remove-Item -Path HKCU:\SOFTWARE\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
         Remove-Item -Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\OneDrive -Recurse -Force -ErrorAction Ignore
         Remove-Item -Path "$env:ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction Ignore
-        Remove-Item -Path $env:SystemDrive\OneDriveTemp -Recurse -Force -ErrorAction Ignore
+        Remove-Item -Path $env:SYSTEMDRIVE\OneDriveTemp -Recurse -Force -ErrorAction Ignore
         Unregister-ScheduledTask -TaskName *OneDrive* -Confirm:$false
 
         # Getting the OneDrive folder path
@@ -2559,12 +2559,12 @@ function UninstallMSTeams {
         Write-Warning "Teams installation not found"
     }
     # Get all Users
-    $Users = Get-ChildItem -Path "$($ENV:SystemDrive)\Users"
+    $Users = Get-ChildItem -Path "$($env:SYSTEMDRIVE)\Users"
     # Process all the Users
     $Users | ForEach-Object {
         Write-Host "Process user: $($_.Name)" -ForegroundColor Yellow
         #Locate installation folder
-        $localAppData = "$($ENV:SystemDrive)\Users\$($_.Name)\AppData\Local\Microsoft\Teams"
+        $localAppData = "$($env:SYSTEMDRIVE)\Users\$($_.Name)\AppData\Local\Microsoft\Teams"
         $programData = "$($env:ProgramData)\$($_.Name)\Microsoft\Teams"
         If (Test-Path "$($localAppData)\Current\Teams.exe") {
             unInstallTeams($localAppData)
@@ -2616,14 +2616,14 @@ function EnableHibernate {
 # Change the %TEMP% environment variable path to the %SystemDrive%\Temp (both machine-wide, and for the current user)
 # Изменить путь переменной среды для %TEMP% на %SystemDrive%\Temp (для всех пользователей)
 function SetTempPath {
-    [Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\temp", "User")
-    [Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\temp", "Machine")
-    [Environment]::SetEnvironmentVariable("TMP", "$env:SystemDrive\temp", "Process")
+    [Environment]::SetEnvironmentVariable("TMP", "$env:SYSTEMDRIVE\temp", "User")
+    [Environment]::SetEnvironmentVariable("TMP", "$env:SYSTEMDRIVE\temp", "Machine")
+    [Environment]::SetEnvironmentVariable("TMP", "$env:SYSTEMDRIVE\temp", "Process")
     New-ItemProperty -Path HKCU:\Environment -Name TMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
-    [Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\temp", "User")
-    [Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\temp", "Machine")
-    [Environment]::SetEnvironmentVariable("TEMP", "$env:SystemDrive\temp", "Process")
+    [Environment]::SetEnvironmentVariable("TEMP", "$env:SYSTEMDRIVE\temp", "User")
+    [Environment]::SetEnvironmentVariable("TEMP", "$env:SYSTEMDRIVE\temp", "Machine")
+    [Environment]::SetEnvironmentVariable("TEMP", "$env:SYSTEMDRIVE\temp", "Process")
     New-ItemProperty -Path HKCU:\Environment -Name TEMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
 
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name TMP -PropertyType ExpandString -Value %SystemDrive%\temp -Force
@@ -2631,13 +2631,13 @@ function SetTempPath {
 
     Stop-Process -Name FileCoAuth -Force -ErrorAction Ignore
 
-    Remove-Item -Path $env:SystemRoot\temp -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path $env:WINDIR\temp -Recurse -Force -ErrorAction Ignore
     Get-Item -Path $env:LOCALAPPDATA\temp | Where-Object -FilterScript { $_.LinkType -ne "SymbolicLink" } | Remove-Item -Recurse -Force -ErrorAction Ignore
 
     # Create a symbolic link to the %SystemDrive%\temp folder
     # Создать символическую ссылку к папке %SystemDrive%\temp
     try {
-        New-Item -Path $env:LOCALAPPDATA\temp -ItemType SymbolicLink -Value $env:SystemDrive\temp -Force
+        New-Item -Path $env:LOCALAPPDATA\temp -ItemType SymbolicLink -Value $env:SYSTEMDRIVE\temp -Force
     }
     catch [System.Exception] {
         $Message = Invoke-Command -ScriptBlock ([ScriptBlock]::Create($Localization.LOCALAPPDATANotEmptyFolder))
@@ -3283,12 +3283,12 @@ function PreventRequireSignInWhenAfterSleep {
 # Disable indexing
 function DisableIndexing {
     $DriveLetters = @((Get-Disk | Where-Object -FilterScript { $_.BusType -ne "USB" } | Get-Partition | Get-Volume | Where-Object -FilterScript { $null -ne $_.DriveLetter }).DriveLetter | Sort-Object)
-    $Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = 'C:'")
+    $Object = (Get-WmiObject -Class Win32_Volume -Filter "DriveLetter = '$env:SYSTEMDRIVE'")
     Stop-Service "WSearch" -Force -WarningAction SilentlyContinue
     Set-Service "WSearch" -StartupType Disabled -ErrorAction SilentlyContinue
     if ($DriveLetters.Count -notmatch 2) {
         if (($Object.IndexingEnabled -match $True)) {
-            Write-Output "Disabling indexing of drive C:"
+            Write-Output "Disabling indexing of drive $env:SYSTEMDRIVE"
             $Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
         }
         else {
@@ -3297,7 +3297,7 @@ function DisableIndexing {
     }
     if ($DriveLetters.Count -notmatch 3) {
         if (($Object.IndexingEnabled -match $True)) {
-            Write-Output "Disabling indexing of drive C:"
+            Write-Output "Disabling indexing of drive $env:SYSTEMDRIVE"
             $Object | Set-WmiInstance -Arguments @{IndexingEnabled = $False }
         }
         else {
@@ -3910,7 +3910,7 @@ function EnableTRIM {
     fsutil behavior set quotanotify 10800
     fsutil behavior set bugcheckoncorrupt 0
     fsutil behavior set disablespotcorruptionhandling 1
-    fsutil resource setlog shrink 99.9 c:\
+    fsutil resource setlog shrink 99.9 $env:SYSTEMDRIVE\
 }
 
 # Disable power throttling
@@ -4100,7 +4100,7 @@ function Errors {
     sfc.exe /scannow
     chkdsk /f
     chkdsk /r
-    fsutil resource setautoreset true c:\
+    fsutil resource setautoreset true $env:SYSTEMDRIVE\
 
     if ($Global:Error) {
 		($Global:Error | ForEach-Object -Process {
