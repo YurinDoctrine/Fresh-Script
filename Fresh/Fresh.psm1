@@ -3908,6 +3908,8 @@ function EnableTRIM {
 
     fsutil behavior set DisableDeleteNotify 0
     fsutil behavior set quotanotify 10800
+    fsutil behavior set bugcheckoncorrupt 0
+    fsutil behavior set disablespotcorruptionhandling 1
 }
 
 # Disable power throttling
