@@ -2087,6 +2087,8 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableFontProviders" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
 
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" -Name "*RssBaseProcNumber" -PropertyType DWord -Value 2 -Force
+
     if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing")) {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Force
     }
@@ -3904,8 +3906,8 @@ function IndexerRespectPowerModes {
 function EnableTRIM {
     Get-WmiObject -Class Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | Select-Object -ExpandProperty DeviceID | ForEach-Object { Optimize-Volume -DriveLetter $_[0] -ReTrim -Verbose }
 
-    fsutil behavior set DisableDeleteNotify 1
-    fsutil behavior set quotanotify 0
+    fsutil behavior set DisableDeleteNotify 0
+    fsutil behavior set quotanotify 10800
 }
 
 # Disable power throttling
