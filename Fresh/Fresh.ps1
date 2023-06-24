@@ -1008,7 +1008,7 @@ PreventRequireSignInWhenAfterSleep
 # Disable indexing
 DisableIndexing
 
-# Set current boot timeout value to 0
+# Set current boot timeout value to 1
 SetBootTimeoutValue
 
 # Ntfs allow extended character 8dot3 rename
