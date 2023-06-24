@@ -3313,9 +3313,9 @@ function DisableIndexing {
     }
 }
 
-# Set current boot timeout value to 0
+# Set current boot timeout value to 1
 function SetBootTimeoutValue {
-    bcdedit /timeout 0
+    bcdedit /timeout 1
 }
 
 # Ntfs allow extended character 8dot3 rename
