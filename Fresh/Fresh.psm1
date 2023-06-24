@@ -2089,6 +2089,8 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
 
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "Latency" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "DisableSensorWatchdog" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "SleepReliabilityDetailedDiagnostics" -PropertyType DWord -Value 0 -Force
 
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" -Name "*RssBaseProcNumber" -PropertyType DWord -Value 2 -Force
 
