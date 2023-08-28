@@ -616,7 +616,7 @@ function DisablePrtScnSnippingTool {
 
 # Change desktop background
 function ChangeDesktopBackground {
-    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh/Wallpaper.jpg" -Destination $ENV:WINDIR\Windows\Web\Wallpaper\Windows\Wallpaper.jpg
+    Start-BitsTransfer -Source "https://raw.githubusercontent.com/YurinDoctrine/Fresh-Script/main/Fresh/Wallpaper.jpg" -Destination $ENV:WINDIR\Web\Wallpaper\Windows\Wallpaper.jpg
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaper -Type String -Value "$ENV:WINDIR\Web\Wallpaper\Windows\Wallpaper.jpg" -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallPaperStyle -Type String -Value 10 -Force
 }
@@ -953,7 +953,7 @@ function EnablePreviousVersionsPage {
 #region Chocolatey
 # Install Chocolatey package manager and pre-installs as well
 function ChocolateyPackageManager {
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; cinst pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; cinst --ignore-checksums pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; cinst 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission; cinst --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); choco feature enable -n=allowGlobalConfirmation; choco feature enable -n useFipsCompliantChecksums; choco feature enable -n=useEnhancedExitCodes; choco config set commandExecutionTimeoutSeconds 14400; choco config set --name="'proxyBypassOnLocal'" --value="'true'"; choco install pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; choco install --ignore-checksums pswindowsupdate directx dotnetfx dotnet3.5 dotnet-runtime dotnet-5.0-runtime dotnetcore-3.1-desktopruntime vcredist-all openal xna; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; Get-WindowsUpdate -NotCategory "Upgrades", "Silverlight" -NotTitle Preview -MicrosoftUpdate -Install -AcceptAll -IgnoreReboot -Verbose; choco install 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission; choco install --ignore-checksums 7zip.install notepadplusplus.install cpu-z.install teracopy jpegview potplayer sharex steam-client transmission
 }
 #endregion Chocolatey
 #region Microsoft Defender & Security
@@ -1231,65 +1231,65 @@ function DisableNTFSREFSMitigations {
 
 # Disable weak TLS
 function DisableWeakTLS {
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3” -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Server” -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client” -Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3" -Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Server" -Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Server" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Server" -Name DisabledByDefault -Type DWORD -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client" -Name DisabledByDefault -Type DWORD -Value "0" -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2” -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server” -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client” -Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2" -Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server" -Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server" -Name DisabledByDefault -Type DWORD -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" -Name DisabledByDefault -Type DWORD -Value "0" -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1” –Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server” –Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client” –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" –Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name DisabledByDefault -Type DWORD -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" -Name DisabledByDefault -Type DWORD -Value "0" -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0” –Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server” –Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client” –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" –Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" -Name Enabled -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name DisabledByDefault -Type DWORD -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" -Name DisabledByDefault -Type DWORD -Value "0" -Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0” –Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server” –Force
-    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client” –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0" –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server" –Force
+    New-Item "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client" –Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server" -Name Enabled -Type DWORD -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client" -Name Enabled -Type DWORD -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server" -Name DisabledByDefault -Type DWORD -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client" -Name DisabledByDefault -Type DWORD -Value "1" -Force
-    Disable-TlsCipherSuite -Name “TLS_DHE_RSA_WITH_AES_256_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_DHE_RSA_WITH_AES_128_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_AES_256_GCM_SHA384“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_AES_128_GCM_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_AES_256_CBC_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_AES_128_CBC_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_AES_256_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_AES_128_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_3DES_EDE_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_DHE_DSS_WITH_AES_256_CBC_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_DHE_DSS_WITH_AES_128_CBC_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_DHE_DSS_WITH_AES_256_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_DHE_DSS_WITH_AES_128_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_RC4_128_SHA“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_RC4_128_MD5“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_NULL_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_RSA_WITH_NULL_SHA“
-    Disable-TlsCipherSuite -Name “TLS_PSK_WITH_AES_256_GCM_SHA384“
-    Disable-TlsCipherSuite -Name “TLS_PSK_WITH_AES_128_GCM_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_PSK_WITH_AES_256_CBC_SHA384“
-    Disable-TlsCipherSuite -Name “TLS_PSK_WITH_AES_128_CBC_SHA256“
-    Disable-TlsCipherSuite -Name “TLS_PSK_WITH_NULL_SHA384“
-    Disable-TlsCipherSuite -Name “TLS_PSK_WITH_NULL_SHA256“
+    Disable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_DHE_RSA_WITH_AES_128_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_GCM_SHA384"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_GCM_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_256_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_AES_128_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_DHE_DSS_WITH_AES_256_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_DHE_DSS_WITH_AES_128_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_RC4_128_SHA"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_RC4_128_MD5"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_NULL_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_RSA_WITH_NULL_SHA"
+    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_GCM_SHA384"
+    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_GCM_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_256_CBC_SHA384"
+    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_AES_128_CBC_SHA256"
+    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_NULL_SHA384"
+    Disable-TlsCipherSuite -Name "TLS_PSK_WITH_NULL_SHA256"
 }
 #endregion Microsoft Defender & Security
 #region O&OShutup
@@ -2366,8 +2366,10 @@ function UninstallUWPApps {
     $ExcludedAppxPackages = @(
 
         # Realtek Audio Control
-        "RealtekSemiconductorCorp.RealtekAudioControl"
+        "RealtekSemiconductorCorp.RealtekAudioControl",
 
+        # Desktop App Installer
+        "Microsoft.DesktopAppInstaller"
     )
 
     if (Get-AppxPackage -PackageTypeFilter Bundle -AllUsers | Where-Object -FilterScript { $_.Name -cnotmatch ($ExcludedAppxPackages -join "|") } | Remove-AppxPackage -AllUsers ) {
@@ -3521,6 +3523,235 @@ function ValueMax {
     New-ItemProperty -Path HKLM:\SYSTEM\ControlSet001\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583 -Name ValueMax -PropertyType DWord -Value 0 -Force
 }
 
+# Disable boot splash animations
+function DisableBootSplashAnimations {
+    bcdedit /set `{current`} bootux disabled
+    bcdedit /set `{current`} quietboot yes
+    bcdedit /set `{current`} quietboot On
+    bcdedit /set `{current`} bootmenupolicy Legacy
+}
+
+# Disable trusted platform module
+function DisableTrustedPlatformModule {
+    bcdedit /set `{current`} tpmbootentropy ForceDisable
+}
+
+# Disable integrity checks
+function DisableIntegrityChecks {
+    bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
+    bcdedit /set `{current`} nointegritychecks on
+}
+
+# Disable last access
+function DisableLastAccess {
+    fsutil behavior set disablelastaccess 1
+}
+
+# Set memory usage
+function SetMemoryUsage {
+    fsutil behavior set memoryusage 2
+}
+
+# Disable boot logging
+function DisableBootLogging {
+    New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\AeDebug" -Name "Auto" -Type DWord -Value 0 -Force
+    bcdedit /bootdebug `{current`} off
+    bcdedit /debug `{current`} off
+    bcdedit /set `{current`} bootlog no
+}
+
+# Increase default size buffer
+function IncreaseDefaultSizeBuffer {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 16384 -Force
+}
+
+# IRP stack size
+function IRPStackSize {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "autodisconnect" -Type DWord -Value 15 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "EnableOplocks" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxRawWorkItems" -Type DWord -Value 512 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MinFreeConnections" -Type DWord -Value 16 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "InitWorkItems" -Type DWord -Value 512 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 32 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationDelay" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationRetries" -Type DWord -Value 0 -Force
+
+}
+
+# Size
+function Size {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "Size" -Type DWord -Value 3 -Force
+}
+
+# Max work items
+function MaxWorkItems {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxWorkItems" -Type DWord -Value 16384 -Force
+}
+
+# Maxmpxct
+function MaxMpxCt {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxMpxCt" -Type DWord -Value 4096 -Force
+}
+
+# Max cmds
+function MaxCmds {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxCmds" -Type DWord -Value 4096 -Force
+}
+
+# Disable strict name checking
+function DisableStrictNameChecking {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "DisableStrictNameChecking" -Type DWord -Value 1 -Force
+}
+
+# Enable dynamic backlog
+function EnableDynamicBacklog {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "EnableDynamicBacklog" -Type DWord -Value 1 -Force
+}
+
+# Minimum dynamic backlog
+function MinimumDynamicBacklog {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MinimumDynamicBacklog" -Type DWord -Value 200 -Force
+}
+
+# Maximum dynamic backlog
+function MaximumDynamicBacklog {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MaximumDynamicBacklog" -Type DWord -Value 20000 -Force
+}
+
+# Dynamic backlog growth delta
+function DynamicBacklogGrowthDelta {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DoNotHoldNicBuffers" -Type DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableRawSecurity" -Type DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableAddressSharing" -Type DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableChainedReceive" -Type DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
+}
+
+# Increase mft zone
+function IncreaseMFTZone {
+    bcdedit /set `{current`} firstmegabytepolicy UseAll
+
+    fsutil behavior set mftzone 3
+}
+
+# Enable memory allocation in graphics driver
+function EnableMemoryAllocationInGraphicsDriver {
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
+}
+
+# Disable realtime monitoring
+function DisableRealtimeMonitoring {
+    if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection")) {
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring" -Type DWord -Value 1 -Force
+    Set-MpPreference -DisableRealtimeMonitoring 1
+    Set-MpPreference -DisableRealtimeMonitoring $true
+}
+
+# Enable hardware accelerated GPU scheduling
+function EnableHardwareAcceleratedGPUScheduling {
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "PlatformSupportMiracast" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrLevel" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrDelay" -Type DWord -Value 60 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrDebugMode" -Type DWord -Value 0 -Force
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "EnablePreemption" -Type DWord -Value 0 -Force
+}
+
+# Indexer respect power modes
+function IndexerRespectPowerModes {
+    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex")) {
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
+}
+
+# Enable TRIM
+function EnableTRIM {
+    Get-WmiObject -Class Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | Select-Object -ExpandProperty DeviceID | ForEach-Object { Optimize-Volume -DriveLetter $_[0] -ReTrim -Verbose | Optimize-Volume -DriveLetter $_[0] -SlabConsolidate -Verbose }
+
+    fsutil behavior set DisableDeleteNotify 0
+    fsutil behavior set quotanotify 10800
+    fsutil behavior set bugcheckoncorrupt 0
+    fsutil behavior set disablespotcorruptionhandling 1
+    fsutil resource setlog shrink 99.9 $ENV:SYSTEMDRIVE\
+}
+
+# Disable power throttling
+function DisablePowerThrottling {
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name PowerThrottlingOff -PropertyType DWord -Value 1 -Force
+}
+
+# Disable wpp software tracing logs
+function DisableWPPSoftwareTracingLogs {
+    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF")) {
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Name "LogLevel" -Type DWord -Value 0 -Force
+}
+
+# Cpu rate limit
+function CpuRateLimit {
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Name "CpuRateLimit" -Type DWord -Value 100 -Force
+}
+
+# Disable search history
+function DisableSearchHistory {
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings")) {
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
+    }
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Name "IsDeviceSearchHistoryEnabled" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
+}
+
+# Thread priority
+function ThreadPriority {
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Force
+    }
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Force
+    }
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Force
+    }
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Force
+    }
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Force
+    }
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Name "KeyboardDataQueueSize" -PropertyType DWord -Value 20 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableWriteCombining" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableMshybridNvsrSwitch" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "EnableHybridMode" -PropertyType DWord -Value 0 -Force
+}
+
 # Debloat microsoft services
 function DebloatMicrosoftServices {
     Stop-Service "ALG" -Force -WarningAction SilentlyContinue
@@ -3756,235 +3987,6 @@ function DebloatMicrosoftServices {
     Set-Service WinHttpAutoProxySvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "WpcMonSvc" -Force -WarningAction SilentlyContinue
     Set-Service WpcMonSvc -StartupType Disabled -ErrorAction SilentlyContinue
-}
-
-# Disable boot splash animations
-function DisableBootSplashAnimations {
-    bcdedit /set `{current`} bootux disabled
-    bcdedit /set `{current`} quietboot yes
-    bcdedit /set `{current`} quietboot On
-    bcdedit /set `{current`} bootmenupolicy Legacy
-}
-
-# Disable trusted platform module
-function DisableTrustedPlatformModule {
-    bcdedit /set `{current`} tpmbootentropy ForceDisable
-}
-
-# Disable integrity checks
-function DisableIntegrityChecks {
-    bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
-    bcdedit /set `{current`} nointegritychecks on
-}
-
-# Disable last access
-function DisableLastAccess {
-    fsutil behavior set disablelastaccess 1
-}
-
-# Set memory usage
-function SetMemoryUsage {
-    fsutil behavior set memoryusage 2
-}
-
-# Disable boot logging
-function DisableBootLogging {
-    New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\AeDebug" -Name "Auto" -Type DWord -Value 0 -Force
-    bcdedit /bootdebug `{current`} off
-    bcdedit /debug `{current`} off
-    bcdedit /set `{current`} bootlog no
-}
-
-# Increase default size buffer
-function IncreaseDefaultSizeBuffer {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SizReqBuf" -Type DWord -Value 16384 -Force
-}
-
-# IRP stack size
-function IRPStackSize {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "autodisconnect" -Type DWord -Value 15 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "EnableOplocks" -Type DWord -Value 0 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxRawWorkItems" -Type DWord -Value 512 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MinFreeConnections" -Type DWord -Value 16 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "InitWorkItems" -Type DWord -Value 512 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "IRPStackSize" -Type DWord -Value 32 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationDelay" -Type DWord -Value 0 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SharingViolationRetries" -Type DWord -Value 0 -Force
-
-}
-
-# Size
-function Size {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "Size" -Type DWord -Value 3 -Force
-}
-
-# Max work items
-function MaxWorkItems {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxWorkItems" -Type DWord -Value 16384 -Force
-}
-
-# Maxmpxct
-function MaxMpxCt {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxMpxCt" -Type DWord -Value 4096 -Force
-}
-
-# Max cmds
-function MaxCmds {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "MaxCmds" -Type DWord -Value 4096 -Force
-}
-
-# Disable strict name checking
-function DisableStrictNameChecking {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "DisableStrictNameChecking" -Type DWord -Value 1 -Force
-}
-
-# Enable dynamic backlog
-function EnableDynamicBacklog {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "EnableDynamicBacklog" -Type DWord -Value 1 -Force
-}
-
-# Minimum dynamic backlog
-function MinimumDynamicBacklog {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MinimumDynamicBacklog" -Type DWord -Value 200 -Force
-}
-
-# Maximum dynamic backlog
-function MaximumDynamicBacklog {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "MaximumDynamicBacklog" -Type DWord -Value 20000 -Force
-}
-
-# Dynamic backlog growth delta
-function DynamicBacklogGrowthDelta {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DynamicBacklogGrowthDelta" -Type DWord -Value 100 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DoNotHoldNicBuffers" -Type DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableRawSecurity" -Type DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableAddressSharing" -Type DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "DisableChainedReceive" -Type DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\AFD\Parameters" -Name "KeepAliveInterval" -Type DWord -Value 1 -Force
-}
-
-# Increase mft zone
-function IncreaseMFTZone {
-    bcdedit /set `{current`} firstmegabytepolicy UseAll
-
-    fsutil behavior set mftzone 3
-}
-
-# Enable memory allocation in graphics driver
-function EnableMemoryAllocationInGraphicsDriver {
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name DpiMapIommuContiguous -Type "DWORD" -Value "1" -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name PreferSystemMemoryContiguous -Type "DWORD" -Value "1" -Force
-}
-
-# Disable realtime monitoring
-function DisableRealtimeMonitoring {
-    if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection")) {
-        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring" -Type DWord -Value 1 -Force
-    Set-MpPreference -DisableRealtimeMonitoring 1
-    Set-MpPreference -DisableRealtimeMonitoring $true
-}
-
-# Enable hardware accelerated GPU scheduling
-function EnableHardwareAcceleratedGPUScheduling {
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "HwSchMode" -Type DWord -Value 2 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "PlatformSupportMiracast" -Type DWord -Value 0 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrLevel" -Type DWord -Value 0 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrDelay" -Type DWord -Value 60 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" -Name "TdrDebugMode" -Type DWord -Value 0 -Force
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "EnablePreemption" -Type DWord -Value 0 -Force
-}
-
-# Indexer respect power modes
-function IndexerRespectPowerModes {
-    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex")) {
-        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" -Name "RespectPowerModes" -Type DWord -Value 1 -Force
-}
-
-# Enable TRIM
-function EnableTRIM {
-    Get-WmiObject -Class Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | Select-Object -ExpandProperty DeviceID | ForEach-Object { Optimize-Volume -DriveLetter $_[0] -ReTrim -Verbose | Optimize-Volume -DriveLetter $_[0] -SlabConsolidate -Verbose }
-
-    fsutil behavior set DisableDeleteNotify 0
-    fsutil behavior set quotanotify 10800
-    fsutil behavior set bugcheckoncorrupt 0
-    fsutil behavior set disablespotcorruptionhandling 1
-    fsutil resource setlog shrink 99.9 $ENV:SYSTEMDRIVE\
-}
-
-# Disable power throttling
-function DisablePowerThrottling {
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" -Name PowerThrottlingOff -PropertyType DWord -Value 1 -Force
-}
-
-# Disable wpp software tracing logs
-function DisableWPPSoftwareTracingLogs {
-    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF")) {
-        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\WUDF" -Name "LogLevel" -Type DWord -Value 0 -Force
-}
-
-# Cpu rate limit
-function CpuRateLimit {
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Quota System\S-1-2-0" -Name "CpuRateLimit" -Type DWord -Value 100 -Force
-}
-
-# Disable search history
-function DisableSearchHistory {
-    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings")) {
-        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Force
-    }
-    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings" -Name "IsDeviceSearchHistoryEnabled" -PropertyType DWord -Value 0 -Force
-    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "DeviceHistoryEnabled" -PropertyType DWord -Value 0 -Force
-}
-
-# Thread priority
-function ThreadPriority {
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Force
-    }
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Force
-    }
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Force
-    }
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Force
-    }
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Force
-    }
-    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
-        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\mouclass\Parameters" -Name "MouseDataQueueSize" -PropertyType DWord -Value 20 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\kbdclass\Parameters" -Name "KeyboardDataQueueSize" -PropertyType DWord -Value 20 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 31 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableWriteCombining" -PropertyType DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "DisableMshybridNvsrSwitch" -PropertyType DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm" -Name "EnableHybridMode" -PropertyType DWord -Value 0 -Force
 }
 #endregion Performance
 function Errors {
