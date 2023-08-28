@@ -1098,9 +1098,6 @@ DoubleClickHeightWidth
 # Value max
 ValueMax
 
-# Debloat microsoft services
-DebloatMicrosoftServices
-
 # Disable boot splash animations
 DisableBootSplashAnimations
 
@@ -1184,5 +1181,8 @@ DisableSearchHistory
 
 # Thread priority
 ThreadPriority
+
+# Debloat microsoft services
+DebloatMicrosoftServices
 #endregion Performance
 Errors
