@@ -2254,7 +2254,7 @@ function BestPriorityForeground {
     netsh int ip set global icmpredirects=disabled
     netsh winsock set autotuning on
 
-    Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("9.9.9.11", "149.112.112.11")
+    Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("1.1.1.1", "1.0.0.1")
 
     setx GPU_MAX_ALLOC_PERCENT 99
     setx GPU_SINGLE_ALLOC_PERCENT 90
