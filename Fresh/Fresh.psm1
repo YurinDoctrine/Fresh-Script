@@ -2405,28 +2405,9 @@ function DisableBackgroundUWPApps {
 # Disable the following Windows features
 # Отключить следующие компоненты Windows
 function DisableWindowsFeatures {
-    $WindowsOptionalFeatures = @(
-
-        # Windows Fax and Scan
-        "FaxServicesClientPackage",
-
-        # Internet Explorer
-        "Internet-Explorer-Optional-*",
-
-        # Legacy Components
-        "LegacyComponents",
-
-        # PowerShell 2.0
-        "MicrosoftWindowsPowerShellV2",
-        "MicrosoftWindowsPowershellV2Root",
-
-        # Microsoft XPS Document Writer
-        "Printing-XPSServices-Features",
-
-        # Work Folders Client
-        "WorkFolders-Client"
-    )
-    Disable-WindowsOptionalFeature -Online -FeatureName $WindowsOptionalFeatures -NoRestart
+    $OptionalFeatures = Get-WindowsOptionalFeature -Online | Where-Object { $_.State -eq "Enabled" }
+    $FeatureNames = $OptionalFeatures | Select-Object -ExpandProperty FeatureName
+    Disable-WindowsOptionalFeature -Online -FeatureName $FeatureNames -NoRestart
 }
 
 # Disable certain Feature On Demand v2 (FODv2) capabilities
