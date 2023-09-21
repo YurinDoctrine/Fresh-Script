@@ -2091,6 +2091,8 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" -Name "RepairContentServerSource" -PropertyType DWord -Value 2 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
 
+    New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\None" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\Foreground" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\BackgroundDefault" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\PrelaunchForeground" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\ThrottleGPUInterference" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
