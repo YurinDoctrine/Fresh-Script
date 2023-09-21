@@ -2094,6 +2094,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\None" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\Foreground" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\Foreground" -Name "EnableForegroundBoost" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\BackgroundDefault" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\PrelaunchForeground" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\EstimateMemoryUsage" -Name "IsLowPriority" -PropertyType DWord -Value 0 -Force
