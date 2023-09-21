@@ -2188,10 +2188,6 @@ function BestPriorityForeground {
     regsvr32.exe /s muweb.dll
     regsvr32.exe /s wuwebv.dll
 
-    Enable-WindowsOptionalFeature -Online -FeatureName NetFx4-AdvSrvs -All -NoRestart
-    Enable-WindowsOptionalFeature -Online -FeatureName NetFx4Extended-ASPNET45 -All -NoRestart
-    Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -NoRestart
-
     Disable-MMAgent -MemoryCompression
     Disable-MMAgent -PageCombining
 
