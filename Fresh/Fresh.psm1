@@ -2267,7 +2267,11 @@ function BestPriorityForeground {
     netsh int tcp set global maxsynretransmissions=2
     netsh int udp set global uro=enabled
     netsh int ip set global icmpredirects=disabled
+    netsh int ip set global taskoffload=enabled
     netsh winsock set autotuning on
+
+    set-netoffloadglobalsetting -ReceiveSideScaling Enabled
+    set-netoffloadglobalsetting -TaskOffload Enabled
 
     Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("1.1.1.1", "1.0.0.1")
 
