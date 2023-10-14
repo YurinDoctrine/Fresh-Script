@@ -628,6 +628,7 @@ function SmallTaskbarIcons {
 
 # Smaller min max close window button
 function MinMaxCloseWindowButton {
+    New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name MinAnimate -PropertyType String -Value 0 -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name CaptionWidth -PropertyType String -Value -290 -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name CaptionHeight -PropertyType String -Value -290 -Force
 }
