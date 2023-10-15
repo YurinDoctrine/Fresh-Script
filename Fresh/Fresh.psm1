@@ -1482,6 +1482,8 @@ function DisableScheduledTasks {
     schtasks /Delete /F /TN "\Microsoft\Windows\Application Experience\ProgramDataUpdater" >nul 2>&1
     schtasks /Delete /F /TN "\Microsoft\Windows\Application Experience\AitAgent" >nul 2>&1
     schtasks /Delete /F /TN "\Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor" >nul 2>&1
+    schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\MareBackup"
+    schtasks /Change /DISABLE /TN "Microsoft\Windows\Application Experience\PcaPatchDbTask"
     schtasks /Change /DISABLE /TN "Microsoft\Windows\SetupSQMTask"
     schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM"
     schtasks /Change /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator"
