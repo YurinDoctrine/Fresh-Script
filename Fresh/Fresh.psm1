@@ -635,6 +635,8 @@ function MinMaxCloseWindowButton {
 
 # Turn off action center
 function TurnOffActionCenter {
+    Stop-Service "WpnService" -Force -WarningAction SilentlyContinue
+    Set-Service "WpnService" -StartupType Disabled
     Stop-Service "WpnUserService" -Force -WarningAction SilentlyContinue
     Set-Service "WpnUserService" -StartupType Disabled
     New-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "DisableNotificationCenter" -PropertyType DWord -Value 1 -Force
