@@ -2412,9 +2412,6 @@ function UninstallUWPApps {
     # UWP-приложения, которые не будут выводиться в форме
     $ExcludedAppxPackages = @(
 
-        # Realtek Audio Control
-        "RealtekSemiconductorCorp.RealtekAudioControl",
-
         # Desktop App Installer
         "Microsoft.DesktopAppInstaller"
     )
