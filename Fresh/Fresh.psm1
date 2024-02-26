@@ -1892,7 +1892,6 @@ function DisableNewsFeeds {
 function DisableEdgeUpdate {
     New-Item -Path "HKLM:\SOFTWARE\Microsoft\EdgeUpdate" -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\EdgeUpdate" -Name "DoNotUpdateToEdgeWithChromium" -Type DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\EdgeUpdate" -Name "Allowsxs" -Type DWord -Value 1 -Force
 }
 #endregion Privacy & Telemetry
 #region Gaming
@@ -2174,6 +2173,11 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" -Name "AllowPrelaunch" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" -Name "PreventLiveTileDataCollection" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" -Name "SyncFavoritesBetweenIEAndMicrosoftEdge" -PropertyType DWord -Value 0 -Force
+
+    if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\EdgeUpdate")) {
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\EdgeUpdate" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\EdgeUpdate" -Name "Allowsxs" -Type DWord -Value 1 -Force
 
     if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
         New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
