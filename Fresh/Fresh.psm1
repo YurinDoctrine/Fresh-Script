@@ -29,6 +29,9 @@ function Check {
     ipconfig /flushdns
     ipconfig /registerdns
 
+    # Make a clean slate for the time sync
+    w32tm.exe /unregister
+
     # Run WMI reset
     net stop winmgmt /y
     winmgmt /resetrepository
@@ -2046,6 +2049,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "EnableCfg" -PropertyType DWord -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisableAcrylicBackgroundOnLogon" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisableShutdownNamedPipe" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name CacheAwareScheduling -Type "DWORD" -Value "7" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name CoalescingTimerInterval -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name DisableExceptionChainValidation -Type "DWORD" -Value "1" -Force
@@ -2099,6 +2103,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Edge" -Name "UsageStatsInSample" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "BackgroundModeEnabled" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "HideFirstRunExperience" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "NewTabPageContentEnabled" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableFontProviders" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\ScheduledDiagnostics" -Name "EnabledExecution" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" -Name "RepairContentServerSource" -PropertyType DWord -Value 2 -Force
@@ -2184,6 +2189,11 @@ function BestPriorityForeground {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\EdgeUpdate" -Force
     }
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\EdgeUpdate" -Name "Allowsxs" -Type DWord -Value 1 -Force
+
+    if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EdgeUI")) {
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EdgeUI" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EdgeUI" -Name "DisableMFUTracking" -Type DWord -Value 1 -Force
 
     if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
         New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
@@ -3593,6 +3603,7 @@ function DisableTrustedPlatformModule {
 function DisableIntegrityChecks {
     bcdedit /set `{current`} loadoptions DISABLE_INTEGRITY_CHECKS
     bcdedit /set `{current`} nointegritychecks on
+    bcdedit /set `{current`} recoveryenabled No
 }
 
 # Disable last access
@@ -3813,6 +3824,8 @@ function DebloatMicrosoftServices {
     Set-Service AJRouter -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "AppIDSvc" -Force -WarningAction SilentlyContinue
     Set-Service AppIDSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "AppXSvc" -Force -WarningAction SilentlyContinue
+    Set-Service AppXSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "AxInstSV" -Force -WarningAction SilentlyContinue
     Set-Service AxInstSV -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "BcastDVRUserService" -Force -WarningAction SilentlyContinue
