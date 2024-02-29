@@ -2163,6 +2163,11 @@ function BestPriorityForeground {
     }
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsRunInBackground" -Type DWord -Value 2 -Force
 
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig")) {
+        New-Item -Force "HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig"
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SCMConfig" -Name "EnableSvchostMitigationPolicy" -PropertyType DWord -Value 0 -Force
+
     if (!(Test-Path "HKLM:\SYSTEM\ControlSet001\Control\BootControl")) {
         New-Item -Force "HKLM:\SYSTEM\ControlSet001\Control\BootControl"
     }
