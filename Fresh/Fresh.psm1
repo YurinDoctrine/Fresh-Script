@@ -3012,6 +3012,7 @@ function DisableDeviceRestartAfterUpdate {
 function SetDEPOptOut {
     bcdedit /set `{current`} nx optout
     bcdedit /set `{current`} nx AlwaysOff
+    Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
 }
 
 # Disable remote assistance
