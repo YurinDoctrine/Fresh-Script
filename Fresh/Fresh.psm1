@@ -2340,7 +2340,7 @@ function BestPriorityForeground {
     set-netoffloadglobalsetting -ReceiveSideScaling Enabled
     set-netoffloadglobalsetting -TaskOffload Enabled
 
-    Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("94.140.14.14", "94.140.15.15")
+    Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("176.103.130.130", "176.103.130.131")
 
     setx GPU_MAX_ALLOC_PERCENT 99
     setx GPU_SINGLE_ALLOC_PERCENT 90
