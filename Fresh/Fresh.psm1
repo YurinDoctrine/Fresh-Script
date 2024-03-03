@@ -2148,6 +2148,11 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Name "GPU Priority" -PropertyType DWord -Value 12 -Force
 
+    if (!(Test-Path "HKCU:\Software\Microsoft\DirectX\GraphicsSettings")) {
+        New-Item -Path "HKCU:\Software\Microsoft\DirectX\GraphicsSettings" -Force
+    }
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\DirectX\GraphicsSettings" -Name SwapEffectUpgradeCache -Type "DWORD" -Value "1" -Force
+
     if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion")) {
         New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\SearchCompanion"
     }
