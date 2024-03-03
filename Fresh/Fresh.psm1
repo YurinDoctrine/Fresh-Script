@@ -2397,6 +2397,10 @@ function BestPriorityForeground {
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR CPDECREASEPOL 1
     powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR DISTRIBUTEUTIL 1
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR DISTRIBUTEUTIL 1
+    powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFAUTONOMOUS 1
+    powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFAUTONOMOUS 1
+    powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTPOL 100
+    powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTPOL 100
     powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 3
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 3
     powercfg -setACvalueindex SCHEME_CURRENT SUB_PROCESSOR SCHEDPOLICY 2
@@ -2409,9 +2413,12 @@ function BestPriorityForeground {
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_SLEEP d4e98f31-5ffe-4ce1-be31-1b38b384c009 3
     powercfg -setACvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESPOLICY 1
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_ENERGYSAVER ESPOLICY 1
+    powercfg -setACvalueindex SCHEME_CURRENT e276e160-7cb0-43c6-b20b-73f5dce39954 a1662ab2-9d34-4e53-ba8b-2639b9e20857 2
+    powercfg -setDCvalueindex SCHEME_CURRENT e276e160-7cb0-43c6-b20b-73f5dce39954 a1662ab2-9d34-4e53-ba8b-2639b9e20857 2
     powercfg -setACvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3
     powercfg -setDCvalueindex SCHEME_CURRENT 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 3
     powercfg -setDCvalueindex SCHEME_CURRENT 44f3beca-a7c0-460e-9df2-bb8b99e0cba6 3619c3f2-afb2-4afc-b0e9-e7fef372de36 0
+    powercfg -setDCvalueindex SCHEME_CURRENT c763b4ec-0e50-4b6b-9bed-2b92a6ee884e 7ec1751b-60ed-4588-afb5-9819d3d77d90 0
     powercfg -setACvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOADAPT 1
     powercfg -setDCvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOADAPT 1
     powercfg -setactive SCHEME_CURRENT
