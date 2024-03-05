@@ -1959,6 +1959,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name TcpMaxPortsExhausted -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name TcpMaxConnectResponseRetransmissions -PropertyType DWord -Value 2 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name TCPMaxDataRetransmissions -PropertyType DWord -Value 7 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name TcpMaxDupAcks -PropertyType DWord -Value 2 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name EnablePMTUBHDiscovery -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name EnableConnectionRateLimiting -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name DisableTaskOffload -PropertyType DWord -Value 0 -Force
@@ -2211,6 +2212,11 @@ function BestPriorityForeground {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EdgeUI" -Force
     }
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\EdgeUI" -Name "DisableMFUTracking" -Type DWord -Value 1 -Force
+
+    if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
+        New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Force
+    }
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoSimpleNetIDList" -Type DWord -Value 1 -Force
 
     if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
         New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
@@ -3269,6 +3275,7 @@ function AdjustBestPerformance {
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name DesktopReadyTimeout -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name ExplorerStartupTraceRecorded -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name TelemetrySalt -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer -Name DesktopProcess -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewAlphaSelect -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewShadow -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ListviewWatermark -PropertyType DWord -Value 0 -Force
