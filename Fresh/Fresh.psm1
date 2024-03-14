@@ -3303,10 +3303,14 @@ function AdjustBestPerformance {
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name UseCompactMode -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarDa -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarMn -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarGlomming -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarGlomLevel -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ExtendedUIHoverTime -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ReindexedProfile -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NoTaskGrouping -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name LoosenRudeAppCheck -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name StartMenuInit -PropertyType DWord -Value 2 -Force
+    New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ClassicViewState -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell -Name UseWin32TrayClockExperience -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\ImmersiveShell -Name UseWin32BatteryFlyout -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\SVDEn -Name PromoteOEMTiles -PropertyType DWord -Value 0 -Force
