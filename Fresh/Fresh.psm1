@@ -28,6 +28,7 @@ function Check {
     nbtstat -RR
     ipconfig /flushdns
     ipconfig /registerdns
+    netsh interface ip delete arpcache
 
     # Make a clean slate for the time sync
     w32tm.exe /unregister
@@ -1964,6 +1965,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name EnablePMTUBHDiscovery -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name EnableConnectionRateLimiting -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name DisableTaskOffload -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name RawInput -PropertyType String -Value 1 -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseSpeed -PropertyType String -Value 0 -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold1 -PropertyType String -Value 0 -Force
     New-ItemProperty -Path "HKCU:\Control Panel\Mouse" -Name MouseThreshold2 -PropertyType String -Value 0 -Force
@@ -1971,6 +1973,8 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" -Name CursorUpdateInterval -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed" -Name IRRemoteNavigationDelta -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" -Name TimeStampInterval -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name RunStartupScriptSync -PropertyType DWord -Value 0 -Force
     if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force
     }
@@ -1978,10 +1982,6 @@ function BestPriorityForeground {
     if (!(Test-Path "HKCU:\AppEvents\Schemes")) {
         New-Item -Path "HKCU:\AppEvents\Schemes" -Force
     }
-    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System")) {
-        New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Force
-    }
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name DelayedDesktopSwitchTimeout -PropertyType DWord -Value 1 -Force
     if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile")) {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Force
     }
@@ -2080,6 +2080,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name FlushPolicy -Type "DWORD" -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name Attributes -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\be337238-0d82-4146-a960-4f3749d470c7" -Name Attributes -Type "DWORD" -Value "2" -Force
+    New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name SafeDLLSearchMode -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name ImageExecutionOptions -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "AllocationPreference" -PropertyType DWord -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "EnableCooling" -PropertyType DWord -Value "0" -Force
@@ -2094,6 +2095,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" -Name "AlwaysOn" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Games" -Name "FpsAll" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Games" -Name "GameFluidity" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\DirectDraw" -Name "EmulationOnly" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Perflib" -Name "Disable Performance Counters" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Storage" -Name "StorageD3InModernStandby" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services" -Name "IoLatencyCap" -PropertyType DWord -Value 0 -Force
@@ -2117,6 +2119,15 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" -Name "RepairContentServerSource" -PropertyType DWord -Value 2 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" -Name "DisableStartupSound" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisableStartupSound" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" -Name "DesktopHeapLogging" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" -Name "DwmInputUsesIoCompletionPort" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" -Name "EnableDwmInputProcessing" -PropertyType DWord -Value 0 -Force
+
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\QoS")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\QoS" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\QoS" -Name "EnablePriorityBoost" -PropertyType DWord -Value 1 -Force
 
     if (!(Test-Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\IO\None")) {
         New-Item -Path "HKLM:\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\IO\None" -Force
@@ -2168,6 +2179,8 @@ function BestPriorityForeground {
     if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore")) {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" -Force
     }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" -Name "RemoveWindowsStore" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" -Name "DisableStoreApps " -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" -Name "AutoDownload" -PropertyType DWord -Value 2 -Force
 
     if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy")) {
@@ -2224,6 +2237,21 @@ function BestPriorityForeground {
         New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Force
     }
     New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoSimpleNetIDList" -Type DWord -Value 1 -Force
+
+    if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {
+        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "NoHeapTerminationOnCorruption" -Type DWord -Value 1 -Force
+
+    if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\SoftwareProtectionPlatform")) {
+        New-Item -Force "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\SoftwareProtectionPlatform"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\SoftwareProtectionPlatform" -Name "Activation" -PropertyType DWord -Value 0 -Force
+
+    if (!(Test-Path "HKLM:\SOFTWARE\SOFTWARE\Microsoft\Input\Buttons")) {
+        New-Item -Force "HKLM:\SOFTWARE\SOFTWARE\Microsoft\Input\Buttons"
+    }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\SOFTWARE\Microsoft\Input\Buttons" -Name HardwareButtonsAsVKeys -PropertyType DWord -Value 0 -Force
 
     if (!(Test-Path "HKCU:\Keyboard Layout\ShowToast")) {
         New-Item -Force "HKCU:\Keyboard Layout\ShowToast"
@@ -3137,6 +3165,7 @@ function FixTimers {
     bcdedit /set `{current`} disabledynamictick true
     bcdedit /set `{current`} tscsyncpolicy enhanced
     bcdedit /set `{current`} debug No
+    bcdedit /set `{current`} isolatedcontext No
     bcdedit /set `{current`} highestmode Yes
     bcdedit /set `{current`} perfmem 1
     bcdedit /set `{current`} usephysicaldestination No
@@ -3151,6 +3180,7 @@ function DontUseFirmwarePciSettings {
 # Disable hyper virtualization
 function DisableHyperVirtualization {
     bcdedit /set `{current`} hypervisorlaunchtype off
+    bcdedit /set `{current`} disableelamdrivers Yes
 }
 
 # Enable pae
@@ -3746,6 +3776,7 @@ function DynamicBacklogGrowthDelta {
 # Increase mft zone
 function IncreaseMFTZone {
     bcdedit /set `{current`} firstmegabytepolicy UseAll
+    bcdedit /set `{current`} linearaddress57 OptOut
 
     fsutil behavior set mftzone 3
 }
@@ -3780,6 +3811,7 @@ function EnableHardwareAcceleratedGPUScheduling {
         New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Force
     }
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "EnablePreemption" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "ForceFlipTrueImmediateMode" -Type DWord -Value 1 -Force
 }
 
 # Indexer respect power modes
