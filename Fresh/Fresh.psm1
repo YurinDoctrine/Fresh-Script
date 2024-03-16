@@ -2395,6 +2395,8 @@ function BestPriorityForeground {
 
     set-netoffloadglobalsetting -ReceiveSideScaling Enabled
     set-netoffloadglobalsetting -TaskOffload Enabled
+    set-netoffloadglobalsetting -ReceiveSegmentCoalescing Disabled
+    set-netoffloadglobalsetting -PacketCoalescingFilter Disabled
 
     Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("176.103.130.130", "176.103.130.131")
 
