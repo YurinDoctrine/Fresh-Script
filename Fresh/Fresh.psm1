@@ -2078,6 +2078,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name DpcWatchdogProfileOffset -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name TtmEnabled -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name FlushPolicy -Type "DWORD" -Value "1" -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\pci\Parameters" -Name ASPMOptOut -Type "DWORD" -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name Attributes -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\be337238-0d82-4146-a960-4f3749d470c7" -Name Attributes -Type "DWORD" -Value "2" -Force
     New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name SafeDLLSearchMode -PropertyType DWord -Value 1 -Force
@@ -2151,7 +2152,14 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "DisableSensorWatchdog" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "SleepReliabilityDetailedDiagnostics" -PropertyType DWord -Value 0 -Force
 
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\Profile\Events\{54533251-82be-4824-96c1-47b60b740d00}\{0DA965DC-8FCF-4c0b-8EFE-8DD5E7BC959A}\{7E01ADEF-81E6-4e1b-8075-56F373584694}" -Name "TimeLimitInSeconds" -PropertyType DWord -Value 2 -Force
+
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\0000" -Name "*RssBaseProcNumber" -PropertyType DWord -Value 2 -Force
+
+    if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\Processor")) {
+        New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Processor" -Force
+    }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Processor" -Name "CPPCEnable" -PropertyType DWord -Value 0 -Force
 
     if (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing")) {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Force
@@ -2303,6 +2311,7 @@ function BestPriorityForeground {
     regsvr32.exe /s muweb.dll
     regsvr32.exe /s wuwebv.dll
 
+    Enable-MMAgent -ApplicationPreLaunch
     Disable-MMAgent -MemoryCompression
     Disable-MMAgent -PageCombining
 
