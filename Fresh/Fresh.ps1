@@ -889,11 +889,11 @@ EnableSaveRestartableApps
 
 # Enable "Network Discovery" and "File and Printers Sharing" for workgroup networks
 # Включить сетевое обнаружение и общий доступ к файлам и принтерам для рабочих групп
-EnableNetworkDiscovery
+# EnableNetworkDiscovery
 
 # Disable "Network Discovery" and "File and Printers Sharing" for workgroup networks
 # Выключить сетевое обнаружение и общий доступ к файлам и принтерам для рабочих групп
-# DisableNetworkDiscovery
+DisableNetworkDiscovery
 
 # This option must be Enabled by default, otherwise set it so.
 OnlySecurityUpdates
