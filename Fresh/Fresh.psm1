@@ -2401,7 +2401,7 @@ function BestPriorityForeground {
     set-netoffloadglobalsetting -PacketCoalescingFilter Disabled
     set-netoffloadglobalsetting -ScalingHeuristics Disabled
 
-    Get-NetAdapter | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("176.103.130.130", "176.103.130.131")
+    Get-NetAdapter -IncludeHidden | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("176.103.130.130", "176.103.130.131")
 
     setx GPU_MAX_ALLOC_PERCENT 99
     setx GPU_SINGLE_ALLOC_PERCENT 90
