@@ -2076,6 +2076,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name MaximumSharedReadyQueueSize -Type "DWORD" -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name MinDynamicTickDuration -Type "DWORD" -Value "1000" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name DpcWatchdogProfileOffset -Type "DWORD" -Value "0" -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" -Name DistributeTimers -Type "DWORD" -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name TtmEnabled -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name FlushPolicy -Type "DWORD" -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\pci\Parameters" -Name ASPMOptOut -Type "DWORD" -Value "1" -Force
@@ -3907,6 +3908,8 @@ function ThreadPriority {
     if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters")) {
         New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\services\nvlddmkm\Parameters" -Force
     }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl" -Name "MonitorLatencyTolerance" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl" -Name "MonitorRefreshLatencyTolerance" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\DXGKrnl\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBHUB3\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\USBXHCI\Parameters" -Name "ThreadPriority" -PropertyType DWord -Value 15 -Force
