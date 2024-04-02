@@ -2120,6 +2120,10 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "NewTabPageContentEnabled" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableFontProviders" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "DisableHHDEP" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MRT" -Name "DontOfferThroughWUAU" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MRT" -Name "DontReportInfectionInformation" -PropertyType DWord -Value 1 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RemovalTools\MpGears" -Name "HeartbeatTrackingIndex" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RemovalTools\MpGears" -Name "SpyNetReportingLocation" -PropertyType String -Value "" -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\ScheduledDiagnostics" -Name "EnabledExecution" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" -Name "RepairContentServerSource" -PropertyType DWord -Value 2 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
@@ -2181,6 +2185,13 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Name "NoLazyMode" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Name "Clock Rate" -PropertyType DWord -Value 10000 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing" -Name "GPU Priority" -PropertyType DWord -Value 12 -Force
+
+    New-ItemProperty -Path "HKLM:\SYSTEM\ControlSet001\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000" -Name "FeatureTestControl" -Type DWord -Value 0x0000ffff -Force
+
+    if (!(Test-Path "HKCU:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch")) {
+        New-Item -Force "HKCU:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch"
+    }
+    New-ItemProperty -Path "HKCU:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch" -Name "DriverLoadPolicy" -PropertyType DWord -Value 3 -Force
 
     if (!(Test-Path "HKCU:\Software\Microsoft\DirectX\GraphicsSettings")) {
         New-Item -Path "HKCU:\Software\Microsoft\DirectX\GraphicsSettings" -Force
@@ -2252,6 +2263,9 @@ function BestPriorityForeground {
     if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")) {
         New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Force
     }
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoAutorun" -Type DWord -Value 1 -Force
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoDriveTypeAutoRun" -Type DWord -Value 255 -Force
+    New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "AllowOnlineTips" -Type DWord -Value 0 -Force
     New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoSimpleNetIDList" -Type DWord -Value 1 -Force
 
     if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {
@@ -2341,6 +2355,11 @@ function BestPriorityForeground {
     auditpol /set /category:"Detailed Tracking" /failure:disable
     auditpol /set /category:"System" /success:disable
     auditpol /set /category:"System" /failure:disable
+
+    wevtutil sl Application /ms:0
+    wevtutil sl Setup /ms:0
+    wevtutil sl System /ms:0
+    wevtutil sl Security /ms:0
 
     Set-MpPreference -DefinitionUpdatesChannel Staged
     Set-MpPreference -EngineUpdatesChannel Staged
@@ -3088,7 +3107,6 @@ function DisableDeviceRestartAfterUpdate {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force
     }
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoRebootWithLoggedOnUsers" -Type DWord -Value 1 -Force
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUPowerManagement" -Type DWord -Value 0 -Force
 }
 
 # Set data execution prevention (DEP) policy to optout
@@ -3267,11 +3285,14 @@ function DisableWindowsAutoUpgrade {
     if (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate")) {
         New-Item -Force "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
     }
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "DeferQualityUpdates" -Type DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ManagePreviewBuilds" -Type DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ManagePreviewBuildsPolicyValue" -Type DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableDualScan" -Type DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "SetDisableUXWUAccess" -Type DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUOptions" -Type DWord -Value 2 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "DetectionFrequency" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "DetectionFrequencyEnabled" -Type DWord -Value 0 -Force
     if (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx")) {
         New-Item -Force "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Gwx"
     }
@@ -3837,6 +3858,7 @@ function EnableHardwareAcceleratedGPUScheduling {
     if (!(Test-Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler")) {
         New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Force
     }
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "VsyncIdleTimeout" -Type DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "EnablePreemption" -Type DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler" -Name "ForceFlipTrueImmediateMode" -Type DWord -Value 1 -Force
 }
@@ -4083,6 +4105,8 @@ function DebloatMicrosoftServices {
     Set-Service UserDataSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "WalletService" -Force -WarningAction SilentlyContinue
     Set-Service WalletService -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "WMPNetworkSvc" -Force -WarningAction SilentlyContinue
+    Set-Service WMPNetworkSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "FrameServer" -Force -WarningAction SilentlyContinue
     Set-Service FrameServer -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "gupdatem" -Force -WarningAction SilentlyContinue
@@ -4111,10 +4135,14 @@ function DebloatMicrosoftServices {
     Set-Service BDESVC -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "BFE" -Force -WarningAction SilentlyContinue
     Set-Service BFE -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "DcomLaunch" -Force -WarningAction SilentlyContinue
+    Set-Service DcomLaunch -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "DeviceAssociationService" -Force -WarningAction SilentlyContinue
     Set-Service DeviceAssociationService -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "DPS" -Force -WarningAction SilentlyContinue
     Set-Service DPS -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "irmon" -Force -WarningAction SilentlyContinue
+    Set-Service irmon -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "ose64" -Force -WarningAction SilentlyContinue
     Set-Service ose64 -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "OneSyncSvc" -Force -WarningAction SilentlyContinue
@@ -4156,6 +4184,8 @@ function DebloatMicrosoftServices {
     Set-Service WPDBusEnum -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "WdiSystemHost" -Force -WarningAction SilentlyContinue
     Set-Service WdiSystemHost -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "WdNisSvc" -Force -WarningAction SilentlyContinue
+    Set-Service WdNisSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service WebClient -StartupType Manual -ErrorAction SilentlyContinue
     Stop-Service "WerSvc" -Force -WarningAction SilentlyContinue
     Set-Service WerSvc -StartupType Disabled -ErrorAction SilentlyContinue
