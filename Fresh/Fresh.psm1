@@ -2379,20 +2379,21 @@ function BestPriorityForeground {
     Set-MpPreference -DisableCpuThrottleOnIdleScans $False
     Set-MpPreference -SubmitSamplesConsent 2
     Set-MpPreference -ServiceHealthReportInterval 0
-    Set-MpPreference -DisableAutoExclusions  $True
-    Set-MpPreference -DisableBehaviorMonitoring  $True
-    Set-MpPreference -DisableBlockAtFirstSeen  $True
-    Set-MpPreference -DisableCatchupFullScan  $True
-    Set-MpPreference -DisableCatchupQuickScan  $True
-    Set-MpPreference -DisableEmailScanning  $True
+    Set-MpPreference -DisableAutoExclusions $True
+    Set-MpPreference -DisableBehaviorMonitoring $True
+    Set-MpPreference -DisableBlockAtFirstSeen $True
+    Set-MpPreference -DisableCatchupFullScan $True
+    Set-MpPreference -DisableCatchupQuickScan $True
+    Set-MpPreference -DisableEmailScanning $True
     Set-MpPreference -DisableIntrusionPreventionSystem $True
-    Set-MpPreference -DisableIOAVProtection  $True
+    Set-MpPreference -DisableIOAVProtection $True
     Set-MpPreference -DisableRemovableDriveScanning $True
-    Set-MpPreference -DisableRestorePoint  $True
-    Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan  $True
-    Set-MpPreference -DisableScanningNetworkFiles  $True
-    Set-MpPreference -DisableScriptScanning  $True
-    Set-MpPreference -DisablePrivacyMode  $False
+    Set-MpPreference -DisableRestorePoint $True
+    Set-MpPreference -DisableScanningMappedNetworkDrivesForFullScan $True
+    Set-MpPreference -DisableScanningNetworkFiles $True
+    Set-MpPreference -DisableScriptScanning $True
+    Set-MpPreference -DisablePrivacyMode $False
+    Set-MpPreference -MAPSReporting 0
 
     Set-SmbServerConfiguration -ServerHidden $False -AnnounceServer $False -Force
     Set-SmbServerConfiguration -EnableLeasing $false -Force
