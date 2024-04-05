@@ -2162,6 +2162,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "PerfBoostAtGuaranteed" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "CsEnabled" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "DeepIoCoalescingEnabled" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "EnergyEstimationEnabled" -PropertyType DWord -Value 0 -Force
 
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\Profile\Events\{54533251-82be-4824-96c1-47b60b740d00}\{0DA965DC-8FCF-4c0b-8EFE-8DD5E7BC959A}\{7E01ADEF-81E6-4e1b-8075-56F373584694}" -Name "TimeLimitInSeconds" -PropertyType DWord -Value 2 -Force
 
@@ -4023,6 +4024,8 @@ function DebloatMicrosoftServices {
     Stop-Service "TermService" -Force -WarningAction SilentlyContinue
     Set-Service TermService -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service TieringEngineService -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "TimeBrokerSvc" -Force -WarningAction SilentlyContinue
+    Set-Service TimeBrokerSvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "TokenBroker" -Force -WarningAction SilentlyContinue
     Set-Service TokenBroker -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "HvHost" -Force -WarningAction SilentlyContinue
