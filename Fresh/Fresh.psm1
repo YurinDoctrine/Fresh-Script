@@ -2163,6 +2163,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "CsEnabled" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "DeepIoCoalescingEnabled" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "EnergyEstimationEnabled" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name "CoreParkingDisabled" -PropertyType DWord -Value 1 -Force
 
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\Profile\Events\{54533251-82be-4824-96c1-47b60b740d00}\{0DA965DC-8FCF-4c0b-8EFE-8DD5E7BC959A}\{7E01ADEF-81E6-4e1b-8075-56F373584694}" -Name "TimeLimitInSeconds" -PropertyType DWord -Value 2 -Force
 
