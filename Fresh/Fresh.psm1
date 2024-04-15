@@ -2125,8 +2125,8 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\MRT" -Name "DontReportInfectionInformation" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RemovalTools\MpGears" -Name "HeartbeatTrackingIndex" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RemovalTools\MpGears" -Name "SpyNetReportingLocation" -PropertyType String -Value "" -Force
-    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" -Name "IoPriority" -PropertyType DWord -Value 3 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\ScheduledDiagnostics" -Name "EnabledExecution" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Reliability" -Name "IoPriority" -PropertyType DWord -Value 3 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" -Name "RepairContentServerSource" -PropertyType DWord -Value 2 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" -Name "DisableStartupSound" -PropertyType DWord -Value 1 -Force
