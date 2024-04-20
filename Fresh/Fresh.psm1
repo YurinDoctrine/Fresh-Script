@@ -2084,6 +2084,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\pci\Parameters" -Name ASPMOptOut -Type "DWORD" -Value "1" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" -Name Attributes -Type "DWORD" -Value "0" -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\be337238-0d82-4146-a960-4f3749d470c7" -Name Attributes -Type "DWORD" -Value "2" -Force
+    New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name AlpcWakePolicy -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name SafeDLLSearchMode -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager" -Name ImageExecutionOptions -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "AllocationPreference" -PropertyType DWord -Value "0" -Force
@@ -2105,6 +2106,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Storage" -Name "StorageD3InModernStandby" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services" -Name "IoLatencyCap" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv" -Name "ErrorControl" -Type DWord -Value 2 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv\Parameters" -Name "ThreadPriority" -Type DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Peernet" -Name "Disabled" -Type DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\Environment" -Name "SEE_MASK_NOZONECHECKS" -PropertyType String -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name "SEE_MASK_NOZONECHECKS" -PropertyType String -Value 1 -Force
