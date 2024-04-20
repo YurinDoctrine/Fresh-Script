@@ -2106,7 +2106,7 @@ function BestPriorityForeground {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Storage" -Name "StorageD3InModernStandby" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services" -Name "IoLatencyCap" -PropertyType DWord -Value 0 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv" -Name "ErrorControl" -Type DWord -Value 2 -Force
-    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv\Parameters" -Name "ThreadPriority" -Type DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Audiosrv\Parameters" -Name "ThreadPriority" -Type DWord -Value 31 -Force
     New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Peernet" -Name "Disabled" -Type DWord -Value 1 -Force
     New-ItemProperty -Path "HKCU:\Environment" -Name "SEE_MASK_NOZONECHECKS" -PropertyType String -Value 1 -Force
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name "SEE_MASK_NOZONECHECKS" -PropertyType String -Value 1 -Force
