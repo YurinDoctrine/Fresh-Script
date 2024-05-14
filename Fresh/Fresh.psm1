@@ -29,6 +29,7 @@ function Check {
     ipconfig /flushdns
     ipconfig /registerdns
     netsh interface ip delete arpcache
+    netsh branchcache reset
 
     # Make a clean slate for the time sync
     w32tm.exe /unregister
