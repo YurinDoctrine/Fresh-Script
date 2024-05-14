@@ -4013,7 +4013,6 @@ function DebloatMicrosoftServices {
     Stop-Service "bthserv" -Force -WarningAction SilentlyContinue
     Set-Service bthserv -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service Ndu -StartupType Disabled -ErrorAction SilentlyContinue
-    Set-Service netprofm -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "MapsBroker" -Force -WarningAction SilentlyContinue
     Set-Service MapsBroker -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "Messenger" -Force -WarningAction SilentlyContinue
