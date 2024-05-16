@@ -2323,6 +2323,10 @@ function BestPriorityForeground {
     Remove-Item -Path HKCR:\Directory\Background\shellex\ContextMenuHandlers\igfxDTCM -Recurse -Force -ErrorAction Ignore
     Remove-Item -Path HKCR:\Directory\Background\shellex\ContextMenuHandlers\NvCplDesktopContext -Recurse -Force -ErrorAction Ignore
 
+    Get-ChildItem -Path "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger" -Recurse | ForEach-Object {
+        New-ItemProperty -Path $_.PSPath -Name "Start" -Value 0 -PropertyType DWORD -Force | Out-Null
+    }
+
     regsvr32.exe /s atl.dll
     regsvr32.exe /s urlmon.dll
     regsvr32.exe /s mshtml.dll
