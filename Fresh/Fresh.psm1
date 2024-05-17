@@ -3704,6 +3704,7 @@ function WaitToKillServiceTimeout1 {
 function DisablePagingExecutive1 {
     New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -PropertyType DWord -Value 1 -Force
     New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Memory Management" -Name "ClearPageFileAtShutdown" -PropertyType DWord -Value 0 -Force
+    New-ItemProperty -Path "HKLM:\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\CrashControl" -Name "CrashDumpEnabled" -PropertyType DWord -Value 0 -Force
 }
 
 # Enable boot optimization function
