@@ -4217,6 +4217,8 @@ function DebloatMicrosoftServices {
     Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "UnistoreSvc" -Force -WarningAction SilentlyContinue
     Set-Service UnistoreSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "vds" -Force -WarningAction SilentlyContinue
+    Set-Service vds -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "W32Time" -Force -WarningAction SilentlyContinue
     Set-Service W32Time -StartupType Disabled -ErrorAction SilentlyContinue
     Set-Service WFDSConMgrSvc -StartupType Disabled -ErrorAction SilentlyContinue
