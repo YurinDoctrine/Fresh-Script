@@ -2486,7 +2486,7 @@ function BestPriorityForeground {
     setx GPU_MAX_USE_SYNC_OBJECTS 1
     setx GPU_ENABLE_LARGE_ALLOCATION 99
     setx GPU_MAX_WORKGROUP_SIZE 1024
-    setx GPU_FORCE_64BIT_PTR 0
+    setx GPU_FORCE_64BIT_PTR 1
 
     powercfg -setactive SCHEME_BALANCED
     powercfg -setACvalueindex SCHEME_CURRENT SUB_NONE PERSONALITY 2
