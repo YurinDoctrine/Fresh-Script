@@ -2476,7 +2476,7 @@ function BestPriorityForeground {
     set-netoffloadglobalsetting -ScalingHeuristics Disabled
 
     Get-NetAdapter -IncludeHidden | Set-NetIPInterface -WeakHostSend Enabled -WeakHostReceive Enabled
-    Get-NetAdapter -IncludeHidden | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("94.140.14.15", "94.140.15.16")
+    Get-NetAdapter -IncludeHidden | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("9.9.9.11", "149.112.112.11")
 
     setx GPU_MAX_ALLOC_PERCENT 99
     setx GPU_SINGLE_ALLOC_PERCENT 90
