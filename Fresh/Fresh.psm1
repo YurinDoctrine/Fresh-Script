@@ -4219,6 +4219,8 @@ function DebloatMicrosoftServices {
     Set-Service SmsRouter -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "StorSvc" -Force -WarningAction SilentlyContinue
     Set-Service StorSvc -StartupType Disabled -ErrorAction SilentlyContinue
+    Stop-Service "svsvc" -Force -WarningAction SilentlyContinue
+    Set-Service svsvc -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "TrkWks" -Force -WarningAction SilentlyContinue
     Set-Service TrkWks -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service "UnistoreSvc" -Force -WarningAction SilentlyContinue
