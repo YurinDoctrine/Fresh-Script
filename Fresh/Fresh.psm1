@@ -2462,7 +2462,7 @@ function BestPriorityForeground {
     Get-NetAdapter -IncludeHidden | Set-NetIPInterface -WeakHostSend Enabled -WeakHostReceive Enabled
     Get-NetAdapter -IncludeHidden | Get-DnsClientServerAddress | Set-DnsClientServerAddress -ServerAddresses ("9.9.9.11", "149.112.112.11")
 
-    Invoke-WebRequest -Uri "https://github.com/StevenBlack/hosts/raw/refs/heads/master/alternates/fakenews-gambling-porn-social/hosts.bak" -OutFile "C:\Windows\System32\drivers\etc\hosts.bak"
+    Invoke-WebRequest -Uri "https://github.com/StevenBlack/hosts/raw/refs/heads/master/alternates/fakenews-gambling-porn-social/hosts" -OutFile "C:\Windows\System32\drivers\etc\hosts.bak"
     (Get-Content "C:\Windows\System32\drivers\etc\hosts.bak") | ForEach-Object { $_ -replace "#.*0\.0\.0\.0", "0.0.0.0" } | Set-Content "C:\Windows\System32\drivers\etc\hosts.bak" -Force
     Move-Item -Path "C:\Windows\System32\drivers\etc\hosts.bak" -Destination "C:\Windows\System32\drivers\etc\hosts" -Force
 
