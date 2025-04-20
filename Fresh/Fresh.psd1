@@ -1,7 +1,7 @@
 ﻿@{
 	RootModule            = 'Fresh.psm1'
 	ModuleVersion         = '6.3'
-	Author                = 'Yurin Doctrine'
+	Author                = 'YurinDoctrine'
 	Description           = 'A tuner script works on Windows 10 and Windows 11'
 	PowerShellVersion     = '5.1'
 	ProcessorArchitecture = 'AMD64'
